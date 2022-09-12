@@ -1,4 +1,4 @@
-# MeetMusic :musical_note:
+# MeetMusic 🎵
 
 An online social network for musicians to connect with each other, share content, connecting with people with similar interests, and more.
 
