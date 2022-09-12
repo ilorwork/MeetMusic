@@ -1,0 +1,30 @@
+{
+  "name": "meetmusic",
+  "version": "1.0.0",
+  "description": "An online social network for musicians to connect with each other, share content, connecting with people with similar interests, and more.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"nodemon server.js\" \"cd client && npm start\"",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilorwork/MeetMusic.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ilorwork/MeetMusic/issues"
+  },
+  "homepage": "https://github.com/ilorwork/MeetMusic#readme",
+  "dependencies": {
+    "concurrently": "^7.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongoose": "^6.6.0",
+    "nodemon": "^2.0.19"
+  }
+}
