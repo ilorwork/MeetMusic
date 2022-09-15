@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
-const env = require("dotenv");
-
-main();
-
-env.config();
+require("dotenv").config();
 
 const { DB_USER, DB_PASS, DB_HOST, DB_NAME } = process.env;
 
@@ -13,6 +9,8 @@ async function main() {
       `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`,
       { useNewUrlParser: true, useUnifiedTopology: true }
     )
-    .then(() => console.log("mongo connect"))
-    .catch((err) => console.log(err));
+    .then(() => console.log("Mongo connection succeeded"))
+    .catch((err) => console.log("Mongo connect fail. " + err));
 }
+
+main();
