@@ -1,0 +1,14 @@
+.containsCard{
+    /* width: 160px;
+    height: 250px; */
+    /* border: solid black 2px; */
+    margin-bottom: 8px;
+}
+
+.card{
+    margin: 0 8px;
+}
+
+.card:hover{
+    cursor: pointer;
+}
