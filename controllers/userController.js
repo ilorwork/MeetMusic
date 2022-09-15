@@ -21,7 +21,7 @@ const createUser = async (req, res) => {
     console.log("newUser", newUser);
     await newUser.save();
     newUser.password = "********";
-    return serverResponse(res, 200, newUser);
+    return serverResponse(res, 201, newUser);
   } catch (e) {
     return serverResponse(res, 500, {
       message: "internal error occured " + e,
