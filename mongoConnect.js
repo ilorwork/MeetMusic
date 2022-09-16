@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
 
 const { DB_USER, DB_PASS, DB_HOST, DB_NAME } = process.env;
 
-async function main() {
+const main = async () => {
   await mongoose
     .connect(
       `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`,
@@ -11,6 +10,6 @@ async function main() {
     )
     .then(() => console.log("Mongo connection succeeded"))
     .catch((err) => console.log("Mongo connect fail. " + err));
-}
+};
 
 main();

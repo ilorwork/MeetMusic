@@ -11,18 +11,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   profilePic: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], required: true },
-  following: [
-    {
-      _id: { type: [mongoose.Types.ObjectId], ref: "User" },
-      //   username: { type: String, ref: "User" },
-    },
-  ],
-  followers: [
-    {
-      _id: { type: [mongoose.Types.ObjectId], ref: "User" },
-      // username: { type: String,  ref: 'User' }
-    },
-  ],
+  following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+  followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   //   posts: [posts],
   //   sharedPosts: [sharedPosts],
 });
