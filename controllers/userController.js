@@ -18,9 +18,9 @@ const createUser = async (req, res) => {
     await newUser.save();
 
     newUser.password = "Unable to send sensitive data";
-    return res.status(200).json(newUser);
+    return res.status(201).json(newUser);
   } catch (e) {
-    return res.status(500).json(`User creation has failed ${e}`);
+    return res.status(500).json(`User creation failed ${e}`);
   }
 };
 
@@ -35,7 +35,7 @@ const login = async (req, res) => {
 
     return res.status(200).json("Allowed");
   } catch (e) {
-    return res.status(500).json(`internal error has accured ${e}`);
+    return res.status(500).json(`Login proccess failed ${e}`);
   }
 };
 
