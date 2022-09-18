@@ -1,5 +1,6 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -24,6 +25,17 @@ const createUser = async (req, res) => {
   }
 };
 
+const verifyUser = (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (token === undefined) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
 const login = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
@@ -31,12 +43,26 @@ const login = async (req, res) => {
     if (!user) return res.status(404).json("user not found");
 
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
-    if (!isCorrect) res.status(401).json("Unauthorized");
+    if (!isCorrect) res.sendStatus(401);
 
-    return res.status(200).json("Allowed");
+    const accessToken = jwt.sign(
+      { email: user.email },
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    res.json({ accessToken });
   } catch (e) {
     return res.status(500).json(`Login proccess failed ${e}`);
   }
 };
 
-module.exports = { getAllUsers, createUser, login };
+const getFollowing = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+
+    return res.status(200).json(user.following);
+  } catch (e) {
+    return res.status(500).json(`get following failed ${e}`);
+  }
+};
+
+module.exports = { getAllUsers, createUser, login, verifyUser, getFollowing };
