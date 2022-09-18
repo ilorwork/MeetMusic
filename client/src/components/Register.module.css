@@ -1,4 +1,4 @@
-.connection{
+.connection {
     flex: 1;
     /* border: solid green 2px; */
     min-height: 500px;
@@ -7,12 +7,12 @@
     align-items: center;
 }
 
-.names{
+.names {
     display: flex;
     justify-content: space-between;
 }
 
-.inputs{
+.inputs {
     height: inherit;
     display: flex;
     flex-direction: column;
@@ -20,7 +20,13 @@
     text-align: center;
 }
 
-.createAccount{
+.createAccount {
     border-top: 2px dotted green;
     padding-top: 24px;
+}
+
+.dateOfBirthAndGender {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
