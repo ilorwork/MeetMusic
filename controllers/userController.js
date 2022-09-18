@@ -25,17 +25,6 @@ const createUser = async (req, res) => {
   }
 };
 
-const verifyUser = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (token === undefined) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
-
 const login = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
@@ -65,4 +54,4 @@ const getFollowing = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, createUser, login, verifyUser, getFollowing };
+module.exports = { getAllUsers, createUser, login, getFollowing };
