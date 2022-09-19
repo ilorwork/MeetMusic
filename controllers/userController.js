@@ -1,6 +1,10 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {
+  generateAccessTokenCookie,
+  generateRefreshTokenCookie,
+} = require("../middleware/userVerification");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -34,14 +38,33 @@ const login = async (req, res) => {
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
     if (!isCorrect) res.sendStatus(401);
 
-    const accessToken = jwt.sign(
-      { email: user.email },
-      process.env.ACCESS_TOKEN_SECRET
-    );
-    res.json({ accessToken });
+    generateAccessTokenCookie(req, res, user);
+
+    const refreshToken = generateRefreshTokenCookie(req, res, user);
+    // user.refreshToken = refreshToken;
+    // await user.save();
+    res.status(200).json("User login succeeded");
   } catch (e) {
     return res.status(500).json(`Login proccess failed ${e}`);
   }
+};
+
+const logout = async (req, res) => {
+  // const refreshToken = req.body.token;
+  // console.log("cookies before clean:", req.cookies);
+  const refreshToken = req.cookies.accessToken;
+  // This validation may be useless
+  if (!refreshToken) return res.status(400).json("No token provided");
+
+  // const user = await UserModel.findOne({ refreshToken: refreshToken });
+  // if (!user) return res.status(404).json("User already logged out");
+
+  // user.refreshToken = "";
+  // await user.save();
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+  // console.log("cookies after clean:", req.cookies);
+  return res.status(200).json("User logged out succesfully");
 };
 
 const getFollowing = async (req, res) => {
@@ -54,4 +77,10 @@ const getFollowing = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, createUser, login, getFollowing };
+module.exports = {
+  getAllUsers,
+  createUser,
+  login,
+  logout,
+  getFollowing,
+};
