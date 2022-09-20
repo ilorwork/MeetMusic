@@ -7,6 +7,6 @@ router.get("/", userController.getAllUsers);
 router.post("/", userController.createUser);
 router.post("/login", userController.login);
 router.delete("/logout", userController.logout);
-router.post("/user/following", verifyUser, userController.getFollowing);
+router.get("/user/following", verifyUser, userController.getFollowing);
 
 module.exports = router;

@@ -35,6 +35,7 @@ const login = async (req, res) => {
     if (!user) return res.status(404).json("user not found");
 
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
+    // Remove message to improve security
     if (!isCorrect) res.sendStatus(401);
 
     generateAccessTokenCookie(req, res, user);
@@ -47,8 +48,8 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  const refreshToken = req.cookies.accessToken;
   // This validation may be useless
+  const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.status(400).json("No token provided");
 
   res.clearCookie("accessToken");

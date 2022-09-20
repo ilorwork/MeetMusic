@@ -5,13 +5,12 @@ const generateAccessTokenCookie = (req, res, user) => {
   const accessToken = jwt.sign(
     { email: user.email },
     process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: `5s`,
-    }
+    { expiresIn: `5s` }
   );
-  console.log("generating new access token");
+
   res.cookie("accessToken", accessToken, {
-    maxAge: 900000,
+    // TODO: Check if and why maxAge is needed
+    // maxAge: 900000, // 15 min
     httpOnly: true,
   });
 };
@@ -24,7 +23,9 @@ const generateRefreshTokenCookie = (req, res, user) => {
       expiresIn: `60s`,
     }
   );
-  res.cookie("refreshToken", refreshToken, { maxAge: 900000, httpOnly: true });
+  res.cookie("refreshToken", refreshToken, {
+    /* maxAge: 900000, */ httpOnly: true,
+  });
   return refreshToken;
 };
 
@@ -34,6 +35,7 @@ const genAccessTokenByRefreshToken = (req, res, next) => {
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
+
     generateAccessTokenCookie(req, res, user);
     req.user = user;
   });
@@ -44,6 +46,7 @@ const verifyUser = (req, res, next) => {
   const accessToken = req.cookies.accessToken;
   if (!accessToken) return res.status(401).json("No token provided");
 
+  // TODO: Change user to decoded
   jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) genAccessTokenByRefreshToken(req, res, next);
     else {
@@ -55,7 +58,6 @@ const verifyUser = (req, res, next) => {
 
 module.exports = {
   verifyUser,
-  genAccessTokenByRefreshToken,
   generateAccessTokenCookie,
   generateRefreshTokenCookie,
 };
