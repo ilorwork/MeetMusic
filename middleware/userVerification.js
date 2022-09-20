@@ -33,12 +33,16 @@ const genAccessTokenByRefreshToken = (req, res, next) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.status(401).json("No token provided");
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    (err, decodedUser) => {
+      if (err) return res.sendStatus(403);
 
-    generateAccessTokenCookie(req, res, user);
-    req.user = user;
-  });
+      generateAccessTokenCookie(req, res, decodedUser);
+      req.user = decodedUser;
+    }
+  );
   next();
 };
 
@@ -46,14 +50,17 @@ const verifyUser = (req, res, next) => {
   const accessToken = req.cookies.accessToken;
   if (!accessToken) return res.status(401).json("No token provided");
 
-  // TODO: Change user to decoded
-  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) genAccessTokenByRefreshToken(req, res, next);
-    else {
-      req.user = user;
-      next();
+  jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET,
+    (err, decodedUser) => {
+      if (err) genAccessTokenByRefreshToken(req, res, next);
+      else {
+        req.user = decodedUser;
+        next();
+      }
     }
-  });
+  );
 };
 
 module.exports = {
