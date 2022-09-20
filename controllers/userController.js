@@ -1,5 +1,9 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const {
+  generateAccessTokenCookie,
+  generateRefreshTokenCookie,
+} = require("../middleware/userVerification");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -18,9 +22,9 @@ const createUser = async (req, res) => {
     await newUser.save();
 
     newUser.password = "Unable to send sensitive data";
-    return res.status(200).json(newUser);
+    return res.status(201).json(newUser);
   } catch (e) {
-    return res.status(500).json(`User creation has failed ${e}`);
+    return res.status(500).json(`User creation failed ${e}`);
   }
 };
 
@@ -31,12 +35,42 @@ const login = async (req, res) => {
     if (!user) return res.status(404).json("user not found");
 
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
-    if (!isCorrect) res.status(401).json("Unauthorized");
+    // Remove message to improve security
+    if (!isCorrect) res.sendStatus(401);
 
-    return res.status(200).json("Allowed");
+    generateAccessTokenCookie(req, res, user);
+    generateRefreshTokenCookie(req, res, user);
+
+    res.status(200).json("User login succeeded");
   } catch (e) {
-    return res.status(500).json(`internal error has accured ${e}`);
+    return res.status(500).json(`Login proccess failed ${e}`);
   }
 };
 
-module.exports = { getAllUsers, createUser, login };
+const logout = async (req, res) => {
+  // This validation may be useless
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.status(400).json("No token provided");
+
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+  return res.status(200).json("User logged out succesfully");
+};
+
+const getFollowing = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+
+    return res.status(200).json(user.following);
+  } catch (e) {
+    return res.status(500).json(`get following failed ${e}`);
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  createUser,
+  login,
+  logout,
+  getFollowing,
+};

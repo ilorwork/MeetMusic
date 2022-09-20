@@ -9,7 +9,7 @@ const main = async () => {
       { useNewUrlParser: true, useUnifiedTopology: true }
     )
     .then(() => console.log("Mongo connection succeeded"))
-    .catch((err) => console.log("Mongo connect fail. " + err));
+    .catch((err) => console.error("Mongo connect fail. " + err));
 };
 
 main();
