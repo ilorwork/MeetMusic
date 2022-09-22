@@ -1,0 +1,38 @@
+.appBar {
+    background: white !important;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.toolBar {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wrapperMusicIcon {
+    width: 150px;
+}
+
+.musicIcon {
+    color: rgb(221, 95, 137);
+    margin-right: 12px;
+}
+
+.wrapperIcons {
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.notificationsIcon {
+    color: rgb(38, 165, 165);
+    margin-left: 12px;
+}
+
+.accountIcon {
+    color: rgb(38, 165, 165);
+}
