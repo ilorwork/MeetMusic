@@ -12,13 +12,19 @@ import React, { useEffect, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { apiGet } from "../services/requestsToServer";
+import axios from "axios";
 import style from "./Register.module.css";
 import { v4 as uuid } from "uuid";
 
 const Register = () => {
   const [countries, setCountries] = useState([]);
   const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
 
@@ -47,7 +53,7 @@ const Register = () => {
   };
 
   const getAllCountriesAndCities = async () => {
-    const { data } = await apiGet(
+    const { data } = await axios.get(
       "https://countriesnow.space/api/v0.1/countries"
     );
 
@@ -58,6 +64,38 @@ const Register = () => {
     );
   };
 
+  const hanbleSubmitForm = async () => {
+    if (!firstName || !lastName || !email || !password || !gender || !birthDate)
+      return;
+
+    const newUser = {
+      firstName,
+      lastName,
+      email,
+      password,
+      gender,
+      birthDate,
+      country,
+      city,
+    };
+
+    try {
+      const res = await axios.post("http://localhost:7000/users", newUser);
+      console.log("user created, res:", res);
+      console.log("user created, status:", res.status);
+      console.log("user created, data:", res.data);
+
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+      setGender("");
+      setBirthDate("");
+      setCountry("");
+      setCity("");
+    } catch (e) {}
+  };
+
   return (
     <div className={style.registrationFormContainer}>
       <Paper
@@ -66,15 +104,37 @@ const Register = () => {
         sx={{ width: 400, height: 550 }}
       >
         <div className={style.flexRowCenterGroup}>
-          <TextField label="First name" autoFocus sx={{ marginRight: 3 }} />
-          <TextField label="Last name" />
+          <TextField
+            label="First name"
+            autoFocus
+            sx={{ marginRight: 3 }}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+          <TextField
+            label="Last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
         </div>
-        <TextField label="Email" />
-        <TextField label="Password" />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
             <FormLabel>Gender</FormLabel>
-            <RadioGroup row>
+            <RadioGroup
+              row
+              onChange={(e) => setGender(e.target.value)}
+              value={gender}
+            >
               <FormControlLabel value="male" control={<Radio />} label="Male" />
               <FormControlLabel
                 value="female"
@@ -85,7 +145,11 @@ const Register = () => {
           </FormControl>
           <FormControl>
             <FormLabel>Birth Date</FormLabel>
-            <TextField type="date" />
+            <TextField
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+            />
           </FormControl>
         </div>
         <div className={style.flexRowCenterGroup}>
@@ -122,7 +186,7 @@ const Register = () => {
           </FormControl>
         </div>
 
-        <Button variant="contained" sx={{ my: 3 }}>
+        <Button variant="contained" sx={{ my: 3 }} onClick={hanbleSubmitForm}>
           Create a new account
         </Button>
         <div className={style.loginBtn}>
