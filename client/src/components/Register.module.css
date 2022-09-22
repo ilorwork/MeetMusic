@@ -1,26 +1,25 @@
-.connection{
-    flex: 1;
-    /* border: solid green 2px; */
-    min-height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.registrationFormContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.names{
-    display: flex;
-    justify-content: space-between;
+.flexRowCenterGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.inputs{
-    height: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    text-align: center;
+.registrationFormPaper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+  padding: 4px 8px;
 }
 
-.createAccount{
-    border-top: 2px dotted green;
-    padding-top: 24px;
+.loginBtn {
+  border-top: 2px dotted green;
+  padding: 24px;
 }
