@@ -1,36 +1,25 @@
-.connection {
-    flex: 1;
-    /* border: solid green 2px; */
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.registrationFormContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.names {
-    /* border: solid red 2px; */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.flexRowCenterGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.inputs {
-    /* border: solid blue 2px; */
-    height: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    text-align: center;
+.registrationFormPaper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+  padding: 4px 8px;
 }
 
-.connect {
-    border-top: 2px dotted green;
-    padding-top: 24px;
-    margin: 24px 0;
-}
-
-.dateOfBirthAndGender {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.loginBtn {
+  border-top: 2px dotted green;
+  padding: 24px;
 }

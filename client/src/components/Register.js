@@ -1,24 +1,36 @@
-import { Button, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import style from './Register.module.css';
-import '../services/requestsToServer';
-import { apiGet } from '../services/requestsToServer';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Chip from '@mui/material/Chip';
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import { apiGet } from "../services/requestsToServer";
+import style from "./Register.module.css";
+import { v4 as uuid } from "uuid";
 
 const Register = () => {
-  const [arrOfCountries, setArrOfCountries] = useState([]);
-  const [arrOfAllCities, setArrOfAllCities] = useState([]);
-  const [country, setCountry] = useState([]);
-  const [city, setCity] = useState([]);
-  let index = 0;
-  let [arrOfCitiesOfCountry, setArrOfCitiesOfCountry] = useState([]);
-  const theme = useTheme();
+  const [countries, setCountries] = useState([]);
+  const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+
+  useEffect(() => {
+    getAllCountriesAndCities();
+  }, []);
+
+  useEffect(() => {
+    const indexOfCountry = countries.findIndex((c) => country === c.name);
+    if (indexOfCountry !== -1)
+      setCitiesOfSelectedCountry(countries[indexOfCountry].cities);
+  }, [country]);
 
   const MenuProps = {
     PaperProps: {
@@ -29,160 +41,98 @@ const Register = () => {
     },
   };
 
-  const getStyles = (name, countryOrCity, theme) => {
-    // console.log(name, countryOrCity, theme);
-    return {
-      fontWeight:
-        countryOrCity.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
-
-  const handleChangeForCountry = (event) => {
-    // console.log(event.target.value);
-    const {
-      target: { value },
-    } = event;
-    // console.log(value);
-    setCountry(
-      [value]
-    );
-    setCity([]);
-  };
-  const handleChangeForCity = (event) => {
-    // console.log(event.target.value);
-    const {
-      target: { value },
-    } = event;
-    // console.log(value);
-    setCity(
-      [value]
-    );
+  const handleCountryChange = (e) => {
+    setCountry(e.target.value);
+    setCity("");
   };
 
   const getAllCountriesAndCities = async () => {
-    const { data } = await apiGet("https://countriesnow.space/api/v0.1/countries");
-    setArrOfCountries(data.data.map((item) => item.country));
-    setArrOfAllCities(data.data.map((item) => item.cities));
-  }
+    const { data } = await apiGet(
+      "https://countriesnow.space/api/v0.1/countries"
+    );
 
-  useEffect(() => {
-    getAllCountriesAndCities();
-  }, []);
-
-  useEffect(() => {
-    index = arrOfCountries.indexOf(country.toString());
-    // console.log(index);
-    // console.log(country);
-    setArrOfCitiesOfCountry(arrOfAllCities[index]);
-  }, [country]);
-
-  // console.log(arrOfCities);
-  // console.log(arrOfCitiesOfCountry);
-  // useEffect(() => {
-  //     console.log(country);
-  // }, [country]);
-  // console.log(arrOfCountries);
-  // console.log(arrOfCities);
+    setCountries(
+      data.data.map((item) => {
+        return { name: item.country, cities: item.cities };
+      })
+    );
+  };
 
   return (
-    <div className={style.connection}>
-      <Paper elevation={3} sx={{ width: 400, height: 550, padding: "0 8px" }}>
-        <div className={style.inputs}>
-          <div className={style.names}>
-            <TextField label="First name" variant="outlined" autoFocus sx={{ marginRight: 3 }} />
-            <TextField label="Last name" variant="outlined" />
-          </div>
-          <TextField label="Email or phone number" variant="outlined" />
-          <TextField label="New password" variant="outlined" />
-          <div className={style.dateOfBirthAndGender}>
-            <div className={style.names}>
-              <FormControl sx={{ marginRight: 2 }}>
-                <FormLabel>Gender</FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group"
-                  defaultValue="male"
-                >
-                  <FormControlLabel value="male" control={<Radio />} label="Male" />
-                  <FormControlLabel value="female" control={<Radio />} label="Female" />
-                </RadioGroup>
-              </FormControl>
-              <TextField
-                id="date"
-                label="Birthday"
-                type="date"
-                defaultValue="2000-01-01"
+    <div className={style.registrationFormContainer}>
+      <Paper
+        className={style.registrationFormPaper}
+        elevation={3}
+        sx={{ width: 400, height: 550 }}
+      >
+        <div className={style.flexRowCenterGroup}>
+          <TextField label="First name" autoFocus sx={{ marginRight: 3 }} />
+          <TextField label="Last name" />
+        </div>
+        <TextField label="Email" />
+        <TextField label="Password" />
+        <div className={style.flexRowCenterGroup}>
+          <FormControl sx={{ marginRight: 2 }}>
+            <FormLabel>Gender</FormLabel>
+            <RadioGroup row>
+              <FormControlLabel value="male" control={<Radio />} label="Male" />
+              <FormControlLabel
+                value="female"
+                control={<Radio />}
+                label="Female"
               />
-            </div>
-          </div>
-          <div className={style.names}>
-            <FormControl sx={{ m: 1, width: 200, marginRight: 2 }}>
-              <InputLabel>Country</InputLabel>
-              <Select
-                value={country}
-                onChange={handleChangeForCountry}
-                input={<OutlinedInput label="Country" sx={{ minHeight: 70 }} />}
-                renderValue={(selected) => (
-                  city && <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {arrOfCountries.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, country, theme)}
-                  >
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            </RadioGroup>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Birth Date</FormLabel>
+            <TextField type="date" />
+          </FormControl>
+        </div>
+        <div className={style.flexRowCenterGroup}>
+          <FormControl sx={{ m: 1, width: 200, marginRight: 2 }}>
+            <InputLabel>Country</InputLabel>
+            <Select
+              value={country}
+              onChange={handleCountryChange}
+              label="Country"
+              MenuProps={MenuProps}
+            >
+              {countries.map((c) => (
+                <MenuItem key={uuid()} value={c.name}>
+                  {c.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-            <FormControl sx={{ m: 1, width: 200 }}>
-              <InputLabel>City</InputLabel>
-              <Select
-                value={city}
-                onChange={handleChangeForCity}
-                input={<OutlinedInput label="City" sx={{ minHeight: 70 }} />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {arrOfCitiesOfCountry?.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, city, theme)}
-                  >
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div >
+          <FormControl sx={{ m: 1, width: 200 }}>
+            <InputLabel>City</InputLabel>
+            <Select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              label="City"
+              MenuProps={MenuProps}
+            >
+              {citiesOfSelectedCountry.map((c) => (
+                <MenuItem key={uuid()} value={c}>
+                  {c}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
 
-          <Button variant="contained" sx={{ mt: 3 }}>Create a new account</Button>
-          <div className={style.connect}>
-            <Button variant="contained" color="success" sx={{ width: 300 }}>Connect</Button>
-          </div>
-
+        <Button variant="contained" sx={{ my: 3 }}>
+          Create a new account
+        </Button>
+        <div className={style.loginBtn}>
+          <Button variant="contained" color="success" sx={{ width: 300 }}>
+            Login
+          </Button>
         </div>
       </Paper>
     </div>
-  )
-}
+  );
+};
 
 export default Register;
