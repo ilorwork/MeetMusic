@@ -16,11 +16,13 @@ const Home = () => {
         <PeopleYouMayKnow />
       </div>
       <div className={style.postComponent}>
-        <PostComponent />
-        <PostComponent />
-        <PostComponent />
-        <PostComponent />
-        <PostComponent />
+        <div className={style.containerPostComponents}>
+          <PostComponent />
+          <PostComponent />
+          <PostComponent />
+          <PostComponent />
+          <PostComponent />
+        </div>
       </div>
       <div className={style.peopleYouFollow}>
         <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>

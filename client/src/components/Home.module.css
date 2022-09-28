@@ -22,6 +22,12 @@
     border: solid red 1px;
 }
 
+.containerPostComponents {
+    max-width: 500px;
+    margin: 0 auto;
+    border: solid greenyellow 4px;
+}
+
 .titleOfPeopleYouFollow {
     color: #92a5de;
     text-shadow: 0px 0px 0 #899CD5, 1px 1px 0 #8194CD, 2px 2px 0 #788BC4, 3px 3px 0 #6F82BB, 4px 4px 0 #677AB3, 5px 5px 0 #5E71AA;
