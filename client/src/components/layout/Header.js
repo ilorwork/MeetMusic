@@ -166,6 +166,7 @@ const Header = () => {
           options={top100Films.map((option) => option.title)}
           renderInput={(params) => (
             <TextField
+              sx={{ width: 300, px: 2 }}
               variant="standard"
               className={style.searchField}
               {...params}
