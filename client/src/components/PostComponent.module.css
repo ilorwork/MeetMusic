@@ -1,3 +1,13 @@
-.personPic {
-    border-radius: 50%;
+.footerIndecators {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+  border-bottom: 1px dotted black;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.actionsContainer {
+  display: flex;
+  justify-content: space-around;
 }

@@ -1,8 +1,8 @@
-import React from 'react'
-import style from './Home.module.css';
-import PeopleYouFollow from './PeopleYouFollow';
-import PeopleYouMayKnow from './PeopleYouMayKnow';
-import PostComponent from './PostComponent';
+import React from "react";
+import style from "./Home.module.css";
+import PeopleYouFollow from "./PeopleYouFollow";
+import PeopleYouMayKnow from "./PeopleYouMayKnow";
+import PostComponent from "./PostComponent";
 
 const Home = () => {
   return (
@@ -15,14 +15,12 @@ const Home = () => {
         <PeopleYouMayKnow />
         <PeopleYouMayKnow />
       </div>
-      <div className={style.postComponent}>
-        <div className={style.containerPostComponents}>
-          <PostComponent />
-          <PostComponent />
-          <PostComponent />
-          <PostComponent />
-          <PostComponent />
-        </div>
+      <div className={style.containerPostComponents}>
+        <PostComponent />
+        <PostComponent />
+        <PostComponent />
+        <PostComponent />
+        <PostComponent />
       </div>
       <div className={style.peopleYouFollow}>
         <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
@@ -33,7 +31,7 @@ const Home = () => {
         <PeopleYouFollow />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Home;
