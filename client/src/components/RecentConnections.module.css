@@ -1,23 +1,24 @@
-.wrapper{
-    flex: 1;
-    padding: 8px;
-    padding-top: 32px;
-    min-height: 500px;
-    /* border: solid red 2px; */
-    text-align: center;
+.wrapper {
+  flex: 1;
+  padding: 8px;
+  padding-top: 32px;
+  min-height: 500px;
+  text-align: center;
 }
 
 .h1 {
-    font-size: 48px;
-    color: rgb(35, 137, 221);
-    box-shadow: 5px 5px 0px 0px #289FED, 10px 10px 0px 0px #5FB8FF, 15px 15px 0px 0px #A1D8FF, 20px 20px 0px 0px #CAE6FF, 25px 25px 0px 0px #E1EEFF, 5px 5px 15px 5px rgba(0, 0, 0, 0);
+  font-size: 48px;
+  color: rgb(209, 46, 100);
+  box-shadow: 5px 5px 0px 0px rgb(221, 125, 167),
+    10px 10px 0px 0px rgb(221, 155, 197), 15px 15px 0px 0px rgb(221, 185, 227),
+    5px 5px 15px 5px rgba(0, 0, 0, 0);
 }
 
 .h2 {
-    font-size: 24px;
-    margin: 0;
+  font-size: 24px;
+  margin: 0;
 }
 
-.p{
-    margin: 0 0 8px 0;
+.p {
+  margin: 0 0 8px 0;
 }
