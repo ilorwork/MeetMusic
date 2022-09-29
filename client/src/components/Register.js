@@ -12,24 +12,35 @@ import React, { useEffect, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { apiGet } from "../services/requestsToServer";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import style from "./Register.module.css";
 import { v4 as uuid } from "uuid";
 
 const Register = () => {
-  const [countries, setCountries] = useState([]);
-  const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+  const [countriesAndCities, setCountriesAndCities] = useState([]);
+  const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllCountriesAndCities();
   }, []);
 
   useEffect(() => {
-    const indexOfCountry = countries.findIndex((c) => country === c.name);
+    const indexOfCountry = countriesAndCities.findIndex(
+      (c) => country === c.name
+    );
     if (indexOfCountry !== -1)
-      setCitiesOfSelectedCountry(countries[indexOfCountry].cities);
+      setCitiesOfSelectedCountry(countriesAndCities[indexOfCountry].cities);
   }, [country]);
 
   const MenuProps = {
@@ -47,15 +58,51 @@ const Register = () => {
   };
 
   const getAllCountriesAndCities = async () => {
-    const { data } = await apiGet(
+    const { data } = await axios.get(
       "https://countriesnow.space/api/v0.1/countries"
     );
 
-    setCountries(
+    setCountriesAndCities(
       data.data.map((item) => {
         return { name: item.country, cities: item.cities };
       })
     );
+  };
+
+  const hanbleSubmitForm = async () => {
+    if (!firstName || !lastName || !email || !password || !gender || !birthDate)
+      return;
+
+    const newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      gender: gender,
+      birthDate: birthDate,
+      country: country,
+      city: city,
+    };
+
+    try {
+      const res = await axios.post("http://localhost:7000/users", newUser);
+      console.log("user created, res:", res);
+      console.log("user created, status:", res.status);
+      console.log("user created, data:", res.data);
+
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+      setGender("");
+      setBirthDate("");
+      setCountry("");
+      setCity("");
+
+      navigate("/login");
+    } catch (e) {
+      throw e;
+    }
   };
 
   return (
@@ -66,15 +113,37 @@ const Register = () => {
         sx={{ width: 400, height: 550 }}
       >
         <div className={style.flexRowCenterGroup}>
-          <TextField label="First name" autoFocus sx={{ marginRight: 3 }} />
-          <TextField label="Last name" />
+          <TextField
+            label="First name"
+            autoFocus
+            sx={{ marginRight: 3 }}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+          <TextField
+            label="Last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
         </div>
-        <TextField label="Email" />
-        <TextField label="Password" />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
             <FormLabel>Gender</FormLabel>
-            <RadioGroup row>
+            <RadioGroup
+              row
+              onChange={(e) => setGender(e.target.value)}
+              value={gender}
+            >
               <FormControlLabel value="male" control={<Radio />} label="Male" />
               <FormControlLabel
                 value="female"
@@ -85,7 +154,11 @@ const Register = () => {
           </FormControl>
           <FormControl>
             <FormLabel>Birth Date</FormLabel>
-            <TextField type="date" />
+            <TextField
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+            />
           </FormControl>
         </div>
         <div className={style.flexRowCenterGroup}>
@@ -97,7 +170,7 @@ const Register = () => {
               label="Country"
               MenuProps={MenuProps}
             >
-              {countries.map((c) => (
+              {countriesAndCities.map((c) => (
                 <MenuItem key={uuid()} value={c.name}>
                   {c.name}
                 </MenuItem>
@@ -122,7 +195,7 @@ const Register = () => {
           </FormControl>
         </div>
 
-        <Button variant="contained" sx={{ my: 3 }}>
+        <Button variant="contained" sx={{ my: 3 }} onClick={hanbleSubmitForm}>
           Create a new account
         </Button>
         <div className={style.loginBtn}>
