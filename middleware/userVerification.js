@@ -13,6 +13,8 @@ const generateAccessTokenCookie = (req, res, user) => {
     maxAge: 900000, // 15 min
     httpOnly: false,
   });
+
+  return accessToken;
 };
 
 const generateRefreshTokenCookie = (req, res, user) => {

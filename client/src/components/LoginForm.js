@@ -17,15 +17,17 @@ const LoginForm = () => {
     try {
       const res = await axios.post(
         "http://localhost:7000/users/login",
-        userInfo
-        // {
-        //   withCredentials: true,
-        //   headers: { "Access-Control-Allow-Origin": "http://localhost:7000" },
-        // }
+        userInfo,
+        {
+          // credentials: true,
+          // headers: { "Access-Control-Allow-Origin": true },
+          // headers: { "Access-Control-Allow-Origin": "*" },
+        }
       );
-      console.log("res", res);
+      console.log("res", res.headers.authorization);
       // console.log("res cookies", res.cookies);
       // console.log("res cookie", res.cookies);
+      localStorage.setItem("token", res.headers.authorization);
       navigate("/");
     } catch (err) {
       throw new Error("Login user has failed " + err);

@@ -37,7 +37,11 @@ const login = async (req, res) => {
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
     if (!isCorrect) return res.sendStatus(401);
 
-    generateAccessTokenCookie(req, res, user);
+    const accessToken = generateAccessTokenCookie(req, res, user);
+    res.setHeader("Authorization", accessToken);
+    res.setHeader("Access-Control-Expose-Headers", "Authorization");
+    // res.setHeader("Access-Control-Allow-Credentials", true);
+
     generateRefreshTokenCookie(req, res, user);
 
     // console.log("headers", req.headers);
