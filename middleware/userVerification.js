@@ -8,10 +8,10 @@ const generateAccessTokenCookie = (req, res, user) => {
     { expiresIn: `5s` }
   );
 
+  // Replace with LocalStorage or Context
   res.cookie("accessToken", accessToken, {
-    // TODO: Check if and why maxAge is needed
-    // maxAge: 900000, // 15 min
-    httpOnly: true,
+    maxAge: 900000, // 15 min
+    httpOnly: false,
   });
 };
 

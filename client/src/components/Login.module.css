@@ -1,15 +1,14 @@
 .container {
-    min-height: 100vh;
-    max-width: 1000px;
-    margin: 0 auto;
-    /* border: solid black 2px; */
-    display: flex;
-    align-items: center;
-    padding: 12px;
+  min-height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 12px;
 }
 
-@media (max-width:800px) {
-    .container {
-        display: block;
-    }
+@media (max-width: 800px) {
+  .container {
+    display: block;
+  }
 }

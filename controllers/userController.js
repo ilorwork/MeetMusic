@@ -35,12 +35,16 @@ const login = async (req, res) => {
     if (!user) return res.status(404).json("user not found");
 
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
-    // Remove message to improve security
-    if (!isCorrect) res.sendStatus(401);
+    if (!isCorrect) return res.sendStatus(401);
 
     generateAccessTokenCookie(req, res, user);
     generateRefreshTokenCookie(req, res, user);
 
+    // console.log("headers", req.headers);
+    // console.log(req.cookies);
+    // console.log(req.cookie);
+    // console.log(res.cookies);
+    // console.log(res.cookie);
     res.status(200).json("User login succeeded");
   } catch (e) {
     return res.status(500).json(`Login proccess failed ${e}`);
