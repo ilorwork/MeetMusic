@@ -12,13 +12,12 @@ import React, { useEffect, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./Register.module.css";
 import { v4 as uuid } from "uuid";
 
 const Register = () => {
-  const [countries, setCountries] = useState([]);
-  const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,15 +26,21 @@ const Register = () => {
   const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+  const [countriesAndCities, setCountriesAndCities] = useState([]);
+  const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllCountriesAndCities();
   }, []);
 
   useEffect(() => {
-    const indexOfCountry = countries.findIndex((c) => country === c.name);
+    const indexOfCountry = countriesAndCities.findIndex(
+      (c) => country === c.name
+    );
     if (indexOfCountry !== -1)
-      setCitiesOfSelectedCountry(countries[indexOfCountry].cities);
+      setCitiesOfSelectedCountry(countriesAndCities[indexOfCountry].cities);
   }, [country]);
 
   const MenuProps = {
@@ -57,7 +62,7 @@ const Register = () => {
       "https://countriesnow.space/api/v0.1/countries"
     );
 
-    setCountries(
+    setCountriesAndCities(
       data.data.map((item) => {
         return { name: item.country, cities: item.cities };
       })
@@ -69,14 +74,14 @@ const Register = () => {
       return;
 
     const newUser = {
-      firstName,
-      lastName,
-      email,
-      password,
-      gender,
-      birthDate,
-      country,
-      city,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      gender: gender,
+      birthDate: birthDate,
+      country: country,
+      city: city,
     };
 
     try {
@@ -93,7 +98,11 @@ const Register = () => {
       setBirthDate("");
       setCountry("");
       setCity("");
-    } catch (e) {}
+
+      navigate("/login");
+    } catch (e) {
+      throw e;
+    }
   };
 
   return (
@@ -161,7 +170,7 @@ const Register = () => {
               label="Country"
               MenuProps={MenuProps}
             >
-              {countries.map((c) => (
+              {countriesAndCities.map((c) => (
                 <MenuItem key={uuid()} value={c.name}>
                   {c.name}
                 </MenuItem>
