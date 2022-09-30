@@ -5,8 +5,8 @@ import axios from "axios";
 import style from "./LoginForm.module.css";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("a@b.c");
+  const [password, setPassword] = useState("1234");
 
   const navigate = useNavigate();
 
@@ -19,14 +19,9 @@ const LoginForm = () => {
         "http://localhost:7000/users/login",
         userInfo,
         {
-          // credentials: true,
-          // headers: { "Access-Control-Allow-Origin": true },
-          // headers: { "Access-Control-Allow-Origin": "*" },
+          withCredentials: true,
         }
       );
-      console.log("res", res.headers.authorization);
-      // console.log("res cookies", res.cookies);
-      // console.log("res cookie", res.cookies);
       localStorage.setItem("token", res.headers.authorization);
       navigate("/");
     } catch (err) {
