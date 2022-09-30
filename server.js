@@ -11,13 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  cors()
-  //   {
-  //   origin: ["http://localhost:3000", "http://localhost:3000/"],
-  //   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  //   preflightContinue: false,
-  //   optionsSuccessStatus: 204,
-  // }
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3000/"],
+    credentials: true,
+  })
 );
 app.use(express.static("client/build"));
 
