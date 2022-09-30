@@ -203,6 +203,7 @@ const Header = () => {
                 horizontal: "right",
               }}
               transformOrigin={{
+                vertical: "top",
                 horizontal: "right",
               }}
               open={Boolean(anchorNotice)}
@@ -233,6 +234,7 @@ const Header = () => {
                 horizontal: "right",
               }}
               transformOrigin={{
+                vertical: "top",
                 horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
