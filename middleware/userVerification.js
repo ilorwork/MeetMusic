@@ -14,7 +14,8 @@ const generateAccessTokenCookie = (req, res, user) => {
     httpOnly: false,
   });
 
-  return accessToken;
+  res.setHeader("Authorization", accessToken);
+  res.setHeader("Access-Control-Expose-Headers", "Authorization");
 };
 
 const generateRefreshTokenCookie = (req, res, user) => {
@@ -39,17 +40,17 @@ const genAccessTokenByRefreshToken = (req, res, next) => {
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     (err, decodedUser) => {
-      if (err) return res.sendStatus(403);
+      if (err) return res.status(403).json("refresh token is expired");
 
       generateAccessTokenCookie(req, res, decodedUser);
       req.user = decodedUser;
+      next();
     }
   );
-  next();
 };
 
 const verifyUser = (req, res, next) => {
-  const accessToken = req.cookies.accessToken;
+  const accessToken = req.headers.authorization;
   if (!accessToken) return res.status(401).json("No token provided");
 
   jwt.verify(

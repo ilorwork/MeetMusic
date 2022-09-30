@@ -37,18 +37,12 @@ const login = async (req, res) => {
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
     if (!isCorrect) return res.sendStatus(401);
 
-    const accessToken = generateAccessTokenCookie(req, res, user);
-    res.setHeader("Authorization", accessToken);
-    res.setHeader("Access-Control-Expose-Headers", "Authorization");
     // res.setHeader("Access-Control-Allow-Credentials", true);
+
+    generateAccessTokenCookie(req, res, user);
 
     generateRefreshTokenCookie(req, res, user);
 
-    // console.log("headers", req.headers);
-    // console.log(req.cookies);
-    // console.log(req.cookie);
-    // console.log(res.cookies);
-    // console.log(res.cookie);
     res.status(200).json("User login succeeded");
   } catch (e) {
     return res.status(500).json(`Login proccess failed ${e}`);
@@ -63,6 +57,15 @@ const logout = async (req, res) => {
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
   return res.status(200).json("User logged out succesfully");
+};
+
+const getUser = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+    return res.status(200).json(user);
+  } catch (e) {
+    return res.status(500).json(`get user failed ${e}`);
+  }
 };
 
 const getFollowing = async (req, res) => {
@@ -80,5 +83,6 @@ module.exports = {
   createUser,
   login,
   logout,
+  getUser,
   getFollowing,
 };
