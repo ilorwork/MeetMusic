@@ -1,7 +1,7 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const {
-  generateAccessTokenCookie,
+  generateAccessTokenHeader,
   generateRefreshTokenCookie,
 } = require("../middleware/userVerification");
 
@@ -37,10 +37,7 @@ const login = async (req, res) => {
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
     if (!isCorrect) return res.sendStatus(401);
 
-    // res.setHeader("Access-Control-Allow-Credentials", true);
-
-    generateAccessTokenCookie(req, res, user);
-
+    generateAccessTokenHeader(req, res, user);
     generateRefreshTokenCookie(req, res, user);
 
     res.status(200).json("User login succeeded");
@@ -54,7 +51,6 @@ const logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.status(400).json("No token provided");
 
-  res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
   return res.status(200).json("User logged out succesfully");
 };
