@@ -166,8 +166,13 @@ const Header = () => {
   return (
     <AppBar position="sticky" className={style.appBar}>
       <Toolbar className={style.toolBar}>
-        <div className={style.wrapperMusicIcon}>
-          <LibraryMusicIcon className={style.musicIcon} sx={{ fontSize: 48 }} />
+        <div className={style.wrapperMusicIcon} onClick={() => navigate("/")}>
+          <Tooltip title="Home">
+            <LibraryMusicIcon
+              className={style.musicIcon}
+              sx={{ fontSize: 48 }}
+            />
+          </Tooltip>
         </div>
         <Autocomplete
           freeSolo
