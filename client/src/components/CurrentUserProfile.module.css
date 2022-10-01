@@ -22,12 +22,17 @@
   /* align-items: center; */
   /* flex-wrap: wrap; */
   height: inherit;
+  width: 28rem;
   padding: 0rem 4rem;
 }
 
 .profileHeader {
-  font-size: xx-large;
-  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+
+.editProfileBtn {
+  height: 3rem;
 }
 
 .personalInfoContainer {

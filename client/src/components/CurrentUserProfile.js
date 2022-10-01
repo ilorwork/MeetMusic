@@ -14,6 +14,9 @@ import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
 import PeopleYouFollow from "./PeopleYouFollow";
 import PersonIcon from "@mui/icons-material/Person";
+import WcIcon from "@mui/icons-material/Wc";
+import EditIcon from "@mui/icons-material/Edit";
+import { Button, CardActions, CardHeader } from "@mui/material";
 
 const CurrentUserProfile = () => {
   const [userInfo, setUserInfo] = useState("");
@@ -58,6 +61,8 @@ const CurrentUserProfile = () => {
       (new Date() - new Date(userInfo.birthDate).getTime()) / 3.15576e10
     );
 
+  const handleEditProfile = () => {};
+
   return (
     <>
       <div className={style.profilePageContainer}>
@@ -68,13 +73,23 @@ const CurrentUserProfile = () => {
             src={userInfo.profilePic}
           />
           <CardContent className={style.profileInfoContent}>
-            <h1
-            // className={style.profileHeader}
-            // gutterBottom
-            // variant="h5"
-            >
-              {userInfo.firstName} {userInfo.lastName}
-            </h1>
+            <div className={style.profileHeader}>
+              <h1
+              // className={style.profileHeader}
+              // gutterBottom
+              // variant="h5"
+              >
+                {userInfo.firstName} {userInfo.lastName}
+              </h1>
+              <Button
+                className={style.editProfileBtn}
+                size="small"
+                onClick={handleEditProfile}
+              >
+                <EditIcon />
+              </Button>
+            </div>
+
             <div className={style.personalInfoContainer}>
               <Typography className={style.typographyRow}>
                 <PublicIcon />
@@ -91,6 +106,10 @@ const CurrentUserProfile = () => {
               <Typography className={style.typographyRow}>
                 <PersonIcon />
                 {calculateAge()}
+              </Typography>
+              <Typography className={style.typographyRow}>
+                <WcIcon />
+                {userInfo.gender}
               </Typography>
             </div>
             <div className={style.socialInfoContainer}>
