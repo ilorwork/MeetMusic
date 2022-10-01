@@ -35,7 +35,7 @@ const login = async (req, res) => {
     if (!user) return res.status(404).json("user not found");
 
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
-    if (!isCorrect) return res.sendStatus(401);
+    if (!isCorrect) return res.status(401).json("Wrong password");
 
     generateAccessTokenHeader(req, res, user);
     generateRefreshTokenCookie(req, res, user);
@@ -64,6 +64,25 @@ const getUser = async (req, res) => {
   }
 };
 
+const getPeopleUserMayKnow = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+
+    const usersToExclude = user.following;
+    usersToExclude.push(user._id);
+
+    const idsToExclude = usersToExclude.map((userId) => {
+      return { _id: { $ne: userId } };
+    });
+
+    const peopleUserMayKnow = await UserModel.find({ $and: idsToExclude });
+
+    return res.status(200).json(peopleUserMayKnow);
+  } catch (e) {
+    return res.status(500).json(`get people user may know failed ${e}`);
+  }
+};
+
 const getFollowing = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.user.email });
@@ -80,5 +99,6 @@ module.exports = {
   login,
   logout,
   getUser,
+  getPeopleUserMayKnow,
   getFollowing,
 };

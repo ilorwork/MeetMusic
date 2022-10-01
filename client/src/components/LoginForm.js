@@ -50,7 +50,12 @@ const LoginForm = () => {
           Login
         </Button>
         <div className={style.createAccountBtnWrapper}>
-          <Button variant="contained" color="success" sx={{ width: 300 }}>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ width: 300 }}
+            onClick={() => navigate("/register")}
+          >
             Create a new account
           </Button>
         </div>
