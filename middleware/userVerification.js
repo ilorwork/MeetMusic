@@ -17,7 +17,7 @@ const generateRefreshTokenCookie = (req, res, user) => {
     { email: user.email },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: `60s`,
+      expiresIn: `15m`,
     }
   );
 
