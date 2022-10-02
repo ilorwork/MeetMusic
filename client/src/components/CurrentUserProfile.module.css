@@ -1,0 +1,99 @@
+.profilePageContainer {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.profileInfoContainer {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 70%;
+  height: 270px;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.profileInfoContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  /* align-items: center; */
+  /* flex-wrap: wrap; */
+  height: inherit;
+  width: 28rem;
+  padding: 0rem 4rem;
+}
+
+.profileHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.editProfileBtn {
+  height: 3rem;
+}
+
+.personalInfoContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.socialInfoContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.typographyRow {
+  display: flex;
+  justify-content: space-evenly;
+  width: 7rem;
+}
+
+.homePage {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.titleOfPeopleYouMayKnow {
+  color: #92a5de;
+  text-shadow: 0px 0px 0 #899cd5, 1px 1px 0 #8194cd, 2px 2px 0 #788bc4,
+    3px 3px 0 #6f82bb, 4px 4px 0 #677ab3, 5px 5px 0 #5e71aa;
+}
+
+.peopleYouMayKnow {
+  width: 25rem;
+}
+
+.containerPostComponents {
+  width: 30rem;
+}
+
+.titleOfPeopleYouFollow {
+  color: #92a5de;
+  text-shadow: 0px 0px 0 #899cd5, 1px 1px 0 #8194cd, 2px 2px 0 #788bc4,
+    3px 3px 0 #6f82bb, 4px 4px 0 #677ab3, 5px 5px 0 #5e71aa;
+}
+
+.peopleYouFollow {
+  width: 25rem;
+}
+
+@media (max-width: 800px) {
+  .homePage {
+    justify-content: center;
+  }
+
+  .peopleYouMayKnow {
+    display: none;
+  }
+
+  .peopleYouFollow {
+    display: none;
+  }
+}
