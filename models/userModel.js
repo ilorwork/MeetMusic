@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
   //   sharedPosts: [sharedPosts],
 });
 
-const User = mongoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
 
-User.syncIndexes();
+UserModel.syncIndexes();
 // (async () => {
 //   await User.syncIndexes();
 // })();
 
-module.exports = User;
+module.exports = UserModel;

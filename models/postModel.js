@@ -11,5 +11,5 @@ const postSchema = new mongoose.Schema({
     timeOfCreation: { type: Date, required: true }
 });
 
-const Post = mongoose.model("Post", postSchema);
-module.exports = Post;
+const PostModel = mongoose.model("Post", postSchema);
+module.exports = PostModel;
