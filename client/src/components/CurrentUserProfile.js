@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import PublicIcon from "@mui/icons-material/Public";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import EventIcon from "@mui/icons-material/Event";
-import TextField from "@mui/material/TextField";
 import style from "./CurrentUserProfile.module.css";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
@@ -58,7 +57,8 @@ const CurrentUserProfile = () => {
   const calculateAge = () =>
     // https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
     Math.floor(
-      (new Date() - new Date(userInfo.birthDate).getTime()) / 3.15576e10
+      (new Date() - new Date(userInfo.birthDate).getTime()) /
+        (365.25 * 24 * 60 * 60 * 1000)
     );
 
   const handleEditProfile = () => {};
@@ -66,7 +66,7 @@ const CurrentUserProfile = () => {
   return (
     <>
       <div className={style.profilePageContainer}>
-        <Card className={style.profileInfoContainer}>
+        <Card className={style.profileInfoCard}>
           <Avatar
             alt="user profileic"
             sx={{ width: 250, height: 250 }}
@@ -74,11 +74,7 @@ const CurrentUserProfile = () => {
           />
           <CardContent className={style.profileInfoContent}>
             <div className={style.profileHeader}>
-              <h1
-              // className={style.profileHeader}
-              // gutterBottom
-              // variant="h5"
-              >
+              <h1>
                 {userInfo.firstName} {userInfo.lastName}
               </h1>
               <Button
@@ -121,29 +117,19 @@ const CurrentUserProfile = () => {
               </Typography>
             </div>
           </CardContent>
-
-          {/* <TextField
-          id="date"
-          label="Birthday"
-          type="date"
-          disabled
-          value={beautifyDate(userInfo.birthDate)}
-          sx={{ width: 220 }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        /> */}
         </Card>
       </div>
 
       <div className={style.homePage}>
         <div className={style.peopleYouMayKnow}>
-          <h1 className={style.titleOfPeopleYouMayKnow}>People you may know</h1>
+          <h1 className={style.titleOfPeopleYouMayKnow}>
+            People following you
+          </h1>
+          {/* <PeopleYouMayKnow />
           <PeopleYouMayKnow />
           <PeopleYouMayKnow />
           <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
+          <PeopleYouMayKnow /> */}
         </div>
         <div className={style.containerPostComponents}>
           <PostComponent />
