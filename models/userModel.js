@@ -9,7 +9,10 @@ const userSchema = new mongoose.Schema({
   city: String,
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  profilePic: String,
+  profilePic: {
+    type: String,
+    default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+  },
   role: { type: String, enum: ["user", "admin"], default: "user" },
   following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],

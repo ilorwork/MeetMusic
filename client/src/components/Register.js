@@ -199,7 +199,12 @@ const Register = () => {
           Create a new account
         </Button>
         <div className={style.loginBtn}>
-          <Button variant="contained" color="success" sx={{ width: 300 }}>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ width: 300 }}
+            onClick={() => navigate("/login")}
+          >
             Login
           </Button>
         </div>
