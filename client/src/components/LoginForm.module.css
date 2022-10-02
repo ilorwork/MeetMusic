@@ -1,21 +1,22 @@
-.connection{
-    flex: 1;
-    /* border: solid green 2px; */
-    min-height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.formContainer {
+  flex: 1;
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.inputs{
-    height: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    text-align: center;
+.formPaper {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
-.createAccount{
-    border-top: 2px dotted green;
-    padding-top: 24px;
+.createAccountBtnWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 2px dotted;
+  padding-top: 24px;
 }

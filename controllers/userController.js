@@ -1,7 +1,7 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const {
-  generateAccessTokenCookie,
+  generateAccessTokenHeader,
   generateRefreshTokenCookie,
 } = require("../middleware/userVerification");
 
@@ -35,10 +35,9 @@ const login = async (req, res) => {
     if (!user) return res.status(404).json("user not found");
 
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
-    // Remove message to improve security
-    if (!isCorrect) res.sendStatus(401);
+    if (!isCorrect) return res.sendStatus(401);
 
-    generateAccessTokenCookie(req, res, user);
+    generateAccessTokenHeader(req, res, user);
     generateRefreshTokenCookie(req, res, user);
 
     res.status(200).json("User login succeeded");
@@ -52,9 +51,17 @@ const logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.status(400).json("No token provided");
 
-  res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
   return res.status(200).json("User logged out succesfully");
+};
+
+const getUser = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+    return res.status(200).json(user);
+  } catch (e) {
+    return res.status(500).json(`get user failed ${e}`);
+  }
 };
 
 const getFollowing = async (req, res) => {
@@ -72,5 +79,6 @@ module.exports = {
   createUser,
   login,
   logout,
+  getUser,
   getFollowing,
 };

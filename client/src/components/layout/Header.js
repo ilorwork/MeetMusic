@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -155,6 +156,13 @@ const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorNotice, setAnchorNotice] = useState(null);
 
+  const navigate = useNavigate();
+
+  const handleProfileClicked = () => {
+    setAnchorElUser(null);
+    navigate("/current_user_profile");
+  };
+
   return (
     <AppBar position="sticky" className={style.appBar}>
       <Toolbar className={style.toolBar}>
@@ -230,7 +238,7 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={() => setAnchorElUser(null)}
             >
-              <MenuItem onClick={() => setAnchorElUser(null)}>
+              <MenuItem onClick={handleProfileClicked}>
                 <Typography>Profile</Typography>
               </MenuItem>
               <MenuItem onClick={() => setAnchorElUser(null)}>
