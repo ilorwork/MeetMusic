@@ -22,6 +22,7 @@ const LoginForm = () => {
           withCredentials: true,
         }
       );
+
       localStorage.setItem("token", res.headers.authorization);
       navigate("/");
     } catch (err) {

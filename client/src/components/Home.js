@@ -7,7 +7,7 @@ import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 
 const Home = () => {
-  const [allUsers, setAllUsers] = useState([]);
+  const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
 
   useEffect(() => {
     getPeopleYouMayKnow();
@@ -25,14 +25,14 @@ const Home = () => {
         },
       }
     );
-    setAllUsers(res.data);
+    setPeopleUserMayKnow(res.data);
   };
 
   return (
     <div className={style.homePage}>
       <div className={style.peopleYouMayKnow}>
         <h1 className={style.titleOfPeopleYouMayKnow}>People you may know</h1>
-        {allUsers.map((user) => (
+        {peopleUserMayKnow.map((user) => (
           <PeopleYouMayKnow user={user} key={uuid()} />
         ))}
       </div>

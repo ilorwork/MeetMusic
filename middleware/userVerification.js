@@ -26,7 +26,6 @@ const generateRefreshTokenCookie = (req, res, user) => {
     maxAge: 900000, // 15 min
     httpOnly: true,
   });
-  return refreshToken;
 };
 
 const genAccessTokenByRefreshToken = (req, res, next) => {
