@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-    postText: { type: String, required: true },
+    postText: String,
     postImage: String,
     postAudio: String,
-    likesCount: { type: Number, required: true },
-    commentsCount: { type: Number, required: true },
-    sharedCount: { type: Number, required: true },
-    creator: { type: mongoose.Types.ObjectId, required: true },
-    timeOfCreation: { type: Date, required: true }
+    likesCount: { type: Number, default: 0 },
+    commentsCount: { type: Number, default: 0 },
+    sharedCount: { type: Number, default: 0 },
+    creator: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+    timeOfCreation: { type: Date, default: Date.now() }
 });
 
 const PostModel = mongoose.model("Post", postSchema);

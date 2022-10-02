@@ -5,7 +5,7 @@ const postRoutes = require("./postRoutes");
 // All main routes of the application
 exports.routesInit = (app) => {
   app.use("/users", userRoutes);
-  app.use("/postRoutes", postRoutes);
+  app.use("/posts", postRoutes);
   // app.use("/sharedPostRoutes", sharedPostRoutes);
 
   // Handle case of request to any wrong route
