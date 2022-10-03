@@ -18,7 +18,18 @@ const getAllPosts = async (req, res) => {
         const allPosts = await PostModel.find({});
         return res.status(200).json(allPosts);
     } catch (e) {
-        res.status(500).json("get all posts failed" + e);
+        res.status(500).json("get all posts failed " + e);
+    }
+}
+
+const getPostsByUser = async (req, res) => {
+    try {
+        const userWhoseProfile = await UserModel.findOne({ email: req.user.email });
+        const idOfUserWhoseProfile = userWhoseProfile._id;
+        const userPosts = await PostModel.find({ creator: idOfUserWhoseProfile });
+        return res.status(200).json(userPosts);
+    } catch (e) {
+        res.status(500).json("get user posts failed " + e);
     }
 }
 
@@ -27,7 +38,7 @@ const deletePost = async (req, res) => {
         const deletedPost = await PostModel.deleteOne({ _id: req.body });
         return res.status(200).json(deletedPost);
     } catch (e) {
-        res.status(500).json("delete post failed" + e);
+        res.status(500).json("delete post failed " + e);
     }
 }
 
@@ -41,12 +52,38 @@ const editPost = async (req, res) => {
         await editedPost.save();
         return res.status(200).json(editedPost);
     } catch (e) {
-        res.status(500).json("edit post failed" + e);
+        res.status(500).json("edit post failed " + e);
+    }
+}
+
+const addLike = async (req, res) => {
+    // todo: block in the client, the option for a user to add more than one like
+    try {
+        const post = await PostModel.findOne({ _id: req.body });
+        post.likesCount++;
+        await post.save();
+        return res.status(200).json(post);
+    } catch (e) {
+        res.status(500).json("add like failed " + e);
+    }
+}
+
+const removeLike = async (req, res) => {
+    try {
+        const post = await PostModel.findOne({ _id: req.body });
+        if (post.likesCount === 0) {
+            return res.status(400).json("The amount of likes cannot be less than zero");
+        }
+        post.likesCount--;
+        await post.save();
+        return res.status(200).json(post);
+    } catch (e) {
+        res.status(500).json("remove like failed " + e);
     }
 }
 
 
 
 module.exports = {
-    createPost, getAllPosts, deletePost, editPost
+    getAllPosts, getPostsByUser, createPost, deletePost, editPost, addLike, removeLike
 }
