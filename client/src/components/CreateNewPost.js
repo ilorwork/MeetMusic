@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -10,18 +11,13 @@ import {
   ImageList,
   ImageListItem,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
 import style from "./CreateNewPost.module.css";
-// import NewPostModal from "./NewPostModal";
-// import Box from "@mui/material/Box";
-// import Button from "@mui/material/Button";
-// import Typography from "@mui/material/Typography";
-// import Modal from "@mui/material/Modal";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import { v4 as uuid } from "uuid";
+import axios from "axios";
 
 const modalStyle = {
   position: "absolute",
@@ -38,9 +34,9 @@ const modalStyle = {
 const CreateNewPost = () => {
   const [userInfo, setUserInfo] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState([
-    "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-  ]);
+  const [postText, setPostText] = useState("");
+  const [postImage, setPostImage] = useState("");
+  const [uploadedImageFile, setUploadedImageFile] = useState("");
 
   const navigate = useNavigate();
 
@@ -49,8 +45,27 @@ const CreateNewPost = () => {
   }, []);
 
   useEffect(() => {
-    console.log(uploadedImages);
-  }, [uploadedImages]);
+    if (!uploadedImageFile) return;
+
+    uploadImageToCloudinary(uploadedImageFile);
+  }, [uploadedImageFile]);
+
+  const uploadImageToCloudinary = async (img) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", img);
+      formData.append("upload_preset", "fyqj9lqs");
+
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dhbgvkcez/image/upload",
+        formData
+      );
+      setPostImage(res.data.url);
+      // TODO: Clear the image from the cloudinary on cancel
+    } catch (e) {
+      console.error("Upload image to cloudinary has failed");
+    }
+  };
 
   const getUserInfo = async () => {
     try {
@@ -59,6 +74,24 @@ const CreateNewPost = () => {
     } catch (err) {
       navigate("/login");
     }
+  };
+
+  const handleCreatePost = async () => {
+    if (!postText && !postImage) return;
+
+    const token = localStorage.getItem("token");
+    const newPost = { postText, postImage };
+
+    await axios.post("http://localhost:7000/posts/", newPost, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
+
+    setPostText("");
+    setPostImage("");
+    setIsOpen(false);
   };
 
   return (
@@ -77,27 +110,27 @@ const CreateNewPost = () => {
           Create new post
         </Button>
       </Card>
-      <Modal
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
         <Box sx={modalStyle}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Create New Post
           </Typography>
-          <TextField placeholder="Write some text" />
-          <ImageList cols={3} rowHeight={164}>
-            {uploadedImages.map((img) => (
-              <ImageListItem key={uuid()}>
+          <TextField
+            placeholder="Write some text"
+            value={postText}
+            onChange={(e) => setPostText(e.target.value)}
+          />
+          {/* {postImage && <img src={postImage} className={style.postImage} />} */}
+          <ImageList cols={2} rowHeight={164}>
+            {postImage && (
+              <ImageListItem>
                 <img
-                  src={img}
+                  src={postImage}
                   //   srcSet={img}
                   //   loading="lazy"
                 />
               </ImageListItem>
-            ))}
+            )}
           </ImageList>
           <div>
             <IconButton
@@ -109,14 +142,19 @@ const CreateNewPost = () => {
                 hidden
                 accept="image/*"
                 type="file"
-                onChange={(e) =>
-                  setUploadedImages((prev) => [...prev, e.target.value])
-                }
+                onChange={(e) => setUploadedImageFile(e.target.files[0])}
               />
               <AddPhotoAlternateIcon />
             </IconButton>
             <Button>
               <AudioFileIcon />
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleCreatePost}
+            >
+              Create post
             </Button>
           </div>
         </Box>

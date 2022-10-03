@@ -39,6 +39,7 @@ const Home = () => {
       </div>
       <div className={style.containerPostComponents}>
         <CreateNewPost />
+
         <PostComponent />
         <PostComponent />
         <PostComponent />
