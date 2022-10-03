@@ -22,7 +22,7 @@ const getAllPosts = async (req, res) => {
     }
 }
 
-const getPostsByUser = async (req, res) => {
+const getPostsOfCurrentUser = async (req, res) => {
     try {
         const userWhoseProfile = await UserModel.findOne({ email: req.user.email });
         const idOfUserWhoseProfile = userWhoseProfile._id;
@@ -85,5 +85,5 @@ const removeLike = async (req, res) => {
 
 
 module.exports = {
-    getAllPosts, getPostsByUser, createPost, deletePost, editPost, addLike, removeLike
+    getAllPosts, getPostsOfCurrentUser, createPost, deletePost, editPost, addLike, removeLike
 }

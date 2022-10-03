@@ -4,7 +4,7 @@ const { verifyUser } = require("../middleware/userVerification");
 const router = express.Router();
 
 router.get("/", postController.getAllPosts);
-router.get("/posts-by-user", verifyUser, postController.getPostsByUser);
+router.get("/posts-by-user", verifyUser, postController.getPostsOfCurrentUser);
 router.post("/", verifyUser, postController.createPost);
 router.put("/", verifyUser, postController.editPost);
 router.delete("/", verifyUser, postController.deletePost);
