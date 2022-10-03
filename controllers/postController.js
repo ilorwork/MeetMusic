@@ -57,7 +57,6 @@ const editPost = async (req, res) => {
 }
 
 const addLike = async (req, res) => {
-    // todo: block in the client, the option for a user to add more than one like
     try {
         const post = await PostModel.findOne({ _id: req.body });
         post.likesCount++;
