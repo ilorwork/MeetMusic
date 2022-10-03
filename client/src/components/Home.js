@@ -5,6 +5,7 @@ import PeopleYouFollow from "./PeopleYouFollow";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
+import CreateNewPost from "./CreateNewPost";
 
 const Home = () => {
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
@@ -37,6 +38,8 @@ const Home = () => {
         ))}
       </div>
       <div className={style.containerPostComponents}>
+        <CreateNewPost />
+
         <PostComponent />
         <PostComponent />
         <PostComponent />
