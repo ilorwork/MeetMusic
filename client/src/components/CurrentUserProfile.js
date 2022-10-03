@@ -16,6 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button, CardActions, CardHeader } from "@mui/material";
+import { getCurrentUserInfo } from "../helpers/userHelpers";
 
 const CurrentUserProfile = () => {
   const [userInfo, setUserInfo] = useState("");
@@ -27,16 +28,9 @@ const CurrentUserProfile = () => {
   }, []);
 
   const getUserInfo = async () => {
-    const token = localStorage.getItem("token");
-
     try {
-      const res = await axios.get("http://localhost:7000/users/user", {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      });
-      setUserInfo(res.data);
+      const info = await getCurrentUserInfo();
+      setUserInfo(info);
     } catch (err) {
       navigate("/login");
     }
