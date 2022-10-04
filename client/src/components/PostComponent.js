@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import style from "./PostComponent.module.css";
@@ -12,17 +12,30 @@ import {
   CardContent,
   CardMedia,
   IconButton,
+  Menu,
+  MenuItem,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import axios from "axios";
 
 const PostComponent = ({ post }) => {
-  // const getCreatorAvatar = () => {
-  //   return post.creator.profilePic ? (
-  //     <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
-  //   ) : (
-  //     <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
-  //   );
-  // };
+  const [anchorPostSettings, setAnchorPostSettings] = useState(null);
+
+  const handleDeletePost = async () => {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.delete("http://localhost:7000/posts/", {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+      data: {
+        _id: post._id,
+      },
+    });
+    setAnchorPostSettings(null);
+  };
 
   return (
     <>
@@ -38,9 +51,33 @@ const PostComponent = ({ post }) => {
           title={`${post.creator.firstName} ${post.creator.lastName}`}
           subheader={new Date(post.timeOfCreation).toLocaleString()}
           action={
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
+            <>
+              <IconButton
+                onClick={(e) => setAnchorPostSettings(e.currentTarget)}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorPostSettings}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorPostSettings)}
+                onClose={() => setAnchorPostSettings(null)}
+              >
+                <MenuItem onClick={() => setAnchorPostSettings(null)}>
+                  <Typography>Edit Post</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleDeletePost}>
+                  <Typography color={"error"}>Delete Post</Typography>
+                </MenuItem>
+              </Menu>
+            </>
           }
         ></CardHeader>
         {post.postText && <CardContent>{post.postText}</CardContent>}
