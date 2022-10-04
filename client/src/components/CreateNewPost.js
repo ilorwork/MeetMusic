@@ -82,16 +82,20 @@ const CreateNewPost = () => {
     const token = localStorage.getItem("token");
     const newPost = { postText, postImage };
 
-    await axios.post("http://localhost:7000/posts/", newPost, {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-    });
+    try {
+      await axios.post("http://localhost:7000/posts/", newPost, {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+      });
 
-    setPostText("");
-    setPostImage("");
-    setIsOpen(false);
+      setPostText("");
+      setPostImage("");
+      setIsOpen(false);
+    } catch (e) {
+      navigate("/login");
+    }
   };
 
   return (
