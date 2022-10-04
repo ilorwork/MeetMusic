@@ -36,7 +36,7 @@ const PostComponent = ({ post }) => {
             )
           }
           title={`${post.creator.firstName} ${post.creator.lastName}`}
-          subheader={new Date(post.timeOfCreation).toUTCString()}
+          subheader={new Date(post.timeOfCreation).toLocaleString()}
           action={
             <IconButton>
               <MoreVertIcon />
