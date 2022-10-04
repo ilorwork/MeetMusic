@@ -36,18 +36,6 @@ const CurrentUserProfile = () => {
     }
   };
 
-  const beautifyDate = (dateAsStirng) => {
-    const date = new Date(dateAsStirng);
-    //https://bobbyhadz.com/blog/javascript-format-date-mm-dd-yyyy
-    const beautifiedDate = [
-      date.getDate(),
-      date.getMonth() + 1,
-      date.getFullYear(),
-    ].join("/");
-
-    return beautifiedDate;
-  };
-
   const calculateAge = () =>
     // https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
     Math.floor(
@@ -91,7 +79,7 @@ const CurrentUserProfile = () => {
               </Typography>
               <Typography className={style.typographyRow}>
                 <EventIcon />
-                {beautifyDate(userInfo.birthDate)}
+                {new Date(userInfo.birthDate).toLocaleDateString()}
               </Typography>
               <Typography className={style.typographyRow}>
                 <PersonIcon />
@@ -126,11 +114,11 @@ const CurrentUserProfile = () => {
           <PeopleYouMayKnow /> */}
         </div>
         <div className={style.containerPostComponents}>
+          {/* <PostComponent />
           <PostComponent />
           <PostComponent />
           <PostComponent />
-          <PostComponent />
-          <PostComponent />
+          <PostComponent /> */}
         </div>
         <div className={style.peopleYouFollow}>
           <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>

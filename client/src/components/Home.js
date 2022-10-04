@@ -8,11 +8,18 @@ import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
 
 const Home = () => {
+  const [allPosts, setAllPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
 
   useEffect(() => {
+    getAllPosts();
     getPeopleYouMayKnow();
   }, []);
+
+  const getAllPosts = async () => {
+    const res = await axios.get("http://localhost:7000/posts/");
+    setAllPosts(res.data);
+  };
 
   const getPeopleYouMayKnow = async () => {
     const token = localStorage.getItem("token");
@@ -40,11 +47,9 @@ const Home = () => {
       <div className={style.containerPostComponents}>
         <CreateNewPost />
 
-        <PostComponent />
-        <PostComponent />
-        <PostComponent />
-        <PostComponent />
-        <PostComponent />
+        {allPosts.map((post) => (
+          <PostComponent post={post} key={uuid()} />
+        ))}
       </div>
       <div className={style.peopleYouFollow}>
         <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>

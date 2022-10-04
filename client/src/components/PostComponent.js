@@ -15,34 +15,47 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 
-const PostComponent = () => {
+const PostComponent = ({ post }) => {
+  // const getCreatorAvatar = () => {
+  //   return post.creator.profilePic ? (
+  //     <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
+  //   ) : (
+  //     <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
+  //   );
+  // };
+
   return (
     <>
       <Card sx={{ mt: 2 }}>
         <CardHeader
-          avatar={<Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>}
-          title="Miki Cohen"
-          subheader="September 14, 2016"
+          avatar={
+            post.creator.profilePic ? (
+              <Avatar src={post.creator.profilePic} />
+            ) : (
+              <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
+            )
+          }
+          title={`${post.creator.firstName} ${post.creator.lastName}`}
+          subheader={new Date(post.timeOfCreation).toUTCString()}
           action={
             <IconButton>
               <MoreVertIcon />
             </IconButton>
           }
         ></CardHeader>
-        <CardContent>
-          I love sky and sea I love sky and sea I love sky and sea I love sky
-          and sea I love sky and sea I love sky and sea
-        </CardContent>
-        <CardMedia
-          component="img"
-          height="300"
-          image="https://images.unsplash.com/photo-1570483358100-6d222cdea6ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=465&q=80"
-          alt="sky"
-        ></CardMedia>
+        {post.postText && <CardContent>{post.postText}</CardContent>}
+        {post.postImage && (
+          <CardMedia
+            component="img"
+            height="300"
+            image={post.postImage}
+            alt="post image"
+          ></CardMedia>
+        )}
         <Box className={style.footerIndecators}>
-          <div>5 Likes</div>
-          <div>13 Comments</div>
-          <div>2 Shares</div>
+          <div>{post.likesCount} Likes</div>
+          <div>{post.commentsCount} Comments</div>
+          <div>{post.sharedCount} Shares</div>
         </Box>
         <CardActions className={style.actionsContainer}>
           <IconButton>
