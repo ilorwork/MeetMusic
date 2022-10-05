@@ -6,10 +6,13 @@ import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [allPosts, setAllPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllPosts();
@@ -24,16 +27,20 @@ const Home = () => {
   const getPeopleYouMayKnow = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await axios.get(
-      "http://localhost:7000/users/user/people-user-may-know",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
-    setPeopleUserMayKnow(res.data);
+    try {
+      const res = await axios.get(
+        "http://localhost:7000/users/user/people-user-may-know",
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setPeopleUserMayKnow(res.data);
+    } catch (e) {
+      navigate("/login");
+    }
   };
 
   return (
