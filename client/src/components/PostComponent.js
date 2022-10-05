@@ -22,6 +22,11 @@ import axios from "axios";
 const PostComponent = ({ post }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
 
+  const handleEditPost = async () => {
+    setAnchorPostSettings(null);
+    // Open new post modal
+  };
+
   const handleDeletePost = async () => {
     const token = localStorage.getItem("token");
 
@@ -70,7 +75,7 @@ const PostComponent = ({ post }) => {
                 open={Boolean(anchorPostSettings)}
                 onClose={() => setAnchorPostSettings(null)}
               >
-                <MenuItem onClick={() => setAnchorPostSettings(null)}>
+                <MenuItem onClick={handleEditPost}>
                   <Typography>Edit Post</Typography>
                 </MenuItem>
                 <MenuItem onClick={handleDeletePost}>
