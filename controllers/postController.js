@@ -1,10 +1,17 @@
 const PostModel = require("../models/postModel");
 const UserModel = require("../models/userModel");
+const { cloudinary } = require("../utils/cloudinary");
 
 const createPost = async (req, res) => {
   try {
     const creator = await UserModel.findOne({ email: req.user.email });
     req.body.creator = creator._id;
+    if (req.body.postImage) {
+      const uploadedImgRes = await cloudinary.uploader.upload(
+        req.body.postImage
+      );
+      req.body.postImage = `https://res.cloudinary.com/dhbgvkcez/image/upload/v${uploadedImgRes.version}/${uploadedImgRes.public_id}.${uploadedImgRes.format}`;
+    }
     const newPost = await PostModel.create(req.body);
     await newPost.save();
     return res.status(201).json(newPost);
@@ -36,7 +43,15 @@ const getPostsOfCurrentUser = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
+    const postToDelete = await PostModel.findOne({ _id: req.body });
+
+    if (postToDelete.postImage) {
+      const imgPublicId = postToDelete.postImage.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(imgPublicId);
+    }
+
     const deletedPost = await PostModel.deleteOne({ _id: req.body });
+
     return res.status(200).json(deletedPost);
   } catch (e) {
     res.status(500).json("delete post failed " + e);
