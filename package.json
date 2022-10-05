@@ -21,6 +21,7 @@
   "homepage": "https://github.com/ilorwork/MeetMusic#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cloudinary": "^1.32.0",
     "concurrently": "^7.4.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
