@@ -5,7 +5,7 @@ const generateAccessTokenHeader = (req, res, user) => {
   const accessToken = jwt.sign(
     { email: user.email },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: `5s` }
+    { expiresIn: `15m` }
   );
 
   res.setHeader("Authorization", accessToken);
@@ -17,7 +17,7 @@ const generateRefreshTokenCookie = (req, res, user) => {
     { email: user.email },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: `15m`,
+      expiresIn: `1440m`,
     }
   );
 

@@ -1,6 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { v4 as uuid } from "uuid";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -8,15 +9,15 @@ import Typography from "@mui/material/Typography";
 import PublicIcon from "@mui/icons-material/Public";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import EventIcon from "@mui/icons-material/Event";
-import style from "./CurrentUserProfile.module.css";
-import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
-import PeopleYouFollow from "./PeopleYouFollow";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import EditIcon from "@mui/icons-material/Edit";
-import { Button, CardActions, CardHeader } from "@mui/material";
+import { Button } from "@mui/material";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
+import style from "./CurrentUserProfile.module.css";
+import PeopleYouFollow from "./PeopleYouFollow";
+import PeopleFollowYou from "./peopleFollowYou";
 
 const CurrentUserProfile = () => {
   const [userInfo, setUserInfo] = useState("");
@@ -52,10 +53,56 @@ const CurrentUserProfile = () => {
     // https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
     Math.floor(
       (new Date() - new Date(userInfo.birthDate).getTime()) /
-        (365.25 * 24 * 60 * 60 * 1000)
+      (365.25 * 24 * 60 * 60 * 1000)
     );
 
-  const handleEditProfile = () => {};
+  const handleEditProfile = () => { };
+
+  const [poepleYouFollow, setPeopleYouFollow] = useState([]);
+  const [followers, setFollowers] = useState([]);
+
+  useEffect(() => {
+    getPeopleYouFollow();
+    getFollowers();
+  }, []);
+
+  const getPeopleYouFollow = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(
+        "http://localhost:7000/users/user/following",
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setPeopleYouFollow(res.data);
+    } catch (e) {
+      throw new Error("get people you follow failed " + e);
+    }
+  }
+
+
+  const getFollowers = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get("http://localhost:7000/users/user/followers",
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        });
+      setFollowers(res.data);
+    } catch (e) {
+      throw new Error("get followers failed " + e);
+    }
+  }
+
+
+
 
   return (
     <>
@@ -119,11 +166,9 @@ const CurrentUserProfile = () => {
           <h1 className={style.titleOfPeopleYouMayKnow}>
             People following you
           </h1>
-          {/* <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
-          <PeopleYouMayKnow /> */}
+          {followers.map((user) =>
+            <PeopleFollowYou user={user} userInfo={userInfo} key={uuid()} />
+          )}
         </div>
         <div className={style.containerPostComponents}>
           <PostComponent />
@@ -134,11 +179,9 @@ const CurrentUserProfile = () => {
         </div>
         <div className={style.peopleYouFollow}>
           <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
-          <PeopleYouFollow />
-          <PeopleYouFollow />
-          <PeopleYouFollow />
-          <PeopleYouFollow />
-          <PeopleYouFollow />
+          {poepleYouFollow.map((user) =>
+            <PeopleYouFollow user={user} key={uuid()} />
+          )}
         </div>
       </div>
     </>
