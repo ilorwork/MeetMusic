@@ -53,6 +53,8 @@ const logout = async (req, res) => {
 
 const editUser = async (req, res) => {
   try {
+    // TODO: when updating pic, needs to delete the old if there is
+    // and upload the new to cloudinary
     const user = await UserModel.findOne({ email: req.user.email });
 
     const updates = Object.keys(req.body);
