@@ -47,10 +47,6 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  // This validation may be useless
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) return res.status(400).json("No token provided");
-
   res.clearCookie("refreshToken");
   return res.status(200).json("User logged out succesfully");
 };
