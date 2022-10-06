@@ -4,6 +4,7 @@ const {
   generateAccessTokenHeader,
   generateRefreshTokenCookie,
 } = require("../middleware/userVerification");
+const { cloudinary } = require("../utils/cloudinary");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -53,11 +54,20 @@ const logout = async (req, res) => {
 
 const editUser = async (req, res) => {
   try {
-    // TODO: when updating pic, needs to delete the old if there is
-    // and upload the new to cloudinary
     const user = await UserModel.findOne({ email: req.user.email });
 
     const updates = Object.keys(req.body);
+    if (updates.includes("profilePic")) {
+      if (user.profilePic.includes("cloudinary")) {
+        const imgPublicId = user.profilePic.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(imgPublicId);
+      }
+
+      const uploadedImgRes = await cloudinary.uploader.upload(
+        req.body.profilePic
+      );
+      req.body.profilePic = `https://res.cloudinary.com/dhbgvkcez/image/upload/v${uploadedImgRes.version}/${uploadedImgRes.public_id}.${uploadedImgRes.format}`;
+    }
     updates.forEach((update) => (user[update] = req.body[update]));
 
     await user.save();
