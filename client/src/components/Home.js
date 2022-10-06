@@ -34,15 +34,12 @@ const Home = () => {
   const getPeopleYouFollow = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await axios.get(
-      "http://localhost:7000/users/user/following",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const res = await axios.get("http://localhost:7000/users/user/following", {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
     setPeopleYouFollow(res.data);
   };
 
@@ -50,9 +47,14 @@ const Home = () => {
     <div className={style.homePage}>
       <div className={style.peopleYouMayKnow}>
         <h1 className={style.titleOfPeopleYouMayKnow}>People you may know</h1>
-        {peopleUserMayKnow.map((user) =>
-          <PeopleYouMayKnow user={user} key={uuid()} />
-        )}
+        {peopleUserMayKnow.map((user) => (
+          <PeopleYouMayKnow
+            user={user}
+            getPeopleYouMayKnow={getPeopleYouMayKnow}
+            getPeopleYouFollow={getPeopleYouFollow}
+            key={uuid()}
+          />
+        ))}
       </div>
       <div className={style.containerPostComponents}>
         <CreateNewPost />
@@ -65,9 +67,14 @@ const Home = () => {
       </div>
       <div className={style.peopleYouFollow}>
         <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
-        {poepleYouFollow.map((user) =>
-          <PeopleYouFollow user={user} key={uuid()} />
-        )}
+        {poepleYouFollow.map((user) => (
+          <PeopleYouFollow
+            user={user}
+            getPeopleYouMayKnow={getPeopleYouMayKnow}
+            getPeopleYouFollow={getPeopleYouFollow}
+            key={uuid()}
+          />
+        ))}
       </div>
     </div>
   );

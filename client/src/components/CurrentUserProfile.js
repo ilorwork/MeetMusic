@@ -21,11 +21,15 @@ import PeopleFollowYou from "./peopleFollowYou";
 
 const CurrentUserProfile = () => {
   const [userInfo, setUserInfo] = useState("");
+  const [poepleYouFollow, setPeopleYouFollow] = useState([]);
+  const [followers, setFollowers] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     getUserInfo();
+    getPeopleYouFollow();
+    getFollowers();
   }, []);
 
   const getUserInfo = async () => {
@@ -53,18 +57,10 @@ const CurrentUserProfile = () => {
     // https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
     Math.floor(
       (new Date() - new Date(userInfo.birthDate).getTime()) /
-      (365.25 * 24 * 60 * 60 * 1000)
+        (365.25 * 24 * 60 * 60 * 1000)
     );
 
-  const handleEditProfile = () => { };
-
-  const [poepleYouFollow, setPeopleYouFollow] = useState([]);
-  const [followers, setFollowers] = useState([]);
-
-  useEffect(() => {
-    getPeopleYouFollow();
-    getFollowers();
-  }, []);
+  const handleEditProfile = () => {};
 
   const getPeopleYouFollow = async () => {
     const token = localStorage.getItem("token");
@@ -82,27 +78,26 @@ const CurrentUserProfile = () => {
     } catch (e) {
       throw new Error("get people you follow failed " + e);
     }
-  }
+  };
 
-
+  //TODO: remove duplication with Home
   const getFollowers = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get("http://localhost:7000/users/user/followers",
+      const res = await axios.get(
+        "http://localhost:7000/users/user/followers",
         {
           withCredentials: true,
           headers: {
             authorization: token,
           },
-        });
+        }
+      );
       setFollowers(res.data);
     } catch (e) {
       throw new Error("get followers failed " + e);
     }
-  }
-
-
-
+  };
 
   return (
     <>
@@ -166,9 +161,15 @@ const CurrentUserProfile = () => {
           <h1 className={style.titleOfPeopleYouMayKnow}>
             People following you
           </h1>
-          {followers.map((user) =>
-            <PeopleFollowYou user={user} userInfo={userInfo} key={uuid()} />
-          )}
+          {followers.map((user) => (
+            <PeopleFollowYou
+              user={user}
+              getPeopleYouFollow={getPeopleYouFollow}
+              getFollowers={getFollowers}
+              userInfo={userInfo}
+              key={uuid()}
+            />
+          ))}
         </div>
         <div className={style.containerPostComponents}>
           <PostComponent />
@@ -179,9 +180,13 @@ const CurrentUserProfile = () => {
         </div>
         <div className={style.peopleYouFollow}>
           <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
-          {poepleYouFollow.map((user) =>
-            <PeopleYouFollow user={user} key={uuid()} />
-          )}
+          {poepleYouFollow.map((user) => (
+            <PeopleYouFollow
+              user={user}
+              getPeopleYouFollow={getPeopleYouFollow}
+              key={uuid()}
+            />
+          ))}
         </div>
       </div>
     </>
