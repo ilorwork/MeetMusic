@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { Button } from "@mui/material";
 import style from "./PeopleSideList.module.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const PeopleYouMayKnow = ({ user }) => {
   const [isFollow, setIsFollow] = useState(false);
-  const navigate = useNavigate();
 
   const followTheUser = async () => {
     const token = localStorage.getItem("token");
