@@ -11,6 +11,7 @@ import EventIcon from "@mui/icons-material/Event";
 import style from "./CurrentUserProfile.module.css";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
+import PeopleFollowYou from "./peopleFollowYou";
 import PeopleYouFollow from "./PeopleYouFollow";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
@@ -29,6 +30,8 @@ import { v4 as uuid } from "uuid";
 const CurrentUserProfile = () => {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [user, setUser] = useState("");
+  const [poepleYouFollow, setPeopleYouFollow] = useState([]);
+  const [followers, setFollowers] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
 
   const { id } = useParams();
@@ -51,6 +54,7 @@ const CurrentUserProfile = () => {
         const currntUserInfo = await getCurrentUserInfo();
         setIsCurrentUser(true);
         setUser(currntUserInfo);
+        getPeopleYouFollow();
       } else {
         const token = localStorage.getItem("token");
         const res = await axios.post(
@@ -64,7 +68,9 @@ const CurrentUserProfile = () => {
           }
         );
         setUser(res.data);
+        getPeopleUserFollow(res.data._id);
       }
+      getFollowers();
     } catch (e) {
       navigate("/login");
     }
@@ -93,6 +99,62 @@ const CurrentUserProfile = () => {
     );
 
   const handleEditProfile = () => {};
+
+  const getPeopleYouFollow = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(
+        "http://localhost:7000/users/current-user/following",
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setPeopleYouFollow(res.data);
+    } catch (e) {
+      throw new Error("get people you follow failed " + e);
+    }
+  };
+
+  const getPeopleUserFollow = async (id) => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        "http://localhost:7000/users/user/following",
+        { _id: id },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setPeopleYouFollow(res.data);
+    } catch (e) {
+      throw new Error("get people you follow failed " + e);
+    }
+  };
+
+  //TODO: remove duplication with Home
+  const getFollowers = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(
+        "http://localhost:7000/users/current-user/followers",
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setFollowers(res.data);
+    } catch (e) {
+      throw new Error("get followers failed " + e);
+    }
+  };
 
   const handlePicChange = (e) => {
     const reader = new FileReader();
@@ -200,11 +262,15 @@ const CurrentUserProfile = () => {
       <div className={style.homePage}>
         <div className={style.peopleYouMayKnow}>
           <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
-          {/* <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
-          <PeopleYouMayKnow />
-          <PeopleYouMayKnow /> */}
+          {followers.map((folower) => (
+            <PeopleFollowYou
+              user={folower}
+              getPeopleYouFollow={getPeopleYouFollow}
+              getFollowers={getFollowers}
+              userInfo={user}
+              key={uuid()}
+            />
+          ))}
         </div>
         <div className={style.containerPostComponents}>
           {userPosts.map((post) => (
@@ -213,11 +279,13 @@ const CurrentUserProfile = () => {
         </div>
         <div className={style.peopleYouFollow}>
           <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
-          <PeopleYouFollow />
-          <PeopleYouFollow />
-          <PeopleYouFollow />
-          <PeopleYouFollow />
-          <PeopleYouFollow />
+          {poepleYouFollow.map((user) => (
+            <PeopleYouFollow
+              user={user}
+              getPeopleYouFollow={getPeopleYouFollow}
+              key={uuid()}
+            />
+          ))}
         </div>
       </div>
     </>

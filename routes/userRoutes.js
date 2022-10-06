@@ -16,6 +16,19 @@ router.get(
   verifyUser,
   userController.getPeopleUserMayKnow
 );
-router.get("/user/following", verifyUser, userController.getFollowing);
+router.get(
+  "/current-user/following",
+  verifyUser,
+  userController.getCurrntUserFollowing
+);
+router.post("/user/following", verifyUser, userController.getFollowing);
+router.patch("/user/follow", verifyUser, userController.follow);
+router.patch("/user/unfollow", verifyUser, userController.unfollow);
+router.get(
+  "/current-user/followers",
+  verifyUser,
+  userController.getCurrentUserFollowers
+);
+router.post("/user/followers", verifyUser, userController.getFollowers);
 
 module.exports = router;

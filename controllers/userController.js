@@ -114,13 +114,87 @@ const getPeopleUserMayKnow = async (req, res) => {
   }
 };
 
-const getFollowing = async (req, res) => {
+const getCurrntUserFollowing = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.user.email });
-
-    return res.status(200).json(user.following);
+    const populatedUser = await user.populate({ path: "following" });
+    return res.status(200).json(populatedUser.following);
   } catch (e) {
     return res.status(500).json(`get following failed ${e}`);
+  }
+};
+
+const getFollowing = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ _id: req.body._id });
+    const populatedUser = await user.populate({ path: "following" });
+    return res.status(200).json(populatedUser.following);
+  } catch (e) {
+    return res.status(500).json(`get following failed ${e}`);
+  }
+};
+
+const follow = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+    const idOfUserFollowed = req.body._id;
+    user.following.unshift(idOfUserFollowed);
+    await user.save();
+
+    const userFollowed = await UserModel.findOne({ _id: idOfUserFollowed });
+    userFollowed.followers.unshift(user._id);
+    await userFollowed.save();
+
+    return res.status(200).json({
+      followingOfUser: user.following,
+      followersOfUserFollowed: userFollowed.followers,
+    });
+  } catch (e) {
+    return res.status(500).json("follow another user failed " + e);
+  }
+};
+
+const unfollow = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+    const idOfUserfollowed = req.body._id;
+    user.following = user.following.filter(
+      (objIdOfUser) => objIdOfUser != idOfUserfollowed
+    );
+    await user.save();
+
+    const idOfUser = user._id;
+    const userFollowed = await UserModel.findOne({ _id: idOfUserfollowed });
+    const indexOfDelete = userFollowed.followers.indexOf(idOfUser);
+    userFollowed.followers.splice(indexOfDelete, 1);
+    await userFollowed.save();
+
+    return res.status(200).json({
+      followingOfUser: user.following,
+      followersOfUserFollowed: userFollowed.followers,
+    });
+  } catch (e) {
+    return res.status(500).json("unfollow another user failed " + e);
+  }
+};
+
+const getCurrentUserFollowers = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+    const populatedUser = await user.populate({ path: "followers" });
+    return res.status(200).json(populatedUser.followers);
+  } catch (e) {
+    return res.status(500).json(`get current user followers failed ${e}`);
+  }
+};
+
+const getFollowers = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ _id: req.body._id });
+    const populatedUser = await user.populate({ path: "followers" });
+    return res.status(200).json(populatedUser.followers);
+  } catch (e) {
+    return res.status(500).json(`get followers failed ${e}`);
   }
 };
 
@@ -133,5 +207,10 @@ module.exports = {
   getCurrentUser,
   getUserById,
   getPeopleUserMayKnow,
+  getCurrntUserFollowing,
   getFollowing,
+  follow,
+  unfollow,
+  getCurrentUserFollowers,
+  getFollowers,
 };
