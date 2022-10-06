@@ -45,10 +45,10 @@ const Home = () => {
         ))}
       </div>
       <div className={style.containerPostComponents}>
-        <CreateNewPost />
+        <CreateNewPost getAllPosts={getAllPosts} />
 
         {allPosts.map((post) => (
-          <PostComponent post={post} key={uuid()} />
+          <PostComponent post={post} getAllPosts={getAllPosts} key={uuid()} />
         ))}
       </div>
       <div className={style.peopleYouFollow}>

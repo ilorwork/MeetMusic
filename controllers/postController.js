@@ -44,7 +44,9 @@ const getPostsOfCurrentUser = async (req, res) => {
 
 const getPostsOfUser = async (req, res) => {
   try {
-    const userPosts = await PostModel.find({ creator: req.body._id });
+    const userPosts = await PostModel.find({ creator: req.body._id }).populate(
+      "creator"
+    );
     userPosts.reverse();
     return res.status(200).json(userPosts);
   } catch (e) {
@@ -54,7 +56,11 @@ const getPostsOfUser = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const postToDelete = await PostModel.findOne({ _id: req.body });
+    const postToDelete = await PostModel.findOne({ _id: req.body }).populate(
+      "creator"
+    );
+    if (req.user.email !== postToDelete.creator.email)
+      return res.status(401).json("Can't delete other's posts");
 
     if (postToDelete.postImage) {
       const imgPublicId = postToDelete.postImage.split("/").pop().split(".")[0];
