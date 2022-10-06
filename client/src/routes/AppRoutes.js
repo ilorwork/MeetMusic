@@ -15,7 +15,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Layout />}>
           <Route path="" element={<Home />}></Route>
           <Route
-            path="current_user_profile"
+            path="user_profile/:id"
             element={<CurrentUserProfile />}
           ></Route>
         </Route>

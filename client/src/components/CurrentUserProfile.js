@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -17,29 +17,72 @@ import WcIcon from "@mui/icons-material/Wc";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button, CardActions, CardHeader } from "@mui/material";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
+import { v4 as uuid } from "uuid";
 
+// TODO: rename to UserProgilePage
 const CurrentUserProfile = () => {
-  const [userInfo, setUserInfo] = useState("");
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const [user, setUser] = useState("");
+  const [userPosts, setUserPosts] = useState([]);
 
+  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!id) return;
     getUserInfo();
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+    getUserPosts();
+  }, [user]);
+
   const getUserInfo = async () => {
+    console.log("userId", id);
     try {
-      const info = await getCurrentUserInfo();
-      setUserInfo(info);
-    } catch (err) {
+      if (id === "current_user") {
+        const currntUserInfo = await getCurrentUserInfo();
+        setIsCurrentUser(true);
+        setUser(currntUserInfo);
+      } else {
+        const token = localStorage.getItem("token");
+        const res = await axios.post(
+          "http://localhost:7000/users/user/id",
+          { _id: id },
+          {
+            withCredentials: true,
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        setUser(res.data);
+      }
+    } catch (e) {
       navigate("/login");
     }
+  };
+
+  const getUserPosts = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      "http://localhost:7000/posts/user-posts",
+      { _id: user._id },
+      {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+    setUserPosts(res.data);
   };
 
   const calculateAge = () =>
     // https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
     Math.floor(
-      (new Date() - new Date(userInfo.birthDate).getTime()) /
+      (new Date() - new Date(user.birthDate).getTime()) /
         (365.25 * 24 * 60 * 60 * 1000)
     );
 
@@ -52,34 +95,36 @@ const CurrentUserProfile = () => {
           <Avatar
             alt="user profileic"
             sx={{ width: 250, height: 250 }}
-            src={userInfo.profilePic}
+            src={user.profilePic}
           />
           <CardContent className={style.profileInfoContent}>
             <div className={style.profileHeader}>
               <h1>
-                {userInfo.firstName} {userInfo.lastName}
+                {user.firstName} {user.lastName}
               </h1>
-              <Button
-                className={style.editProfileBtn}
-                size="small"
-                onClick={handleEditProfile}
-              >
-                <EditIcon />
-              </Button>
+              {isCurrentUser && (
+                <Button
+                  className={style.editProfileBtn}
+                  size="small"
+                  onClick={handleEditProfile}
+                >
+                  <EditIcon />
+                </Button>
+              )}
             </div>
 
             <div className={style.personalInfoContainer}>
               <Typography className={style.typographyRow}>
                 <PublicIcon />
-                {userInfo.country}
+                {user.country}
               </Typography>
               <Typography className={style.typographyRow}>
                 <LocationCityIcon />
-                {userInfo.city}
+                {user.city}
               </Typography>
               <Typography className={style.typographyRow}>
                 <EventIcon />
-                {new Date(userInfo.birthDate).toLocaleDateString()}
+                {new Date(user.birthDate).toLocaleDateString()}
               </Typography>
               <Typography className={style.typographyRow}>
                 <PersonIcon />
@@ -87,15 +132,18 @@ const CurrentUserProfile = () => {
               </Typography>
               <Typography className={style.typographyRow}>
                 <WcIcon />
-                {userInfo.gender}
+                {user.gender}
               </Typography>
             </div>
             <div className={style.socialInfoContainer}>
               <Typography color="text.secondary">
-                {userInfo.followers?.length} followers
+                {user.followers?.length} followers
               </Typography>
               <Typography color="text.secondary">
-                {userInfo.following?.length} following
+                {userPosts?.length} posts
+              </Typography>
+              <Typography color="text.secondary">
+                {user.following?.length} following
               </Typography>
             </div>
           </CardContent>
@@ -104,9 +152,7 @@ const CurrentUserProfile = () => {
 
       <div className={style.homePage}>
         <div className={style.peopleYouMayKnow}>
-          <h1 className={style.titleOfPeopleYouMayKnow}>
-            People following you
-          </h1>
+          <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
           {/* <PeopleYouMayKnow />
           <PeopleYouMayKnow />
           <PeopleYouMayKnow />
@@ -114,14 +160,12 @@ const CurrentUserProfile = () => {
           <PeopleYouMayKnow /> */}
         </div>
         <div className={style.containerPostComponents}>
-          {/* <PostComponent />
-          <PostComponent />
-          <PostComponent />
-          <PostComponent />
-          <PostComponent /> */}
+          {userPosts.map((post) => (
+            <PostComponent post={post} key={uuid()} />
+          ))}
         </div>
         <div className={style.peopleYouFollow}>
-          <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
+          <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
           <PeopleYouFollow />
           <PeopleYouFollow />
           <PeopleYouFollow />

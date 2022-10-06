@@ -160,7 +160,7 @@ const Header = () => {
 
   const handleProfileClicked = () => {
     setAnchorElUser(null);
-    navigate("/current_user_profile");
+    navigate(`/user_profile/current_user`);
   };
 
   return (

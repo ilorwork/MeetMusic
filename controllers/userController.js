@@ -55,9 +55,18 @@ const logout = async (req, res) => {
   return res.status(200).json("User logged out succesfully");
 };
 
-const getUser = async (req, res) => {
+const getCurrentUser = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.user.email });
+    return res.status(200).json(user);
+  } catch (e) {
+    return res.status(500).json(`get user failed ${e}`);
+  }
+};
+
+const getUserById = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ _id: req.body._id });
     return res.status(200).json(user);
   } catch (e) {
     return res.status(500).json(`get user failed ${e}`);
@@ -98,7 +107,8 @@ module.exports = {
   createUser,
   login,
   logout,
-  getUser,
+  getCurrentUser,
+  getUserById,
   getPeopleUserMayKnow,
   getFollowing,
 };

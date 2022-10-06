@@ -14,3 +14,9 @@
   font-size: 24px;
   font-weight: bold;
 }
+
+.userProfileBtn {
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+}

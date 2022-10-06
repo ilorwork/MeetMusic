@@ -35,6 +35,17 @@ const getPostsOfCurrentUser = async (req, res) => {
     const userWhoseProfile = await UserModel.findOne({ email: req.user.email });
     const idOfUserWhoseProfile = userWhoseProfile._id;
     const userPosts = await PostModel.find({ creator: idOfUserWhoseProfile });
+    userPosts.reverse();
+    return res.status(200).json(userPosts);
+  } catch (e) {
+    res.status(500).json("get current user posts failed " + e);
+  }
+};
+
+const getPostsOfUser = async (req, res) => {
+  try {
+    const userPosts = await PostModel.find({ creator: req.body._id });
+    userPosts.reverse();
     return res.status(200).json(userPosts);
   } catch (e) {
     res.status(500).json("get user posts failed " + e);
@@ -102,6 +113,7 @@ const removeLike = async (req, res) => {
 module.exports = {
   getAllPosts,
   getPostsOfCurrentUser,
+  getPostsOfUser,
   createPost,
   deletePost,
   editPost,
