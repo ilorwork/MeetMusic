@@ -9,11 +9,10 @@ const PeopleYouMayKnow = ({
   getPeopleYouMayKnow,
   getPeopleYouFollow,
 }) => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const navToUserPage = () => {
-    console.log("id", user._id);
-    navigate(`user_profile/${user._id}`);
+  const navToUserPage = () => {
+    navigate(`user-profile/${user._id}`);
   };
 
   const followTheUser = async () => {
@@ -40,15 +39,15 @@ const navToUserPage = () => {
   return (
     <>
       <div className={style.personCard}>
-      <button className={style.userProfileBtn} onClick={navToUserPage}>
-        <img
-          className={style.personPic}
-          width={70}
-          height={70}
-          src={user.profilePic}
-          alt="user profile pic"
-        />
-      </button>
+        <button className={style.userProfileBtn} onClick={navToUserPage}>
+          <img
+            className={style.personPic}
+            width={70}
+            height={70}
+            src={user.profilePic}
+            alt="user profile pic"
+          />
+        </button>
         <span className={style.personName}>
           {user.firstName} {user.lastName}
         </span>

@@ -9,7 +9,7 @@ router.get(
   verifyUser,
   postController.getPostsOfCurrentUser
 );
-router.post("/user-posts", verifyUser, postController.getPostsOfUser);
+router.post("/user-posts", postController.getPostsOfUser);
 router.post("/", verifyUser, postController.createPost);
 router.put("/", verifyUser, postController.editPost);
 router.delete("/", verifyUser, postController.deletePost);

@@ -161,7 +161,7 @@ const Header = () => {
 
   const handleProfileClicked = () => {
     setAnchorElUser(null);
-    navigate(`/user_profile/current_user`);
+    navigate("current-user-profile");
   };
 
   const handleLogout = async () => {

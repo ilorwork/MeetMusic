@@ -33,8 +33,10 @@ const getAllPosts = async (req, res) => {
 const getPostsOfCurrentUser = async (req, res) => {
   try {
     const userWhoseProfile = await UserModel.findOne({ email: req.user.email });
-    const idOfUserWhoseProfile = userWhoseProfile._id;
-    const userPosts = await PostModel.find({ creator: idOfUserWhoseProfile });
+    const userPosts = await PostModel.find({
+      creator: userWhoseProfile._id,
+    }).populate("creator");
+
     userPosts.reverse();
     return res.status(200).json(userPosts);
   } catch (e) {
