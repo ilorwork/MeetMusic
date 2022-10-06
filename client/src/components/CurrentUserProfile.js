@@ -15,7 +15,13 @@ import PeopleYouFollow from "./PeopleYouFollow";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import EditIcon from "@mui/icons-material/Edit";
-import { Button, CardActions, CardHeader } from "@mui/material";
+import {
+  Button,
+  CardActions,
+  CardHeader,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
 import { v4 as uuid } from "uuid";
 
@@ -88,15 +94,56 @@ const CurrentUserProfile = () => {
 
   const handleEditProfile = () => {};
 
+  const handlePicChange = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        editUser({ profilePic: reader.result });
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const editUser = async (data) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.put("http://localhost:7000/users/", data, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
+    setUser(res.data);
+  };
+
   return (
     <>
       <div className={style.profilePageContainer}>
         <Card className={style.profileInfoCard}>
-          <Avatar
-            alt="user profileic"
-            sx={{ width: 250, height: 250 }}
-            src={user.profilePic}
-          />
+          {isCurrentUser && (
+            <input
+              hidden
+              accept="image/*"
+              id="icon-button-file"
+              type="file"
+              onChange={handlePicChange}
+            />
+          )}
+          <label htmlFor="icon-button-file">
+            <Tooltip title="Click to replace">
+              <IconButton
+                // color="primary"
+                // aria-label="upload picture"
+                component="span"
+              >
+                <Avatar
+                  alt="user profileic"
+                  sx={{ width: 250, height: 250 }}
+                  src={user.profilePic}
+                />
+              </IconButton>
+            </Tooltip>
+          </label>
           <CardContent className={style.profileInfoContent}>
             <div className={style.profileHeader}>
               <h1>
