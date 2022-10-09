@@ -10,16 +10,14 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import EventIcon from "@mui/icons-material/Event";
 import style from "./CurrentUserProfile.module.css";
 import PostComponent from "./PostComponent";
-import PeopleFollowYou from "./peopleFollowYou";
-import PeopleYouFollow from "./PeopleYouFollow";
+import Followers from "./Followers";
+import Following from "./Following";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import { v4 as uuid } from "uuid";
 
 const UserProfile = () => {
   const [user, setUser] = useState("");
-  const [following, setFollowing] = useState([]);
-  const [followers, setFollowers] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
 
   const { id } = useParams();
@@ -28,8 +26,6 @@ const UserProfile = () => {
   useEffect(() => {
     getUserInfo();
     getUserPosts();
-    getFollowing();
-    getFollowers();
   }, []);
 
   const getUserInfo = async () => {
@@ -50,32 +46,6 @@ const UserProfile = () => {
     });
 
     setUserPosts(res.data);
-  };
-
-  const getFollowing = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:7000/users/user/following",
-        { _id: id }
-      );
-
-      setFollowing(res.data);
-    } catch (e) {
-      throw new Error("get following failed " + e);
-    }
-  };
-
-  const getFollowers = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:7000/users/user/followers",
-        { _id: id }
-      );
-
-      setFollowers(res.data);
-    } catch (e) {
-      throw new Error("get followers failed " + e);
-    }
   };
 
   const calculateAge = () =>
@@ -141,13 +111,11 @@ const UserProfile = () => {
       <div className={style.homePage}>
         <div className={style.peopleYouMayKnow}>
           <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
-          {followers.map((folower) => (
-            <PeopleFollowYou
-              user={folower}
-              getPeopleYouFollow={getFollowing}
-              getFollowers={getFollowers}
-              userInfo={user}
+          {user.followers?.map((follower) => (
+            <Followers
               key={uuid()}
+              follower={follower}
+              getUserInfo={getUserInfo}
             />
           ))}
         </div>
@@ -158,10 +126,10 @@ const UserProfile = () => {
         </div>
         <div className={style.peopleYouFollow}>
           <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
-          {following.map((user) => (
-            <PeopleYouFollow
-              user={user}
-              getPeopleYouFollow={getFollowing}
+          {user.following?.map((followed) => (
+            <Following
+              followed={followed}
+              getUserInfo={getUserInfo}
               key={uuid()}
             />
           ))}

@@ -1,38 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@mui/material";
 import style from "./PeopleSideList.module.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { followUser } from "../helpers/userHelpers";
 
-const PeopleYouMayKnow = ({
-  user,
-  getPeopleYouMayKnow,
-  getPeopleYouFollow,
-}) => {
+const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo }) => {
   const navigate = useNavigate();
 
   const navToUserPage = () => {
     navigate(`user-profile/${user._id}`);
   };
 
-  const followTheUser = async () => {
-    const token = localStorage.getItem("token");
-    const idOfUserFollowed = user._id;
+  const handleFollowUser = async () => {
     try {
-      await axios.patch(
-        "http://localhost:7000/users/user/follow",
-        { _id: idOfUserFollowed },
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      await followUser(user._id);
       getPeopleYouMayKnow();
-      getPeopleYouFollow();
+      getUserInfo();
     } catch (e) {
-      throw new Error("follow another user failed " + e);
+      throw new Error("follow user failed " + e);
     }
   };
 
@@ -54,7 +39,7 @@ const PeopleYouMayKnow = ({
         <Button
           style={{ background: "rgb(38, 165, 165)" }}
           variant="contained"
-          onClick={followTheUser}
+          onClick={handleFollowUser}
         >
           Follow
         </Button>

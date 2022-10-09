@@ -79,7 +79,10 @@ const editUser = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.user.email });
+    const user = await UserModel.findOne({ email: req.user.email })
+      .populate("following")
+      .populate("followers");
+    console.log(user);
     return res.status(200).json(user);
   } catch (e) {
     return res.status(500).json(`get user failed ${e}`);
@@ -88,7 +91,9 @@ const getCurrentUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ _id: req.body._id });
+    const user = await UserModel.findOne({ _id: req.body._id })
+      .populate("following")
+      .populate("followers");
     return res.status(200).json(user);
   } catch (e) {
     return res.status(500).json(`get user failed ${e}`);
@@ -111,26 +116,6 @@ const getPeopleUserMayKnow = async (req, res) => {
     return res.status(200).json(peopleUserMayKnow);
   } catch (e) {
     return res.status(500).json(`get people user may know failed ${e}`);
-  }
-};
-
-const getCurrntUserFollowing = async (req, res) => {
-  try {
-    const user = await UserModel.findOne({ email: req.user.email });
-    const populatedUser = await user.populate({ path: "following" });
-    return res.status(200).json(populatedUser.following);
-  } catch (e) {
-    return res.status(500).json(`get following failed ${e}`);
-  }
-};
-
-const getFollowing = async (req, res) => {
-  try {
-    const user = await UserModel.findOne({ _id: req.body._id });
-    const populatedUser = await user.populate({ path: "following" });
-    return res.status(200).json(populatedUser.following);
-  } catch (e) {
-    return res.status(500).json(`get following failed ${e}`);
   }
 };
 
@@ -178,26 +163,6 @@ const unfollow = async (req, res) => {
   }
 };
 
-const getCurrentUserFollowers = async (req, res) => {
-  try {
-    const user = await UserModel.findOne({ email: req.user.email });
-    const populatedUser = await user.populate({ path: "followers" });
-    return res.status(200).json(populatedUser.followers);
-  } catch (e) {
-    return res.status(500).json(`get current user followers failed ${e}`);
-  }
-};
-
-const getFollowers = async (req, res) => {
-  try {
-    const user = await UserModel.findOne({ _id: req.body._id });
-    const populatedUser = await user.populate({ path: "followers" });
-    return res.status(200).json(populatedUser.followers);
-  } catch (e) {
-    return res.status(500).json(`get followers failed ${e}`);
-  }
-};
-
 module.exports = {
   getAllUsers,
   createUser,
@@ -207,10 +172,6 @@ module.exports = {
   getCurrentUser,
   getUserById,
   getPeopleUserMayKnow,
-  getCurrntUserFollowing,
-  getFollowing,
   follow,
   unfollow,
-  getCurrentUserFollowers,
-  getFollowers,
 };

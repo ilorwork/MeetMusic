@@ -1,22 +1,28 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import style from "./Home.module.css";
-import PeopleYouFollow from "./PeopleYouFollow";
+import Following from "./Following";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
+import { getCurrentUserInfo } from "../helpers/userHelpers";
 
 const Home = () => {
+  const [user, setUser] = useState("");
   const [allPosts, setAllPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
-  const [poepleYouFollow, setPeopleYouFollow] = useState([]);
 
   useEffect(() => {
+    getUserInfo();
     getAllPosts();
     getPeopleYouMayKnow();
-    getPeopleYouFollow();
   }, []);
+
+  const getUserInfo = async () => {
+    const info = await getCurrentUserInfo();
+    setUser(info);
+  };
 
   const getAllPosts = async () => {
     const res = await axios.get("http://localhost:7000/posts/");
@@ -38,21 +44,6 @@ const Home = () => {
     setPeopleUserMayKnow(res.data);
   };
 
-  const getPeopleYouFollow = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await axios.get(
-      "http://localhost:7000/users/current-user/following",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
-    setPeopleYouFollow(res.data);
-  };
-
   return (
     <div className={style.homePage}>
       <div className={style.peopleYouMayKnow}>
@@ -61,7 +52,7 @@ const Home = () => {
           <PeopleYouMayKnow
             user={user}
             getPeopleYouMayKnow={getPeopleYouMayKnow}
-            getPeopleYouFollow={getPeopleYouFollow}
+            getUserInfo={getUserInfo}
             key={uuid()}
           />
         ))}
@@ -75,12 +66,12 @@ const Home = () => {
       </div>
       <div className={style.peopleYouFollow}>
         <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
-        {poepleYouFollow.map((user) => (
-          <PeopleYouFollow
-            user={user}
-            getPeopleYouMayKnow={getPeopleYouMayKnow}
-            getPeopleYouFollow={getPeopleYouFollow}
+        {user.following?.map((followed) => (
+          <Following
             key={uuid()}
+            followed={followed}
+            getUserInfo={getUserInfo}
+            getPeopleYouMayKnow={getPeopleYouMayKnow}
           />
         ))}
       </div>

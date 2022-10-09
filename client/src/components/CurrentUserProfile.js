@@ -10,19 +10,17 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import EventIcon from "@mui/icons-material/Event";
 import style from "./CurrentUserProfile.module.css";
 import PostComponent from "./PostComponent";
-import PeopleFollowYou from "./peopleFollowYou";
-import PeopleYouFollow from "./PeopleYouFollow";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
 import { v4 as uuid } from "uuid";
+import Followers from "./Followers";
+import Following from "./Following";
 
 const CurrentUserProfile = () => {
   const [user, setUser] = useState("");
-  const [following, setFollowing] = useState([]);
-  const [followers, setFollowers] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
 
   const navigate = useNavigate();
@@ -30,8 +28,6 @@ const CurrentUserProfile = () => {
   useEffect(() => {
     getInfo();
     getUserPosts();
-    getFollowing();
-    getFollowers();
   }, []);
 
   const getInfo = async () => {
@@ -55,43 +51,6 @@ const CurrentUserProfile = () => {
       }
     );
     setUserPosts(res.data);
-  };
-
-  const getFollowing = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await axios.get(
-        "http://localhost:7000/users/current-user/following",
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      setFollowing(res.data);
-    } catch (e) {
-      throw new Error("get people you follow failed " + e);
-    }
-  };
-
-  //TODO: remove duplication with Home
-  const getFollowers = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await axios.get(
-        "http://localhost:7000/users/current-user/followers",
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      setFollowers(res.data);
-    } catch (e) {
-      throw new Error("get current user followers failed " + e);
-    }
   };
 
   const calculateAge = () =>
@@ -204,14 +163,8 @@ const CurrentUserProfile = () => {
       <div className={style.homePage}>
         <div className={style.peopleYouMayKnow}>
           <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
-          {followers.map((folower) => (
-            <PeopleFollowYou
-              user={folower}
-              getPeopleYouFollow={getFollowing}
-              getFollowers={getFollowers}
-              userInfo={user}
-              key={uuid()}
-            />
+          {user.followers?.map((follower) => (
+            <Followers key={uuid()} follower={follower} getUserInfo={getInfo} />
           ))}
         </div>
         <div className={style.containerPostComponents}>
@@ -221,12 +174,8 @@ const CurrentUserProfile = () => {
         </div>
         <div className={style.peopleYouFollow}>
           <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
-          {following.map((user) => (
-            <PeopleYouFollow
-              user={user}
-              getPeopleYouFollow={getFollowing}
-              key={uuid()}
-            />
+          {user.following?.map((followed) => (
+            <Following key={uuid()} followed={followed} getUserInfo={getInfo} />
           ))}
         </div>
       </div>
