@@ -4,7 +4,12 @@ const { verifyUser } = require("../middleware/userVerification");
 const router = express.Router();
 
 router.get("/", postController.getAllPosts);
-router.get("/posts-by-user", verifyUser, postController.getPostsOfCurrentUser);
+router.get(
+  "/current-user-posts",
+  verifyUser,
+  postController.getPostsOfCurrentUser
+);
+router.post("/user-posts", postController.getPostsOfUser);
 router.post("/", verifyUser, postController.createPost);
 router.put("/", verifyUser, postController.editPost);
 router.delete("/", verifyUser, postController.deletePost);
@@ -14,5 +19,3 @@ router.patch("/remove-like", verifyUser, postController.removeLike);
 // todo: comment and shared post
 
 module.exports = router;
-
-

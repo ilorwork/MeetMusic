@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,46 +10,41 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import EventIcon from "@mui/icons-material/Event";
 import style from "./CurrentUserProfile.module.css";
 import PostComponent from "./PostComponent";
-import PersonIcon from "@mui/icons-material/Person";
-import WcIcon from "@mui/icons-material/Wc";
-import EditIcon from "@mui/icons-material/Edit";
-import { Button, IconButton, Tooltip } from "@mui/material";
-import { getCurrentUserInfo } from "../helpers/userHelpers";
-import { v4 as uuid } from "uuid";
 import Followers from "./Followers";
 import Following from "./Following";
+import PersonIcon from "@mui/icons-material/Person";
+import WcIcon from "@mui/icons-material/Wc";
+import { v4 as uuid } from "uuid";
 
-const CurrentUserProfile = () => {
+const UserProfile = () => {
   const [user, setUser] = useState("");
   const [userPosts, setUserPosts] = useState([]);
 
+  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    getInfo();
+    getUserInfo();
     getUserPosts();
   }, []);
 
-  const getInfo = async () => {
+  const getUserInfo = async () => {
     try {
-      const currentUserInfo = await getCurrentUserInfo();
-      setUser(currentUserInfo);
+      const res = await axios.post("http://localhost:7000/users/user", {
+        _id: id,
+      });
+
+      setUser(res.data);
     } catch (e) {
       navigate("/login");
     }
   };
 
   const getUserPosts = async () => {
-    const token = localStorage.getItem("token");
-    const res = await axios.get(
-      "http://localhost:7000/posts/current-user-posts",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const res = await axios.post("http://localhost:7000/posts/user-posts", {
+      _id: id,
+    });
+
     setUserPosts(res.data);
   };
 
@@ -59,68 +54,21 @@ const CurrentUserProfile = () => {
         (365.25 * 24 * 60 * 60 * 1000)
     );
 
-  const handleEditProfile = () => {};
-
-  const handlePicChange = (e) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        updateUser({ profilePic: reader.result });
-      }
-    };
-
-    reader.readAsDataURL(e.target.files[0]);
-  };
-
-  const updateUser = async (fieldsToUpdate) => {
-    const token = localStorage.getItem("token");
-    const res = await axios.put(
-      "http://localhost:7000/users/",
-      fieldsToUpdate,
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
-    setUser(res.data);
-  };
-
   return (
     <>
       <div className={style.profilePageContainer}>
         <Card className={style.profileInfoCard}>
-          <input
-            hidden
-            accept="image/*"
-            id="icon-button-file"
-            type="file"
-            onChange={handlePicChange}
+          <Avatar
+            alt="user profile pic"
+            sx={{ width: 250, height: 250 }}
+            src={user.profilePic}
           />
-          <label htmlFor="icon-button-file">
-            <Tooltip title="Click to replace">
-              <IconButton component="span">
-                <Avatar
-                  alt="user profile pic"
-                  sx={{ width: 250, height: 250 }}
-                  src={user.profilePic}
-                />
-              </IconButton>
-            </Tooltip>
-          </label>
+
           <CardContent className={style.profileInfoContent}>
             <div className={style.profileHeader}>
               <h1>
                 {user.firstName} {user.lastName}
               </h1>
-              <Button
-                className={style.editProfileBtn}
-                size="small"
-                onClick={handleEditProfile}
-              >
-                <EditIcon />
-              </Button>
             </div>
 
             <div className={style.personalInfoContainer}>
@@ -164,7 +112,11 @@ const CurrentUserProfile = () => {
         <div className={style.peopleYouMayKnow}>
           <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
           {user.followers?.map((follower) => (
-            <Followers key={uuid()} follower={follower} getUserInfo={getInfo} />
+            <Followers
+              key={uuid()}
+              follower={follower}
+              getUserInfo={getUserInfo}
+            />
           ))}
         </div>
         <div className={style.containerPostComponents}>
@@ -175,7 +127,11 @@ const CurrentUserProfile = () => {
         <div className={style.peopleYouFollow}>
           <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
           {user.following?.map((followed) => (
-            <Following key={uuid()} followed={followed} getUserInfo={getInfo} />
+            <Following
+              followed={followed}
+              getUserInfo={getUserInfo}
+              key={uuid()}
+            />
           ))}
         </div>
       </div>
@@ -183,4 +139,4 @@ const CurrentUserProfile = () => {
   );
 };
 
-export default CurrentUserProfile;
+export default UserProfile;

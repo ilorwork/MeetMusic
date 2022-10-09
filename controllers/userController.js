@@ -4,6 +4,7 @@ const {
   generateAccessTokenHeader,
   generateRefreshTokenCookie,
 } = require("../middleware/userVerification");
+const { cloudinary } = require("../utils/cloudinary");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -47,17 +48,52 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  // This validation may be useless
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) return res.status(400).json("No token provided");
-
   res.clearCookie("refreshToken");
   return res.status(200).json("User logged out succesfully");
 };
 
-const getUser = async (req, res) => {
+const editUser = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.user.email });
+
+    const updates = Object.keys(req.body);
+    if (updates.includes("profilePic")) {
+      if (user.profilePic.includes("cloudinary")) {
+        const imgPublicId = user.profilePic.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(imgPublicId);
+      }
+
+      const uploadedImgRes = await cloudinary.uploader.upload(
+        req.body.profilePic
+      );
+      req.body.profilePic = `https://res.cloudinary.com/dhbgvkcez/image/upload/v${uploadedImgRes.version}/${uploadedImgRes.public_id}.${uploadedImgRes.format}`;
+    }
+    updates.forEach((update) => (user[update] = req.body[update]));
+
+    await user.save();
+    return res.status(200).json(user);
+  } catch (e) {
+    return res.status(500).json(`edit user failed ${e}`);
+  }
+};
+
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email })
+      .populate("following")
+      .populate("followers");
+    console.log(user);
+    return res.status(200).json(user);
+  } catch (e) {
+    return res.status(500).json(`get user failed ${e}`);
+  }
+};
+
+const getUserById = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ _id: req.body._id })
+      .populate("following")
+      .populate("followers");
     return res.status(200).json(user);
   } catch (e) {
     return res.status(500).json(`get user failed ${e}`);
@@ -83,13 +119,47 @@ const getPeopleUserMayKnow = async (req, res) => {
   }
 };
 
-const getFollowing = async (req, res) => {
+const follow = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.user.email });
+    const idOfUserFollowed = req.body._id;
+    user.following.unshift(idOfUserFollowed);
+    await user.save();
 
-    return res.status(200).json(user.following);
+    const userFollowed = await UserModel.findOne({ _id: idOfUserFollowed });
+    userFollowed.followers.unshift(user._id);
+    await userFollowed.save();
+
+    return res.status(200).json({
+      followingOfUser: user.following,
+      followersOfUserFollowed: userFollowed.followers,
+    });
   } catch (e) {
-    return res.status(500).json(`get following failed ${e}`);
+    return res.status(500).json("follow another user failed " + e);
+  }
+};
+
+const unfollow = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.user.email });
+    const idOfUserfollowed = req.body._id;
+    user.following = user.following.filter(
+      (objIdOfUser) => objIdOfUser != idOfUserfollowed
+    );
+    await user.save();
+
+    const idOfUser = user._id;
+    const userFollowed = await UserModel.findOne({ _id: idOfUserfollowed });
+    const indexOfDelete = userFollowed.followers.indexOf(idOfUser);
+    userFollowed.followers.splice(indexOfDelete, 1);
+    await userFollowed.save();
+
+    return res.status(200).json({
+      followingOfUser: user.following,
+      followersOfUserFollowed: userFollowed.followers,
+    });
+  } catch (e) {
+    return res.status(500).json("unfollow another user failed " + e);
   }
 };
 
@@ -98,7 +168,10 @@ module.exports = {
   createUser,
   login,
   logout,
-  getUser,
+  editUser,
+  getCurrentUser,
+  getUserById,
   getPeopleUserMayKnow,
-  getFollowing,
+  follow,
+  unfollow,
 };

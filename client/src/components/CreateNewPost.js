@@ -31,41 +31,17 @@ const modalStyle = {
   p: 4,
 };
 
-const CreateNewPost = () => {
+const CreateNewPost = ({ getAllPosts }) => {
   const [userInfo, setUserInfo] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [postText, setPostText] = useState("");
   const [postImage, setPostImage] = useState("");
-  const [uploadedImageFile, setUploadedImageFile] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     getUserInfo();
   }, []);
-
-  useEffect(() => {
-    if (!uploadedImageFile) return;
-
-    uploadImageToCloudinary(uploadedImageFile);
-  }, [uploadedImageFile]);
-
-  const uploadImageToCloudinary = async (img) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", img);
-      formData.append("upload_preset", "fyqj9lqs");
-
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dhbgvkcez/image/upload",
-        formData
-      );
-      setPostImage(res.data.url);
-      // TODO: Clear the image from the cloudinary on cancel
-    } catch (e) {
-      console.error("Upload image to cloudinary has failed");
-    }
-  };
 
   const getUserInfo = async () => {
     try {
@@ -82,16 +58,32 @@ const CreateNewPost = () => {
     const token = localStorage.getItem("token");
     const newPost = { postText, postImage };
 
-    await axios.post("http://localhost:7000/posts/", newPost, {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-    });
+    try {
+      await axios.post("http://localhost:7000/posts/", newPost, {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+      });
 
-    setPostText("");
-    setPostImage("");
-    setIsOpen(false);
+      setPostImage("");
+      setPostText("");
+      setIsOpen(false);
+      getAllPosts();
+    } catch (e) {
+      navigate("/login");
+    }
+  };
+
+  const handleImageSelection = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setPostImage(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   return (
@@ -142,7 +134,7 @@ const CreateNewPost = () => {
                 hidden
                 accept="image/*"
                 type="file"
-                onChange={(e) => setUploadedImageFile(e.target.files[0])}
+                onChange={handleImageSelection}
               />
               <AddPhotoAlternateIcon />
             </IconButton>

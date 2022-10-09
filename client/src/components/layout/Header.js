@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import style from "./Header.module.css";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import axios from "axios";
 
 const Header = () => {
   const top100Films = [
@@ -160,7 +161,22 @@ const Header = () => {
 
   const handleProfileClicked = () => {
     setAnchorElUser(null);
-    navigate("/current_user_profile");
+    navigate("current-user-profile");
+  };
+
+  const handleLogout = async () => {
+    setAnchorElUser(null);
+
+    try {
+      const res = await axios.delete("http://localhost:7000/users/logout", {
+        withCredentials: true,
+      });
+    } catch (e) {
+      console.error("Failed to logout " + e);
+    } finally {
+      localStorage.removeItem("token");
+      navigate("/login");
+    }
   };
 
   return (
@@ -248,7 +264,7 @@ const Header = () => {
               <MenuItem onClick={handleProfileClicked}>
                 <Typography>Profile</Typography>
               </MenuItem>
-              <MenuItem onClick={() => setAnchorElUser(null)}>
+              <MenuItem onClick={handleLogout}>
                 <Typography>Logout</Typography>
               </MenuItem>
             </Menu>
