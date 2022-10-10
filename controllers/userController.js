@@ -89,7 +89,6 @@ const getCurrentUser = async (req, res) => {
     const user = await UserModel.findOne({ email: req.user.email })
       .populate("following")
       .populate("followers");
-    console.log(user);
     return res.status(200).json(user);
   } catch (e) {
     return res.status(500).json(`get user failed ${e}`);
