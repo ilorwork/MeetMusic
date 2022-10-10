@@ -48,13 +48,20 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.clearCookie("refreshToken");
+  res.clearCookie("refreshToken", {
+    maxAge: 1000, // required to avoid firefox 'cookie already exp' warnning
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
+  });
   return res.status(200).json("User logged out succesfully");
 };
 
 const editUser = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.user.email });
+    const user = await UserModel.findOne({ email: req.user.email })
+      .populate("following")
+      .populate("followers");
 
     const updates = Object.keys(req.body);
     if (updates.includes("profilePic")) {
