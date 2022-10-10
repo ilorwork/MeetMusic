@@ -61,7 +61,7 @@ const Home = () => {
         <CreateNewPost getAllPosts={getAllPosts} />
 
         {allPosts.map((post) => (
-          <PostComponent post={post} getAllPosts={getAllPosts} key={uuid()} />
+          <PostComponent post={post} getPosts={getAllPosts} key={uuid()} />
         ))}
       </div>
       <div className={style.peopleYouFollow}>
