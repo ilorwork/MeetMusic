@@ -49,10 +49,10 @@ const UserProfile = () => {
   };
 
   const calculateAge = () =>
-    Math.floor(
+    (
       (new Date() - new Date(user.birthDate).getTime()) /
-        (365.25 * 24 * 60 * 60 * 1000)
-    );
+      (365.25 * 24 * 60 * 60 * 1000)
+    ).toFixed(1);
 
   return (
     <>

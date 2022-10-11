@@ -24,6 +24,7 @@ const Following = ({
 
   useEffect(() => {
     setIsCurrentUserFollow(followed.followers.includes(currentUserId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUserId]);
 
   const getCurrentUserId = async () => {
