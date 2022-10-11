@@ -41,6 +41,7 @@ const Register = () => {
     );
     if (indexOfCountry !== -1)
       setCitiesOfSelectedCountry(countriesAndCities[indexOfCountry].cities);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
   const MenuProps = {
