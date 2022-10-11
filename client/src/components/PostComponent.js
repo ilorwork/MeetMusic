@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import style from "./PostComponent.module.css";
@@ -18,9 +18,40 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
+import CommentComponent from "./CommentComponent";
+import { v4 as uuid } from "uuid";
+import CreateNewComment from "./CreateNewComment";
 
 const PostComponent = ({ post, getAllPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [commentsOfPost, setCommentsOfPost] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(0);
+
+  useEffect(() => {
+    getCommentsOfPost();
+  }, []);
+
+  const getCommentsOfPost = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post("http://localhost:7000/comments/post-comments/",
+        {
+          _id: post._id,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setCommentsOfPost(res.data);
+    } catch (e) {
+      console.log("get comments of post failed " + e);
+    }
+
+  }
 
   const handleDeletePost = async () => {
     const token = localStorage.getItem("token");
@@ -99,13 +130,20 @@ const PostComponent = ({ post, getAllPosts }) => {
           <IconButton>
             <ThumbUpIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() =>
+            setIsCommentOpen(!isCommentOpen)
+          }>
             <ChatBubbleIcon />
           </IconButton>
           <IconButton>
             <ScreenShareIcon />
           </IconButton>
         </CardActions>
+        {isCommentOpen && <CreateNewComment post={post}
+          getCommentsOfPost={getCommentsOfPost} setCommentsCount={setCommentsCount} />}
+        {isCommentOpen &&
+          commentsOfPost.map((comment) => <CommentComponent comment={comment} post={post}
+            getCommentsOfPost={getCommentsOfPost} setCommentsCount={setCommentsCount} key={uuid()} />)}
       </Card>
     </>
   );
