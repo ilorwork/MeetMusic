@@ -19,7 +19,7 @@ import {
 import { Box } from "@mui/system";
 import axios from "axios";
 
-const PostComponent = ({ post, getAllPosts }) => {
+const PostComponent = ({ post, getPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
 
   const handleDeletePost = async () => {
@@ -34,7 +34,7 @@ const PostComponent = ({ post, getAllPosts }) => {
         _id: post._id,
       },
     });
-    getAllPosts();
+    getPosts();
     setAnchorPostSettings(null);
   };
 

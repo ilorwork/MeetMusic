@@ -169,7 +169,7 @@ const CurrentUserProfile = () => {
         </div>
         <div className={style.containerPostComponents}>
           {userPosts.map((post) => (
-            <PostComponent post={post} key={uuid()} />
+            <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
           ))}
         </div>
         <div className={style.peopleYouFollow}>
