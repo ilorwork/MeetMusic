@@ -1,10 +1,12 @@
 import axios from "axios";
 
+const base_url = "http://localhost:7000";
+
 const getCurrentUserInfo = async () => {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await axios.get("http://localhost:7000/users/current-user", {
+    const res = await axios.get(`${base_url}/users/current-user`, {
       withCredentials: true,
       headers: {
         authorization: token,
@@ -20,15 +22,12 @@ const getPeopleYouMayKnow = async () => {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await axios.get(
-      "http://localhost:7000/users/user/people-user-may-know",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const res = await axios.get(`${base_url}/users/user/people-user-may-know`, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
 
     return res.data;
   } catch (e) {
@@ -40,15 +39,12 @@ const getCurrentUserFollowing = async () => {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await axios.get(
-      "http://localhost:7000/users/current-user/following",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const res = await axios.get(`${base_url}/users/current-user/following`, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
 
     return res.data;
   } catch (e) {
@@ -60,15 +56,12 @@ const getCurrentUserFollowers = async () => {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await axios.get(
-      "http://localhost:7000/users/current-user/followers",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const res = await axios.get(`${base_url}/users/current-user/followers`, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
 
     return res.data;
   } catch (e) {
@@ -80,7 +73,7 @@ const followUser = async (userId) => {
   const token = localStorage.getItem("token");
   try {
     await axios.patch(
-      "http://localhost:7000/users/user/follow",
+      `${base_url}/users/user/follow`,
       { _id: userId },
       {
         withCredentials: true,
@@ -98,7 +91,7 @@ const unfollowUser = async (userId) => {
   const token = localStorage.getItem("token");
   try {
     await axios.patch(
-      "http://localhost:7000/users/user/unfollow",
+      `${base_url}/users/user/unfollow`,
       { _id: userId },
       {
         withCredentials: true,
@@ -114,7 +107,7 @@ const unfollowUser = async (userId) => {
 
 const getUserInfo = async (userId) => {
   try {
-    const res = await axios.post("http://localhost:7000/users/user", {
+    const res = await axios.post(`${base_url}/users/user`, {
       _id: userId,
     });
 
@@ -126,7 +119,7 @@ const getUserInfo = async (userId) => {
 
 const getUserFollowing = async (userId) => {
   try {
-    const res = await axios.post("http://localhost:7000/users/user/following", {
+    const res = await axios.post(`${base_url}/users/user/following`, {
       _id: userId,
     });
 
@@ -138,7 +131,7 @@ const getUserFollowing = async (userId) => {
 
 const getUserFollowers = async (userId) => {
   try {
-    const res = await axios.post("http://localhost:7000/users/user/followers", {
+    const res = await axios.post(`${base_url}/users/user/followers`, {
       _id: userId,
     });
 
