@@ -10,7 +10,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 
-const CommentComponent = ({ comment, post, getCommentsOfPost, setCommentsCount }) => {
+const CommentComponent = ({ comment, post, getCommentsOfPost, commentsCount, setCommentsCount }) => {
     const [anchorCommentSettings, setAnchorCommentSettings] = useState(null);
 
     const handleDeleteComment = async () => {
@@ -29,7 +29,7 @@ const CommentComponent = ({ comment, post, getCommentsOfPost, setCommentsCount }
                 });
             console.log(res.data);
             getCommentsOfPost();
-            setCommentsCount(post.commentsCount--);
+            setCommentsCount(commentsCount - 1);
             setAnchorCommentSettings(null);
         } catch (e) {
             console.log("delete comment failed " + e);

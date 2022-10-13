@@ -20,7 +20,7 @@ const createComment = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     try {
-        const allComments = await CommentModel.find({}).populate("creator");
+        const allComments = await CommentModel.find({});
         allComments.reverse();
         return res.status(200).json(allComments);
     } catch (e) {

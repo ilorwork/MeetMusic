@@ -5,7 +5,7 @@ import FormControl from '@mui/joy/FormControl';
 import Textarea from '@mui/joy/Textarea';
 import axios from 'axios';
 
-const CreateNewComment = ({ post, getCommentsOfPost, setCommentsCount }) => {
+const CreateNewComment = ({ post, getCommentsOfPost, commentsCount, setCommentsCount }) => {
     const [contentOfComment, setContentOfComment] = useState("");
     const handleCreatingNewComment = async () => {
         if (!contentOfComment) return;
@@ -25,7 +25,7 @@ const CreateNewComment = ({ post, getCommentsOfPost, setCommentsCount }) => {
                 });
             setContentOfComment("");
             getCommentsOfPost();
-            setCommentsCount(post.commentsCount++);
+            setCommentsCount(commentsCount + 1);
         } catch (e) {
             console.log("comment creation failed " + e);
         }

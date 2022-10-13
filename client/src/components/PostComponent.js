@@ -26,7 +26,7 @@ const PostComponent = ({ post, getAllPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentsOfPost, setCommentsOfPost] = useState([]);
-  const [commentsCount, setCommentsCount] = useState(0);
+  const [commentsCount, setCommentsCount] = useState(post.commentsCount);
 
   useEffect(() => {
     getCommentsOfPost();
@@ -123,7 +123,7 @@ const PostComponent = ({ post, getAllPosts }) => {
         )}
         <Box className={style.footerIndecators}>
           <div>{post.likesCount} Likes</div>
-          <div>{post.commentsCount} Comments</div>
+          <div>{commentsCount} Comments</div>
           <div>{post.sharedCount} Shares</div>
         </Box>
         <CardActions className={style.actionsContainer}>
@@ -140,10 +140,10 @@ const PostComponent = ({ post, getAllPosts }) => {
           </IconButton>
         </CardActions>
         {isCommentOpen && <CreateNewComment post={post}
-          getCommentsOfPost={getCommentsOfPost} setCommentsCount={setCommentsCount} />}
+          getCommentsOfPost={getCommentsOfPost} commentsCount={commentsCount} setCommentsCount={setCommentsCount} />}
         {isCommentOpen &&
           commentsOfPost.map((comment) => <CommentComponent comment={comment} post={post}
-            getCommentsOfPost={getCommentsOfPost} setCommentsCount={setCommentsCount} key={uuid()} />)}
+            getCommentsOfPost={getCommentsOfPost} commentsCount={commentsCount} setCommentsCount={setCommentsCount} key={uuid()} />)}
       </Card>
     </>
   );
