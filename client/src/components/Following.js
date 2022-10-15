@@ -14,7 +14,7 @@ const Following = ({
   getPeopleYouMayKnow = () => {},
 }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(true);
-  const [currentUserId, setCurrentUserId] = useState({});
+  const [currentUserId, setCurrentUserId] = useState("");
 
   const navigate = useNavigate();
 
@@ -23,6 +23,7 @@ const Following = ({
   }, []);
 
   useEffect(() => {
+    if (!currentUserId) return;
     setIsCurrentUserFollow(followed.followers.includes(currentUserId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUserId]);
