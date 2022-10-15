@@ -20,7 +20,7 @@ const Home = () => {
   }, []);
 
   const getUserInfo = async () => {
-    const info = await getCurrentUserInfo();
+    const info = await getCurrentUserInfo(true);
     setUser(info);
   };
 
