@@ -38,11 +38,11 @@ const CreateNewComment = ({ post, getCommentsOfPost, commentsCount, setCommentsC
                 onChange={(e) => setContentOfComment(e.target.value)}
                 variant="standard"
                 placeholder="Write a comment..."
+                onKeyDown={(e) => { if (e.key === "Enter") handleCreatingNewComment() }}
                 endDecorator={
                     <Box
                         sx={{
                             display: 'flex',
-                            borderColor: 'rgb(38, 165, 165)',
                             flex: 'auto',
                             justifyContent: 'end',
                         }}
