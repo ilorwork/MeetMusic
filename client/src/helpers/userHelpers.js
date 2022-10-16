@@ -2,6 +2,22 @@ import axios from "axios";
 
 const base_url = "http://localhost:7000";
 
+const login = async (email, password) => {
+  try {
+    const res = await axios.post(
+      "http://localhost:7000/users/login",
+      { email, password },
+      {
+        withCredentials: true,
+      }
+    );
+
+    localStorage.setItem("token", res.headers.authorization);
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getCurrentUserInfo = async () => {
   const token = localStorage.getItem("token");
 
@@ -151,6 +167,7 @@ const getAllUsers = async () => {
 };
 
 export {
+  login,
   getCurrentUserInfo,
   getPeopleYouMayKnow,
   getCurrentUserFollowing,
