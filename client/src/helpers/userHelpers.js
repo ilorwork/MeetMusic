@@ -141,6 +141,15 @@ const getUserFollowers = async (userId) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const res = await axios.get(`${base_url}/users/`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 export {
   getCurrentUserInfo,
   getPeopleYouMayKnow,
@@ -151,4 +160,5 @@ export {
   getUserInfo,
   getUserFollowing,
   getUserFollowers,
+  getAllUsers,
 };
