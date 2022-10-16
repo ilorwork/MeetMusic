@@ -53,7 +53,7 @@ const Following = ({
   };
 
   const navToUserPage = () => {
-    navigate(`user-profile/${followed._id}`);
+    navigate(`/user-profile/${followed._id}`);
   };
 
   return (
