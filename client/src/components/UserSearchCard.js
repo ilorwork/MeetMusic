@@ -7,8 +7,6 @@ const UserSearchCard = ({ user }) => {
 
   const navToUserPage = () => {
     navigate(`user-profile/${user._id}`);
-    navigate(0);
-    // window.location.reload();
   };
 
   return (

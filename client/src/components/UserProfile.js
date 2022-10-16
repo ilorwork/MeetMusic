@@ -27,7 +27,7 @@ const UserProfile = () => {
     getUserInfo();
     getUserPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   const getUserInfo = async () => {
     try {

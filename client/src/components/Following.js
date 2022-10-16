@@ -54,8 +54,6 @@ const Following = ({
 
   const navToUserPage = () => {
     navigate(`/user-profile/${followed._id}`);
-    navigate(0);
-    // window.location.reload();
   };
 
   return (
