@@ -1,12 +1,14 @@
 const userRoutes = require("./userRoutes");
 const postRoutes = require("./postRoutes");
 // const sharedPostRoutes = require("./sharedPostRoutes");
+const notificationRouts = require("./notificationRouts");
 
 // All main routes of the application
 exports.routesInit = (app) => {
   app.use("/users", userRoutes);
   app.use("/posts", postRoutes);
   // app.use("/sharedPostRoutes", sharedPostRoutes);
+  app.use("/notifications", notificationRouts);
 
   // Handle case of request to any wrong route
   app.use("", (req, res) => {

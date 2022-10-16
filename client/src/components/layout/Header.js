@@ -21,27 +21,35 @@ import { getAllUsers } from "../../helpers/userHelpers";
 import UserSearchCard from "../UserSearchCard";
 import { v4 as uuid } from "uuid";
 
-const notifications = [
-  "ilor liked your post",
-  "ilor shraed your post",
-  "ilor started following you",
-  "ilor responded to your post",
-];
-
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorNotice, setAnchorNotice] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     getAllUsersInfo();
+    getUserNotifications();
   }, []);
 
   const getAllUsersInfo = async () => {
     const data = await getAllUsers();
     setAllUsers(data);
+  };
+
+  const getUserNotifications = async () => {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get("http://localhost:7000/notifications", {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
+
+    setNotifications(res.data.map((n) => n.content));
   };
 
   const handleProfileClicked = () => {
