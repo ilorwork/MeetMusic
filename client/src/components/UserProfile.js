@@ -37,7 +37,9 @@ const UserProfile = () => {
 
       setUser(res.data);
     } catch (e) {
-      navigate("/login");
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
     }
   };
 

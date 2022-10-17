@@ -10,7 +10,16 @@ const createPost = async (req, res) => {
       const uploadedImgRes = await cloudinary.uploader.upload(
         req.body.postImage
       );
-      req.body.postImage = `https://res.cloudinary.com/dhbgvkcez/image/upload/v${uploadedImgRes.version}/${uploadedImgRes.public_id}.${uploadedImgRes.format}`;
+      req.body.postImage = uploadedImgRes.url;
+    }
+
+    if (req.body.postAudio) {
+      const uploadedAudioRes = await cloudinary.uploader.upload(
+        req.body.postAudio,
+        { resource_type: "video" }
+      );
+
+      req.body.postAudio = uploadedAudioRes.url;
     }
     const newPost = await PostModel.create(req.body);
     await newPost.save();
@@ -67,6 +76,13 @@ const deletePost = async (req, res) => {
     if (postToDelete.postImage) {
       const imgPublicId = postToDelete.postImage.split("/").pop().split(".")[0];
       await cloudinary.uploader.destroy(imgPublicId);
+    }
+
+    if (postToDelete.postAudio) {
+      const audPublicId = postToDelete.postAudio.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(audPublicId, {
+        resource_type: "video",
+      });
     }
 
     const deletedPost = await PostModel.deleteOne({ _id: req.body });

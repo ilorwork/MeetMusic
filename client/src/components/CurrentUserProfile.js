@@ -36,7 +36,9 @@ const CurrentUserProfile = () => {
       const currentUserInfo = await getCurrentUserInfo();
       setUser(currentUserInfo);
     } catch (e) {
-      navigate("/login");
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
     }
   };
 

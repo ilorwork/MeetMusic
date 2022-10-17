@@ -36,6 +36,7 @@ const CreateNewPost = ({ getAllPosts }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [postText, setPostText] = useState("");
   const [postImage, setPostImage] = useState("");
+  const [postAudio, setPostAudio] = useState("");
 
   const navigate = useNavigate();
 
@@ -47,16 +48,18 @@ const CreateNewPost = ({ getAllPosts }) => {
     try {
       const info = await getCurrentUserInfo();
       setUserInfo(info);
-    } catch (err) {
-      navigate("/login");
+    } catch (e) {
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
     }
   };
 
   const handleCreatePost = async () => {
-    if (!postText && !postImage) return;
+    if (!postText && !postImage && !postAudio) return;
 
     const token = localStorage.getItem("token");
-    const newPost = { postText, postImage };
+    const newPost = { postText, postImage, postAudio };
 
     try {
       await axios.post("http://localhost:7000/posts/", newPost, {
@@ -66,12 +69,15 @@ const CreateNewPost = ({ getAllPosts }) => {
         },
       });
 
+      setPostAudio("");
       setPostImage("");
       setPostText("");
       setIsOpen(false);
       getAllPosts();
     } catch (e) {
-      navigate("/login");
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
     }
   };
 
@@ -80,6 +86,17 @@ const CreateNewPost = ({ getAllPosts }) => {
     reader.onload = () => {
       if (reader.readyState === 2) {
         setPostImage(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const handleAudioSelection = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setPostAudio(reader.result);
       }
     };
 
@@ -124,6 +141,11 @@ const CreateNewPost = ({ getAllPosts }) => {
               </ImageListItem>
             )}
           </ImageList>
+          {postAudio && (
+            <audio controls>
+              <source src={postAudio} />
+            </audio>
+          )}
           <div>
             <IconButton
               color="primary"
@@ -138,9 +160,19 @@ const CreateNewPost = ({ getAllPosts }) => {
               />
               <AddPhotoAlternateIcon />
             </IconButton>
-            <Button>
+            <IconButton
+              color="primary"
+              aria-label="upload audio"
+              component="label"
+            >
+              <input
+                hidden
+                accept="audio/*"
+                type="file"
+                onChange={handleAudioSelection}
+              />
               <AudioFileIcon />
-            </Button>
+            </IconButton>
             <Button
               variant="contained"
               color="secondary"

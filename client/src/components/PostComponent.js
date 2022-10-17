@@ -18,25 +18,34 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PostComponent = ({ post, getPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
 
+  const navigate = useNavigate();
+
   const handleDeletePost = async () => {
     const token = localStorage.getItem("token");
 
-    await axios.delete("http://localhost:7000/posts/", {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-      data: {
-        _id: post._id,
-      },
-    });
+    try {
+      await axios.delete("http://localhost:7000/posts/", {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+        data: {
+          _id: post._id,
+        },
+      });
 
-    getPosts();
-    setAnchorPostSettings(null);
+      getPosts();
+      setAnchorPostSettings(null);
+    } catch (e) {
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
+    }
   };
 
   return (
@@ -87,6 +96,11 @@ const PostComponent = ({ post, getPosts }) => {
           image={post.postImage}
           alt="post image"
         ></CardMedia>
+      )}
+      {post.postAudio && (
+        <audio controls>
+          <source src={post.postAudio} />
+        </audio>
       )}
       <Box className={style.footerIndecators}>
         <div>{post.likesCount} Likes</div>
