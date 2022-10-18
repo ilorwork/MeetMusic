@@ -81,22 +81,11 @@ const CreateNewPost = ({ getAllPosts }) => {
     }
   };
 
-  const handleImageSelection = (e) => {
+  const handleAssetSelection = (e, setStateFunc) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setPostImage(reader.result);
-      }
-    };
-
-    reader.readAsDataURL(e.target.files[0]);
-  };
-
-  const handleAudioSelection = (e) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setPostAudio(reader.result);
+        setStateFunc(reader.result);
       }
     };
 
@@ -156,7 +145,7 @@ const CreateNewPost = ({ getAllPosts }) => {
                 hidden
                 accept="image/*"
                 type="file"
-                onChange={handleImageSelection}
+                onChange={(e) => handleAssetSelection(e, setPostImage)}
               />
               <AddPhotoAlternateIcon />
             </IconButton>
@@ -169,7 +158,7 @@ const CreateNewPost = ({ getAllPosts }) => {
                 hidden
                 accept="audio/*"
                 type="file"
-                onChange={handleAudioSelection}
+                onChange={(e) => handleAssetSelection(e, setPostAudio)}
               />
               <AudioFileIcon />
             </IconButton>
