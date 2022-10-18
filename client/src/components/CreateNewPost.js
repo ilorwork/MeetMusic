@@ -10,6 +10,7 @@ import {
   IconButton,
   ImageList,
   ImageListItem,
+  Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
@@ -24,7 +25,7 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 450,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -35,7 +36,7 @@ const CreateNewPost = ({ getAllPosts }) => {
   const [userInfo, setUserInfo] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [postText, setPostText] = useState("");
-  const [postImage, setPostImage] = useState("");
+  const [postImages, setPostImages] = useState([]);
   const [postAudio, setPostAudio] = useState("");
 
   const navigate = useNavigate();
@@ -56,10 +57,10 @@ const CreateNewPost = ({ getAllPosts }) => {
   };
 
   const handleCreatePost = async () => {
-    if (!postText && !postImage && !postAudio) return;
+    if (!postText && !postImages && !postAudio) return;
 
     const token = localStorage.getItem("token");
-    const newPost = { postText, postImage, postAudio };
+    const newPost = { postText, postImages, postAudio };
 
     try {
       await axios.post("http://localhost:7000/posts/", newPost, {
@@ -70,7 +71,7 @@ const CreateNewPost = ({ getAllPosts }) => {
       });
 
       setPostAudio("");
-      setPostImage("");
+      setPostImages([]);
       setPostText("");
       setIsOpen(false);
       getAllPosts();
@@ -81,12 +82,21 @@ const CreateNewPost = ({ getAllPosts }) => {
     }
   };
 
-  const handleAssetSelection = (e, setStateFunc) => {
+  const handleImageSelection = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setStateFunc(reader.result);
+        setPostImages([...postImages, reader.result]);
       }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const handleAudioSelection = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) setPostAudio(reader.result);
     };
 
     reader.readAsDataURL(e.target.files[0]);
@@ -118,50 +128,51 @@ const CreateNewPost = ({ getAllPosts }) => {
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
           />
-          {/* {postImage && <img src={postImage} className={style.postImage} />} */}
-          <ImageList cols={2} rowHeight={164}>
-            {postImage && (
-              <ImageListItem>
-                <img
-                  src={postImage}
-                  //   srcSet={img}
-                  //   loading="lazy"
-                />
-              </ImageListItem>
-            )}
-          </ImageList>
+          {postImages && (
+            <ImageList cols={postImages.length < 5 ? 2 : 3} rowHeight={164}>
+              {postImages.map((img) => (
+                <ImageListItem key={uuid()}>
+                  <img src={img} />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          )}
           {postAudio && (
             <audio controls>
               <source src={postAudio} />
             </audio>
           )}
           <div>
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="label"
-            >
-              <input
-                hidden
-                accept="image/*"
-                type="file"
-                onChange={(e) => handleAssetSelection(e, setPostImage)}
-              />
-              <AddPhotoAlternateIcon />
-            </IconButton>
-            <IconButton
-              color="primary"
-              aria-label="upload audio"
-              component="label"
-            >
-              <input
-                hidden
-                accept="audio/*"
-                type="file"
-                onChange={(e) => handleAssetSelection(e, setPostAudio)}
-              />
-              <AudioFileIcon />
-            </IconButton>
+            <Tooltip title="Upload Image">
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="label"
+              >
+                <input
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageSelection}
+                />
+                <AddPhotoAlternateIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Upload Audio">
+              <IconButton
+                color="primary"
+                aria-label="upload audio"
+                component="label"
+              >
+                <input
+                  hidden
+                  accept="audio/*"
+                  type="file"
+                  onChange={handleAudioSelection}
+                />
+                <AudioFileIcon />
+              </IconButton>
+            </Tooltip>
             <Button
               variant="contained"
               color="secondary"

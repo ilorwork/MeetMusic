@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
   postText: { type: String, default: "" },
-  postImage: { type: String, default: "" },
+  postImages: [String],
   postAudio: { type: String, default: "" },
   likesCount: { type: Number, default: 0 },
   commentsCount: { type: Number, default: 0 },

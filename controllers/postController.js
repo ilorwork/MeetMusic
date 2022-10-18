@@ -6,11 +6,14 @@ const createPost = async (req, res) => {
   try {
     const creator = await UserModel.findOne({ email: req.user.email });
     req.body.creator = creator._id;
-    if (req.body.postImage) {
-      const uploadedImgRes = await cloudinary.uploader.upload(
-        req.body.postImage
+    if (req.body.postImages) {
+      const urls = await Promise.all(
+        req.body.postImages.map(async (img) => {
+          const uploadedImgRes = await cloudinary.uploader.upload(img);
+          return uploadedImgRes.url;
+        })
       );
-      req.body.postImage = uploadedImgRes.url;
+      req.body.postImages = urls;
     }
 
     if (req.body.postAudio) {
@@ -73,9 +76,11 @@ const deletePost = async (req, res) => {
     if (req.user.email !== postToDelete.creator.email)
       return res.status(401).json("Can't delete other's posts");
 
-    if (postToDelete.postImage) {
-      const imgPublicId = postToDelete.postImage.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(imgPublicId);
+    if (postToDelete.postImages) {
+      postToDelete.postImages.map(async (img) => {
+        const imgPublicId = img.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(imgPublicId);
+      });
     }
 
     if (postToDelete.postAudio) {

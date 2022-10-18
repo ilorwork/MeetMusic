@@ -10,8 +10,9 @@ import {
   Avatar,
   CardActions,
   CardContent,
-  CardMedia,
   IconButton,
+  ImageList,
+  ImageListItem,
   Menu,
   MenuItem,
   Typography,
@@ -19,6 +20,7 @@ import {
 import { Box } from "@mui/system";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 
 const PostComponent = ({ post, getPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
@@ -46,6 +48,11 @@ const PostComponent = ({ post, getPosts }) => {
         navigate("/login");
       } else throw e;
     }
+  };
+
+  const getImagesCols = () => {
+    if (post.postImages.length < 3) return post.postImages.length;
+    else return 3;
   };
 
   return (
@@ -89,13 +96,14 @@ const PostComponent = ({ post, getPosts }) => {
         }
       ></CardHeader>
       {post.postText && <CardContent>{post.postText}</CardContent>}
-      {post.postImage && (
-        <CardMedia
-          component="img"
-          height="300"
-          image={post.postImage}
-          alt="post image"
-        ></CardMedia>
+      {post.postImages && (
+        <ImageList cols={getImagesCols()} rowHeight={300}>
+          {post.postImages.map((img) => (
+            <ImageListItem key={uuid()}>
+              <img src={img} />
+            </ImageListItem>
+          ))}
+        </ImageList>
       )}
       {post.postAudio && (
         <audio controls>
