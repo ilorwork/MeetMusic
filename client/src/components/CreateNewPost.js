@@ -105,13 +105,19 @@ const CreateNewPost = ({ getAllPosts }) => {
   return (
     <>
       <Card className={style.createNewPostCard}>
-        <Avatar
-          alt="user profileic"
-          sx={{ width: 50, height: 50 }}
-          src={userInfo.profilePic}
-        />
+        <button
+          className={style.profileBtn}
+          onClick={() => navigate("current-user-profile")}
+        >
+          <Avatar
+            alt="user profileic"
+            sx={{ width: 50, height: 50 }}
+            src={userInfo.profilePic}
+          />
+        </button>
         <Button
           className={style.createNewPostBtn}
+          sx={{ ml: 1 }}
           variant="outlined"
           onClick={() => setIsOpen(true)}
         >
