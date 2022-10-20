@@ -1,4 +1,4 @@
-export const timeAgo = (time) => {
+const timeAgo = (time) => {
     time = Number(time)
     switch (typeof time) {
         case "number":
@@ -52,3 +52,5 @@ export const timeAgo = (time) => {
         }
     return time;
 };
+
+module.exports = timeAgo;

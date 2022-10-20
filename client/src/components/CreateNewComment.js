@@ -12,6 +12,7 @@ const CreateNewComment = ({ post, getCommentsOfPost, commentsCount, setCommentsC
 
         const newComment = {
             content: contentOfComment,
+            timeOfCreation: Date.now(),
             postId: post._id
         }
         const token = localStorage.getItem("token");

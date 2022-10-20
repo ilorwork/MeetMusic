@@ -1,6 +1,7 @@
 const PostModel = require("../models/postModel");
 const UserModel = require("../models/userModel");
 const CommentModel = require("../models/commentModel");
+const timeAgo = require("../helpers/calculationTime");
 
 const createComment = async (req, res) => {
     try {
@@ -30,7 +31,10 @@ const getAllComments = async (req, res) => {
 
 const getCommentsOfPost = async (req, res) => {
     try {
-        const commentsOfPost = await CommentModel.find({ postId: req.body._id }).populate("creator");
+        const commentsOfPost = await CommentModel.find({ postId: req.body._id }).populate("creator").lean();
+        commentsOfPost.forEach((comment) => {
+            comment.timeOfCreation = timeAgo(comment.timeOfCreation);
+        });
         commentsOfPost.reverse();
         return res.status(200).json(commentsOfPost);
     } catch (e) {

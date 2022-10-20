@@ -12,7 +12,6 @@ import axios from "axios";
 import CreateCommentToComment from "./CreateCommentToComment";
 import CommentToCommentComponent from "./CommentToCommentComponent";
 import { v4 as uuid } from "uuid";
-import { timeAgo } from "../helpers/calculationTime";
 
 const CommentComponent = ({ comment, post, getCommentsOfPost, commentsCount, setCommentsCount }) => {
     const [anchorCommentSettings, setAnchorCommentSettings] = useState(null);
@@ -128,7 +127,7 @@ const CommentComponent = ({ comment, post, getCommentsOfPost, commentsCount, set
                     </MenuItem>
                 </Menu>
             </Box>
-            <p style={{ fontSize: 10, margin: "0 0 12px 0" }}>{timeAgo(Date.parse(comment.timeOfCreation))}</p>
+            <p style={{ fontSize: 10, margin: "0 0 12px 0" }}>{comment.timeOfCreation}</p>
             {isCommentToCommentOpen && <CreateCommentToComment
                 comment={comment}
                 getCommentsOfComment={getCommentsOfComment} commentsToCommentCount={commentsToCommentCount}

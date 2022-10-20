@@ -14,6 +14,7 @@ const CreateCommentToComment = ({ comment, getCommentsOfComment, commentsToComme
 
         const newCommentToComment = {
             content: contentOfCommentToComment,
+            timeOfCreation: Date.now(),
             commentId: comment._id
         }
         const token = localStorage.getItem("token");

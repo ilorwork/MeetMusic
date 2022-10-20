@@ -11,7 +11,6 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 import CreateCommentToComment from "./CreateCommentToComment";
 import { v4 as uuid } from "uuid";
-import { timeAgo } from "../helpers/calculationTime";
 
 const CommentToCommentComponent = ({ commentToComment, comment, getCommentsOfComment,
     commentsToCommentCount, setCommentsToCommentCount, paddingXForCommentToComment }) => {
@@ -126,7 +125,7 @@ const CommentToCommentComponent = ({ commentToComment, comment, getCommentsOfCom
                     </MenuItem>
                 </Menu>
             </Box>
-            <p style={{ fontSize: 10, margin: "0 0 3px 0" }}>{timeAgo(Date.parse(commentToComment.timeOfCreation))}</p>
+            <p style={{ fontSize: 10, margin: "0 0 3px 0" }}>{commentToComment.timeOfCreation}</p>
             {isCommentOfCommentToCommentOpen && <CreateCommentToComment
                 comment={commentToComment}
                 getCommentsOfComment={getCommentsOfCommentToComment} commentsToCommentCount={commentsOfCommentToCommentCount}

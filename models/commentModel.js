@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const commentSchema = new mongoose.Schema({
     content: String,
     creator: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
-    timeOfCreation: { type: Date, default: Date.now() },
+    timeOfCreation: Date,
     postId: { type: mongoose.Types.ObjectId, ref: 'Post', required: true },
     commentsToCommentCount: { type: Number, default: 0 }
 });
