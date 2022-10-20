@@ -27,10 +27,75 @@ const PostComponent = ({ post, getAllPosts }) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentsOfPost, setCommentsOfPost] = useState([]);
   const [commentsCount, setCommentsCount] = useState(post.commentsCount);
+  const [likesCount, setLikesCount] = useState(post.likesCount);
+  const [isUserLikeThePost, setIsUserLikeThePost] = useState(false);
 
   useEffect(() => {
     getCommentsOfPost();
+    getDataIsUserLikeThePost();
   }, []);
+
+  const getDataIsUserLikeThePost = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post("http://localhost:7000/likes/test",
+        {
+          postId: post._id,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      console.log(res.data);
+      setIsUserLikeThePost(res.data.isUserLikeThePost)
+    } catch (e) {
+      console.log("get data is user like the post failed " + e);
+    }
+  }
+
+  const addLike = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post("http://localhost:7000/likes/",
+        {
+          postId: post._id,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setIsUserLikeThePost(!isUserLikeThePost);
+      setLikesCount(likesCount + 1);
+    } catch (e) {
+      console.log("add like failed " + e);
+    }
+  }
+
+  const removeLike = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete("http://localhost:7000/likes/",
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+          data: {
+            postId: post._id
+          },
+        });
+      setIsUserLikeThePost(!isUserLikeThePost);
+      setLikesCount(likesCount - 1);
+    } catch (e) {
+      console.log("remove like failed " + e);
+    }
+  }
 
   const getCommentsOfPost = async () => {
     const token = localStorage.getItem("token");
@@ -50,7 +115,6 @@ const PostComponent = ({ post, getAllPosts }) => {
     } catch (e) {
       console.log("get comments of post failed " + e);
     }
-
   }
 
   const handleDeletePost = async () => {
@@ -122,14 +186,17 @@ const PostComponent = ({ post, getAllPosts }) => {
           ></CardMedia>
         )}
         <Box className={style.footerIndecators}>
-          <div>{post.likesCount} Likes</div>
+          <div>{likesCount} Likes</div>
           <div>{commentsCount} Comments</div>
           <div>{post.sharedCount} Shares</div>
         </Box>
         <CardActions className={style.actionsContainer}>
-          <IconButton>
-            <ThumbUpIcon />
-          </IconButton>
+          {!isUserLikeThePost && <IconButton onClick={addLike}>
+            <ThumbUpIcon color="inherit" />
+          </IconButton>}
+          {isUserLikeThePost && <IconButton onClick={removeLike}>
+            <ThumbUpIcon color="secondary" />
+          </IconButton>}
           <IconButton onClick={() =>
             setIsCommentOpen(!isCommentOpen)
           }>

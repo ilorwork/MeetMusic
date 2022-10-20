@@ -60,7 +60,6 @@ const CommentToCommentComponent = ({ commentToComment, comment, getCommentsOfCom
                         commentId: comment._id
                     },
                 });
-            console.log(res.data);
             getCommentsOfComment();
             setCommentsToCommentCount(commentsToCommentCount - 1);
             setAnchorCommentToCommentSettings(null);

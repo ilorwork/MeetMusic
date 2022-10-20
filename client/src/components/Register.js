@@ -86,9 +86,9 @@ const Register = () => {
 
     try {
       const res = await axios.post("http://localhost:7000/users", newUser);
-      console.log("user created, res:", res);
-      console.log("user created, status:", res.status);
-      console.log("user created, data:", res.data);
+      // console.log("user created, res:", res);
+      // console.log("user created, status:", res.status);
+      // console.log("user created, data:", res.data);
 
       setFirstName("");
       setLastName("");

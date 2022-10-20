@@ -18,11 +18,8 @@ const CommentComponent = ({ comment, post, getCommentsOfPost, commentsCount, set
     const [isCommentToCommentOpen, setIsCommentToCommentOpen] = useState(false);
     const [commentsOfComment, setCommentsOfComment] = useState([]);
     const [commentsToCommentCount, setCommentsToCommentCount] = useState(comment.commentsToCommentCount);
-    const [paddingXSourceForCommentToComment, setPaddingXSourceForCommentToComment] = useState(2);
 
-    // useEffect(() => {
-    //     console.log(isCommentToCommentOpen);
-    // }, [isCommentToCommentOpen]);
+    const paddingXSourceForCommentToComment = 2;
 
     useEffect(() => {
         getCommentsOfComment();
@@ -76,21 +73,11 @@ const CommentComponent = ({ comment, post, getCommentsOfPost, commentsCount, set
             <Box sx={{
                 px: 2, pt: 1, display: 'flex', justifyContent: 'space-between'
             }}>
-
-                {comment.creator.profilePic ? (
-                    <Avatar src={comment.creator.profilePic} />
-                ) : (
-                    <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>
-                        {`${comment.creator.firstName.charAt(0).toUpperCase()}${comment.creator.lastName.charAt(0).toUpperCase()}`}
-                    </Avatar>
-                )}
-
+                <Avatar src={comment.creator.profilePic} />
                 <Grid container sx={{
                     border: "solid rgb(209, 46, 101) 1px", borderRadius: 4, ml: 1, p: 1,
                     fontSize: 10, background: '#eee'
                 }}>
-                    <Grid item>
-                    </Grid>
                     <Grid item xs>
                         <Typography>{comment.content}</Typography>
                     </Grid>
