@@ -39,7 +39,7 @@ const PostComponent = ({ post, getPosts }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:7000/likes/test",
+        "http://localhost:7000/likes/has-liked",
         {
           postId: post._id,
         },
