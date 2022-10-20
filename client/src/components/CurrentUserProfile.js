@@ -28,6 +28,7 @@ const CurrentUserProfile = () => {
   useEffect(() => {
     getInfo();
     getUserPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getInfo = async () => {
@@ -54,10 +55,10 @@ const CurrentUserProfile = () => {
   };
 
   const calculateAge = () =>
-    Math.floor(
+    (
       (new Date() - new Date(user.birthDate).getTime()) /
-        (365.25 * 24 * 60 * 60 * 1000)
-    );
+      (365.25 * 24 * 60 * 60 * 1000)
+    ).toFixed(1);
 
   const handleEditProfile = () => {};
 
@@ -169,7 +170,7 @@ const CurrentUserProfile = () => {
         </div>
         <div className={style.containerPostComponents}>
           {userPosts.map((post) => (
-            <PostComponent post={post} key={uuid()} />
+            <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
           ))}
         </div>
         <div className={style.peopleYouFollow}>

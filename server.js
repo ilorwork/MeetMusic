@@ -4,9 +4,12 @@ const { routesInit } = require("./routes/baseRouts");
 require("dotenv").config();
 require("./mongoConnect");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 
 const app = express();
 
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 // Allows the app to get a json format
 app.use(express.json());
 app.use(cookieParser());

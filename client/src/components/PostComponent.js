@@ -22,7 +22,7 @@ import CommentComponent from "./CommentComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewComment from "./CreateNewComment";
 
-const PostComponent = ({ post, getAllPosts }) => {
+const PostComponent = ({ post, getPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentsOfPost, setCommentsOfPost] = useState([]);
@@ -38,7 +38,8 @@ const PostComponent = ({ post, getAllPosts }) => {
   const getDataIsUserLikeThePost = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post("http://localhost:7000/likes/test",
+      const res = await axios.post(
+        "http://localhost:7000/likes/test",
         {
           postId: post._id,
         },
@@ -49,17 +50,17 @@ const PostComponent = ({ post, getAllPosts }) => {
           },
         }
       );
-      console.log(res.data);
-      setIsUserLikeThePost(res.data.isUserLikeThePost)
+      setIsUserLikeThePost(res.data.isUserLikeThePost);
     } catch (e) {
-      console.log("get data is user like the post failed " + e);
+      console.error("get data is user like the post failed " + e);
     }
-  }
+  };
 
   const addLike = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post("http://localhost:7000/likes/",
+      const res = await axios.post(
+        "http://localhost:7000/likes/",
         {
           postId: post._id,
         },
@@ -73,34 +74,34 @@ const PostComponent = ({ post, getAllPosts }) => {
       setIsUserLikeThePost(!isUserLikeThePost);
       setLikesCount(likesCount + 1);
     } catch (e) {
-      console.log("add like failed " + e);
+      console.error("add like failed " + e);
     }
-  }
+  };
 
   const removeLike = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete("http://localhost:7000/likes/",
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-          data: {
-            postId: post._id
-          },
-        });
+      await axios.delete("http://localhost:7000/likes/", {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+        data: {
+          postId: post._id,
+        },
+      });
       setIsUserLikeThePost(!isUserLikeThePost);
       setLikesCount(likesCount - 1);
     } catch (e) {
-      console.log("remove like failed " + e);
+      console.error("remove like failed " + e);
     }
-  }
+  };
 
   const getCommentsOfPost = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post("http://localhost:7000/comments/post-comments/",
+      const res = await axios.post(
+        "http://localhost:7000/comments/post-comments/",
         {
           _id: post._id,
         },
@@ -113,14 +114,14 @@ const PostComponent = ({ post, getAllPosts }) => {
       );
       setCommentsOfPost(res.data);
     } catch (e) {
-      console.log("get comments of post failed " + e);
+      console.error("get comments of post failed " + e);
     }
-  }
+  };
 
   const handleDeletePost = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await axios.delete("http://localhost:7000/posts/", {
+    await axios.delete("http://localhost:7000/posts/", {
       withCredentials: true,
       headers: {
         authorization: token,
@@ -129,90 +130,97 @@ const PostComponent = ({ post, getAllPosts }) => {
         _id: post._id,
       },
     });
-    getAllPosts();
+
+    getPosts();
     setAnchorPostSettings(null);
   };
 
   return (
-    <>
-      <Card sx={{ mt: 2 }}>
-        <CardHeader
-          avatar={
-            post.creator.profilePic ? (
-              <Avatar src={post.creator.profilePic} />
-            ) : (
-              <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
-            )
-          }
-          title={`${post.creator.firstName} ${post.creator.lastName}`}
-          subheader={new Date(post.timeOfCreation).toLocaleString()}
-          action={
-            <>
-              <IconButton
-                onClick={(e) => setAnchorPostSettings(e.currentTarget)}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                anchorEl={anchorPostSettings}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorPostSettings)}
-                onClose={() => setAnchorPostSettings(null)}
-              >
-                <MenuItem onClick={() => setAnchorPostSettings(null)}>
-                  <Typography>Edit Post</Typography>
-                </MenuItem>
-                <MenuItem onClick={handleDeletePost}>
-                  <Typography color={"error"}>Delete Post</Typography>
-                </MenuItem>
-              </Menu>
-            </>
-          }
-        ></CardHeader>
-        {post.postText && <CardContent>{post.postText}</CardContent>}
-        {post.postImage && (
-          <CardMedia
-            component="img"
-            height="300"
-            image={post.postImage}
-            alt="post image"
-          ></CardMedia>
-        )}
-        <Box className={style.footerIndecators}>
-          <div>{likesCount} Likes</div>
-          <div>{commentsCount} Comments</div>
-          <div>{post.sharedCount} Shares</div>
-        </Box>
-        <CardActions className={style.actionsContainer}>
-          {!isUserLikeThePost && <IconButton onClick={addLike}>
+    <Card sx={{ mt: 2 }}>
+      <CardHeader
+        avatar={<Avatar src={post.creator.profilePic} />}
+        title={`${post.creator.firstName} ${post.creator.lastName}`}
+        subheader={new Date(post.timeOfCreation).toLocaleString()}
+        action={
+          <>
+            <IconButton onClick={(e) => setAnchorPostSettings(e.currentTarget)}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorPostSettings}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorPostSettings)}
+              onClose={() => setAnchorPostSettings(null)}
+            >
+              <MenuItem onClick={() => setAnchorPostSettings(null)}>
+                <Typography>Edit Post</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleDeletePost}>
+                <Typography color={"error"}>Delete Post</Typography>
+              </MenuItem>
+            </Menu>
+          </>
+        }
+      ></CardHeader>
+      {post.postText && <CardContent>{post.postText}</CardContent>}
+      {post.postImage && (
+        <CardMedia
+          component="img"
+          height="300"
+          image={post.postImage}
+          alt="post image"
+        ></CardMedia>
+      )}
+      <Box className={style.footerIndecators}>
+        <div>{likesCount} Likes</div>
+        <div>{commentsCount} Comments</div>
+        <div>{post.sharedCount} Shares</div>
+      </Box>
+      <CardActions className={style.actionsContainer}>
+        {!isUserLikeThePost && (
+          <IconButton onClick={addLike}>
             <ThumbUpIcon color="inherit" />
-          </IconButton>}
-          {isUserLikeThePost && <IconButton onClick={removeLike}>
+          </IconButton>
+        )}
+        {isUserLikeThePost && (
+          <IconButton onClick={removeLike}>
             <ThumbUpIcon color="secondary" />
-          </IconButton>}
-          <IconButton onClick={() =>
-            setIsCommentOpen(!isCommentOpen)
-          }>
-            <ChatBubbleIcon />
           </IconButton>
-          <IconButton>
-            <ScreenShareIcon />
-          </IconButton>
-        </CardActions>
-        {isCommentOpen && <CreateNewComment post={post}
-          getCommentsOfPost={getCommentsOfPost} commentsCount={commentsCount} setCommentsCount={setCommentsCount} />}
-        {isCommentOpen &&
-          commentsOfPost.map((comment) => <CommentComponent comment={comment} post={post}
-            getCommentsOfPost={getCommentsOfPost} commentsCount={commentsCount} setCommentsCount={setCommentsCount} key={uuid()} />)}
-      </Card>
-    </>
+        )}
+        <IconButton onClick={() => setIsCommentOpen(!isCommentOpen)}>
+          <ChatBubbleIcon />
+        </IconButton>
+        <IconButton>
+          <ScreenShareIcon />
+        </IconButton>
+      </CardActions>
+      {isCommentOpen && (
+        <CreateNewComment
+          post={post}
+          getCommentsOfPost={getCommentsOfPost}
+          commentsCount={commentsCount}
+          setCommentsCount={setCommentsCount}
+        />
+      )}
+      {isCommentOpen &&
+        commentsOfPost.map((comment) => (
+          <CommentComponent
+            comment={comment}
+            post={post}
+            getCommentsOfPost={getCommentsOfPost}
+            commentsCount={commentsCount}
+            setCommentsCount={setCommentsCount}
+            key={uuid()}
+          />
+        ))}
+    </Card>
   );
 };
 

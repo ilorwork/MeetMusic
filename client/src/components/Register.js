@@ -41,6 +41,7 @@ const Register = () => {
     );
     if (indexOfCountry !== -1)
       setCitiesOfSelectedCountry(countriesAndCities[indexOfCountry].cities);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
   const MenuProps = {
@@ -85,10 +86,7 @@ const Register = () => {
     };
 
     try {
-      const res = await axios.post("http://localhost:7000/users", newUser);
-      // console.log("user created, res:", res);
-      // console.log("user created, status:", res.status);
-      // console.log("user created, data:", res.data);
+      await axios.post("http://localhost:7000/users", newUser);
 
       setFirstName("");
       setLastName("");
@@ -101,7 +99,8 @@ const Register = () => {
 
       navigate("/login");
     } catch (e) {
-      throw e;
+      console.error("Failed to login " + e);
+      // TODO: Present some error to the user
     }
   };
 

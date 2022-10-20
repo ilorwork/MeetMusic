@@ -24,6 +24,7 @@ const getAllPosts = async (req, res) => {
   try {
     const allPostsWithCreator = await PostModel.find({}).populate("creator");
     allPostsWithCreator.reverse();
+
     return res.status(200).json(allPostsWithCreator);
   } catch (e) {
     res.status(500).json(`Failed to get all posts ${e}`);

@@ -16,8 +16,6 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ["user", "admin"], default: "user" },
   following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
-  //   posts: [posts],
-  //   sharedPosts: [sharedPosts],
 });
 
 const UserModel = mongoose.model("User", userSchema);
