@@ -59,11 +59,12 @@ const PostComponent = ({ post, getPosts }) => {
     <Card sx={{ mt: 2 }}>
       <CardHeader
         avatar={
-          post.creator.profilePic ? (
+          <button
+            className={style.profileBtn}
+            onClick={() => navigate(`/user-profile/${post.creator._id}`)}
+          >
             <Avatar src={post.creator.profilePic} />
-          ) : (
-            <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
-          )
+          </button>
         }
         title={`${post.creator.firstName} ${post.creator.lastName}`}
         subheader={new Date(post.timeOfCreation).toLocaleString()}

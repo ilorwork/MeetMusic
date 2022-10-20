@@ -1,3 +1,9 @@
+.profileBtn {
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+}
+
 .footerIndecators {
   display: flex;
   justify-content: space-around;
