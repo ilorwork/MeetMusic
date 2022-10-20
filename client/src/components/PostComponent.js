@@ -38,7 +38,7 @@ const PostComponent = ({ post, getAllPosts }) => {
   const getDataIsUserLikeThePost = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post("http://localhost:7000/likes/test",
+      const res = await axios.post("http://localhost:7000/likes/has-liked",
         {
           postId: post._id,
         },
@@ -49,10 +49,9 @@ const PostComponent = ({ post, getAllPosts }) => {
           },
         }
       );
-      console.log(res.data);
       setIsUserLikeThePost(res.data.isUserLikeThePost)
     } catch (e) {
-      console.log("get data is user like the post failed " + e);
+      console.error("get data is user like the post failed " + e);
     }
   }
 
@@ -73,7 +72,7 @@ const PostComponent = ({ post, getAllPosts }) => {
       setIsUserLikeThePost(!isUserLikeThePost);
       setLikesCount(likesCount + 1);
     } catch (e) {
-      console.log("add like failed " + e);
+      console.error("add like failed " + e);
     }
   }
 
@@ -93,7 +92,7 @@ const PostComponent = ({ post, getAllPosts }) => {
       setIsUserLikeThePost(!isUserLikeThePost);
       setLikesCount(likesCount - 1);
     } catch (e) {
-      console.log("remove like failed " + e);
+      console.error("remove like failed " + e);
     }
   }
 
@@ -113,7 +112,7 @@ const PostComponent = ({ post, getAllPosts }) => {
       );
       setCommentsOfPost(res.data);
     } catch (e) {
-      console.log("get comments of post failed " + e);
+      console.error("get comments of post failed " + e);
     }
   }
 

@@ -3,8 +3,7 @@ const likeController = require("../controllers/likeController");
 const { verifyUser } = require("../middleware/userVerification");
 const router = express.Router();
 
-router.get("/", likeController.getAllLikes);
-router.post("/test", verifyUser, likeController.isUserLikeThePost);
+router.post("/has-liked", verifyUser, likeController.isUserLikeThePost);
 router.post("/", verifyUser, likeController.addLike);
 router.delete("/", verifyUser, likeController.removeLike);
 

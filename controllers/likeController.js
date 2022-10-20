@@ -2,17 +2,6 @@ const LikeModel = require("../models/likeModel");
 const PostModel = require("../models/postModel");
 const UserModel = require("../models/userModel");
 
-const getAllLikes = async (req, res) => {
-    try {
-        const allLikes = await LikeModel.find({});
-        allLikes.reverse();
-        return res.status(200).json(allLikes);
-    } catch (e) {
-        return res.status(500).json("get all likes failed " + e);
-    }
-
-}
-
 const addLike = async (req, res) => {
     try {
         const creator = await UserModel.findOne({ email: req.user.email });
@@ -57,7 +46,6 @@ const isUserLikeThePost = async (req, res) => {
 }
 
 module.exports = {
-    getAllLikes,
     addLike,
     removeLike,
     isUserLikeThePost
