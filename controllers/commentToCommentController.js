@@ -19,16 +19,6 @@ const createCommentToComment = async (req, res) => {
     }
 }
 
-const getAllCommentsToComments = async (req, res) => {
-    try {
-        const allCommentsToComments = await CommentToCommentModel.find({});
-        allCommentsToComments.reverse();
-        return res.status(200).json(allCommentsToComments);
-    } catch (e) {
-        return res.status(500).json("get all comments to comments failed " + e);
-    }
-}
-
 const getCommentsOfComment = async (req, res) => {
     try {
         const commentsOfComment = await CommentToCommentModel.find({ commentId: req.body._id }).populate("creator").lean();
@@ -63,7 +53,6 @@ const deleteCommentToComment = async (req, res) => {
 
 module.exports = {
     createCommentToComment,
-    getAllCommentsToComments,
     getCommentsOfComment,
     deleteCommentToComment
 }

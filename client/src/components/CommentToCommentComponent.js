@@ -73,15 +73,7 @@ const CommentToCommentComponent = ({ commentToComment, comment, getCommentsOfCom
             <Box sx={{
                 pl: paddingXForCurrentCommentToComment, pr: 2, pt: 1, display: 'flex', justifyContent: 'space-between'
             }}>
-
-                {commentToComment.creator.profilePic ? (
-                    <Avatar src={commentToComment.creator.profilePic} />
-                ) : (
-                    <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>
-                        {`${commentToComment.creator.firstName.charAt(0).toUpperCase()}${commentToComment.creator.lastName.charAt(0).toUpperCase()}`}
-                    </Avatar>
-                )}
-
+                <Avatar src={commentToComment.creator.profilePic} />
                 <Grid container sx={{
                     border: "solid rgb(38, 165, 165) 1px", borderRadius: 4, ml: 1, p: 1,
                     fontSize: 8, background: '#efe'

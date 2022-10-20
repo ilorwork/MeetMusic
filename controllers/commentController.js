@@ -19,16 +19,6 @@ const createComment = async (req, res) => {
     }
 }
 
-const getAllComments = async (req, res) => {
-    try {
-        const allComments = await CommentModel.find({});
-        allComments.reverse();
-        return res.status(200).json(allComments);
-    } catch (e) {
-        return res.status(500).json("get all comments failed " + e);
-    }
-}
-
 const getCommentsOfPost = async (req, res) => {
     try {
         const commentsOfPost = await CommentModel.find({ postId: req.body._id }).populate("creator").lean();
@@ -63,7 +53,6 @@ const deleteComment = async (req, res) => {
 
 module.exports = {
     createComment,
-    getAllComments,
     getCommentsOfPost,
     deleteComment
 }

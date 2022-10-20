@@ -3,7 +3,6 @@ const commentController = require("../controllers/commentController");
 const { verifyUser } = require("../middleware/userVerification");
 const router = express.Router();
 
-router.get("/", commentController.getAllComments);
 router.post("/", verifyUser, commentController.createComment);
 router.post("/post-comments", verifyUser, commentController.getCommentsOfPost);
 // router.put("/", verifyUser, commentController.editComment);
