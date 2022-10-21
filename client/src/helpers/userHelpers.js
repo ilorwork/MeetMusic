@@ -18,7 +18,7 @@ const login = async (email, password) => {
   }
 };
 
-const getCurrentUserInfo = async () => {
+const getCurrentUserInfo = async (populated = false) => {
   const token = localStorage.getItem("token");
 
   try {
@@ -27,6 +27,7 @@ const getCurrentUserInfo = async () => {
       headers: {
         authorization: token,
       },
+      params: { populated },
     });
     return res.data;
   } catch (e) {

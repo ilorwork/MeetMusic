@@ -33,7 +33,7 @@ const CurrentUserProfile = () => {
 
   const getInfo = async () => {
     try {
-      const currentUserInfo = await getCurrentUserInfo();
+      const currentUserInfo = await getCurrentUserInfo(true);
       setUser(currentUserInfo);
     } catch (e) {
       if (e.response.status === 401) {

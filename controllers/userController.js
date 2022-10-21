@@ -86,9 +86,15 @@ const editUser = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.user.email })
-      .populate("following")
-      .populate("followers");
+    let user;
+    if (req.query.populated === "true") {
+      user = await UserModel.findOne({ email: req.user.email })
+        .populate("following")
+        .populate("followers");
+    } else {
+      user = await UserModel.findOne({ email: req.user.email });
+    }
+
     return res.status(200).json(user);
   } catch (e) {
     return res.status(500).json(`get user failed ${e}`);
