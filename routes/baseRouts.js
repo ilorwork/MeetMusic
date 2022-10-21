@@ -1,5 +1,8 @@
 const userRoutes = require("./userRoutes");
 const postRoutes = require("./postRoutes");
+const commentRoutes = require("./commentRoutes");
+const commentToCommentRoutes = require("./commentToCommentRoutes");
+const likeRoutes = require("./likeRoutes");
 // const sharedPostRoutes = require("./sharedPostRoutes");
 const notificationRouts = require("./notificationRouts");
 
@@ -7,6 +10,9 @@ const notificationRouts = require("./notificationRouts");
 exports.routesInit = (app) => {
   app.use("/users", userRoutes);
   app.use("/posts", postRoutes);
+  app.use("/comments", commentRoutes);
+  app.use("/comments-to-comments", commentToCommentRoutes);
+  app.use("/likes", likeRoutes);
   // app.use("/sharedPostRoutes", sharedPostRoutes);
   app.use("/notifications", notificationRouts);
 

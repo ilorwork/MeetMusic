@@ -17,8 +17,8 @@ import { getCurrentUserInfo } from "../helpers/userHelpers";
 import style from "./CreateNewPost.module.css";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
-import { v4 as uuid } from "uuid";
 import axios from "axios";
+import { v4 as uuid } from "uuid";
 
 const modalStyle = {
   position: "absolute",
