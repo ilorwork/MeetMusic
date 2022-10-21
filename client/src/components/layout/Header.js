@@ -86,7 +86,7 @@ const Header = () => {
         <Autocomplete
           // freeSolo
           options={allUsers}
-          getOptionLabel={(option) => option._id}
+          getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
           renderOption={(props, option) => (
             <UserSearchCard key={uuid()} user={option} />
           )}
