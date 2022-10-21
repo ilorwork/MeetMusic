@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import style from "./PostComponent.module.css";
@@ -18,9 +18,105 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
+import CommentComponent from "./CommentComponent";
+import { v4 as uuid } from "uuid";
+import CreateNewComment from "./CreateNewComment";
 
 const PostComponent = ({ post, getPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [commentsOfPost, setCommentsOfPost] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(post.commentsCount);
+  const [likesCount, setLikesCount] = useState(post.likesCount);
+  const [isUserLikeThePost, setIsUserLikeThePost] = useState(false);
+
+  useEffect(() => {
+    getCommentsOfPost();
+    getDataIsUserLikeThePost();
+  }, []);
+
+  const getDataIsUserLikeThePost = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        "http://localhost:7000/likes/has-liked",
+        {
+          postId: post._id,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setIsUserLikeThePost(res.data.isUserLikeThePost);
+    } catch (e) {
+      console.error("get data is user like the post failed " + e);
+    }
+  };
+
+  const addLike = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        "http://localhost:7000/likes/",
+        {
+          postId: post._id,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setIsUserLikeThePost(!isUserLikeThePost);
+      setLikesCount(likesCount + 1);
+    } catch (e) {
+      console.error("add like failed " + e);
+    }
+  };
+
+  const removeLike = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete("http://localhost:7000/likes/", {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+        data: {
+          postId: post._id,
+        },
+      });
+      setIsUserLikeThePost(!isUserLikeThePost);
+      setLikesCount(likesCount - 1);
+    } catch (e) {
+      console.error("remove like failed " + e);
+    }
+  };
+
+  const getCommentsOfPost = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        "http://localhost:7000/comments/post-comments/",
+        {
+          _id: post._id,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setCommentsOfPost(res.data);
+    } catch (e) {
+      console.error("get comments of post failed " + e);
+    }
+  };
 
   const handleDeletePost = async () => {
     const token = localStorage.getItem("token");
@@ -42,13 +138,7 @@ const PostComponent = ({ post, getPosts }) => {
   return (
     <Card sx={{ mt: 2 }}>
       <CardHeader
-        avatar={
-          post.creator.profilePic ? (
-            <Avatar src={post.creator.profilePic} />
-          ) : (
-            <Avatar sx={{ bgcolor: "rgb(38, 165, 165)" }}>MC</Avatar>
-          )
-        }
+        avatar={<Avatar src={post.creator.profilePic} />}
         title={`${post.creator.firstName} ${post.creator.lastName}`}
         subheader={new Date(post.timeOfCreation).toLocaleString()}
         action={
@@ -89,21 +179,47 @@ const PostComponent = ({ post, getPosts }) => {
         ></CardMedia>
       )}
       <Box className={style.footerIndecators}>
-        <div>{post.likesCount} Likes</div>
-        <div>{post.commentsCount} Comments</div>
+        <div>{likesCount} Likes</div>
+        <div>{commentsCount} Comments</div>
         <div>{post.sharedCount} Shares</div>
       </Box>
       <CardActions className={style.actionsContainer}>
-        <IconButton>
-          <ThumbUpIcon />
-        </IconButton>
-        <IconButton>
+        {!isUserLikeThePost && (
+          <IconButton onClick={addLike}>
+            <ThumbUpIcon color="inherit" />
+          </IconButton>
+        )}
+        {isUserLikeThePost && (
+          <IconButton onClick={removeLike}>
+            <ThumbUpIcon color="secondary" />
+          </IconButton>
+        )}
+        <IconButton onClick={() => setIsCommentOpen(!isCommentOpen)}>
           <ChatBubbleIcon />
         </IconButton>
         <IconButton>
           <ScreenShareIcon />
         </IconButton>
       </CardActions>
+      {isCommentOpen && (
+        <CreateNewComment
+          post={post}
+          getCommentsOfPost={getCommentsOfPost}
+          commentsCount={commentsCount}
+          setCommentsCount={setCommentsCount}
+        />
+      )}
+      {isCommentOpen &&
+        commentsOfPost.map((comment) => (
+          <CommentComponent
+            comment={comment}
+            post={post}
+            getCommentsOfPost={getCommentsOfPost}
+            commentsCount={commentsCount}
+            setCommentsCount={setCommentsCount}
+            key={uuid()}
+          />
+        ))}
     </Card>
   );
 };
