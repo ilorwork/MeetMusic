@@ -4,6 +4,7 @@ const commentRoutes = require("./commentRoutes");
 const commentToCommentRoutes = require("./commentToCommentRoutes");
 const likeRoutes = require("./likeRoutes");
 // const sharedPostRoutes = require("./sharedPostRoutes");
+const notificationRouts = require("./notificationRouts");
 
 // All main routes of the application
 exports.routesInit = (app) => {
@@ -13,6 +14,7 @@ exports.routesInit = (app) => {
   app.use("/comments-to-comments", commentToCommentRoutes);
   app.use("/likes", likeRoutes);
   // app.use("/sharedPostRoutes", sharedPostRoutes);
+  app.use("/notifications", notificationRouts);
 
   // Handle case of request to any wrong route
   app.use("", (req, res) => {

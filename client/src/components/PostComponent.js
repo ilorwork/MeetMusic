@@ -12,12 +12,15 @@ import {
   CardContent,
   CardMedia,
   IconButton,
+  ImageList,
+  ImageListItem,
   Menu,
   MenuItem,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import CommentComponent from "./CommentComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewComment from "./CreateNewComment";
@@ -118,27 +121,47 @@ const PostComponent = ({ post, getPosts }) => {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleDeletePost = async () => {
     const token = localStorage.getItem("token");
 
-    await axios.delete("http://localhost:7000/posts/", {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-      data: {
-        _id: post._id,
-      },
-    });
+    try {
+      await axios.delete("http://localhost:7000/posts/", {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+        data: {
+          _id: post._id,
+        },
+      });
 
-    getPosts();
-    setAnchorPostSettings(null);
+      getPosts();
+      setAnchorPostSettings(null);
+    } catch (e) {
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
+    }
+  };
+
+  const getImagesCols = () => {
+    if (post.postImages.length < 3) return post.postImages.length;
+    else return 3;
   };
 
   return (
     <Card sx={{ mt: 2 }}>
       <CardHeader
-        avatar={<Avatar src={post.creator.profilePic} />}
+        avatar={
+          <button
+            className={style.profileBtn}
+            onClick={() => navigate(`/user-profile/${post.creator._id}`)}
+          >
+            <Avatar src={post.creator.profilePic} />
+          </button>
+        }
         title={`${post.creator.firstName} ${post.creator.lastName}`}
         subheader={new Date(post.timeOfCreation).toLocaleString()}
         action={
@@ -170,13 +193,19 @@ const PostComponent = ({ post, getPosts }) => {
         }
       ></CardHeader>
       {post.postText && <CardContent>{post.postText}</CardContent>}
-      {post.postImage && (
-        <CardMedia
-          component="img"
-          height="300"
-          image={post.postImage}
-          alt="post image"
-        ></CardMedia>
+      {post.postImages && (
+        <ImageList cols={getImagesCols()} rowHeight={300}>
+          {post.postImages.map((img) => (
+            <ImageListItem key={uuid()}>
+              <img src={img} />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      )}
+      {post.postAudio && (
+        <audio controls>
+          <source src={post.postAudio} />
+        </audio>
       )}
       <Box className={style.footerIndecators}>
         <div>{likesCount} Likes</div>

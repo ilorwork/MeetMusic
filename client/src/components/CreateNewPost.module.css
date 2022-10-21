@@ -4,12 +4,12 @@
   padding: 1rem;
 }
 
-.createNewPostBtn {
-  width: 100%;
-  margin-left: 1rem;
+.profileBtn {
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
 }
 
-/* .postImage {
-  margin: 5px;
-  max-width: 14rem;
-} */
+.createNewPostBtn {
+  width: 100%;
+}

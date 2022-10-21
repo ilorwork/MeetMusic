@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./Register.module.css";
 import { v4 as uuid } from "uuid";
+import { login } from "../helpers/userHelpers";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -86,18 +87,14 @@ const Register = () => {
     };
 
     try {
-      await axios.post("http://localhost:7000/users", newUser);
+      const res = await axios.post("http://localhost:7000/users", newUser);
+      await axios.post("http://localhost:7000/notifications", {
+        userToNote: res.data._id,
+        content: "Welcome to MeetMusic",
+      });
 
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPassword("");
-      setGender("");
-      setBirthDate("");
-      setCountry("");
-      setCity("");
-
-      navigate("/login");
+      await login(email, password);
+      navigate("/");
     } catch (e) {
       console.error("Failed to login " + e);
       // TODO: Present some error to the user

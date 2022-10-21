@@ -2,6 +2,22 @@ import axios from "axios";
 
 const base_url = "http://localhost:7000";
 
+const login = async (email, password) => {
+  try {
+    const res = await axios.post(
+      "http://localhost:7000/users/login",
+      { email, password },
+      {
+        withCredentials: true,
+      }
+    );
+
+    localStorage.setItem("token", res.headers.authorization);
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getCurrentUserInfo = async (populated = false) => {
   const token = localStorage.getItem("token");
 
@@ -142,7 +158,17 @@ const getUserFollowers = async (userId) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const res = await axios.get(`${base_url}/users/`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 export {
+  login,
   getCurrentUserInfo,
   getPeopleYouMayKnow,
   getCurrentUserFollowing,
@@ -152,4 +178,5 @@ export {
   getUserInfo,
   getUserFollowing,
   getUserFollowers,
+  getAllUsers,
 };

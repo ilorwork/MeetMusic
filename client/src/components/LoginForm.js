@@ -1,7 +1,7 @@
 import { Button, Paper, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { login } from "../helpers/userHelpers";
 import style from "./LoginForm.module.css";
 
 const LoginForm = () => {
@@ -13,17 +13,8 @@ const LoginForm = () => {
   const handleSumbitLogin = async () => {
     if (!email || !password) return;
 
-    const userInfo = { email, password };
     try {
-      const res = await axios.post(
-        "http://localhost:7000/users/login",
-        userInfo,
-        {
-          withCredentials: true,
-        }
-      );
-
-      localStorage.setItem("token", res.headers.authorization);
+      await login(email, password);
       navigate("/");
     } catch (err) {
       throw new Error("Login user has failed " + err);

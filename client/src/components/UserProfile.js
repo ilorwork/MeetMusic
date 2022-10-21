@@ -27,7 +27,7 @@ const UserProfile = () => {
     getUserInfo();
     getUserPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   const getUserInfo = async () => {
     try {
@@ -37,7 +37,9 @@ const UserProfile = () => {
 
       setUser(res.data);
     } catch (e) {
-      navigate("/login");
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
     }
   };
 

@@ -6,11 +6,23 @@ const createPost = async (req, res) => {
   try {
     const creator = await UserModel.findOne({ email: req.user.email });
     req.body.creator = creator._id;
-    if (req.body.postImage) {
-      const uploadedImgRes = await cloudinary.uploader.upload(
-        req.body.postImage
+    if (req.body.postImages) {
+      const urls = await Promise.all(
+        req.body.postImages.map(async (img) => {
+          const uploadedImgRes = await cloudinary.uploader.upload(img);
+          return uploadedImgRes.url;
+        })
       );
-      req.body.postImage = `https://res.cloudinary.com/dhbgvkcez/image/upload/v${uploadedImgRes.version}/${uploadedImgRes.public_id}.${uploadedImgRes.format}`;
+      req.body.postImages = urls;
+    }
+
+    if (req.body.postAudio) {
+      const uploadedAudioRes = await cloudinary.uploader.upload(
+        req.body.postAudio,
+        { resource_type: "video" }
+      );
+
+      req.body.postAudio = uploadedAudioRes.url;
     }
     const newPost = await PostModel.create(req.body);
     await newPost.save();
@@ -65,9 +77,18 @@ const deletePost = async (req, res) => {
     if (req.user.email !== postToDelete.creator.email)
       return res.status(401).json("Can't delete other's posts");
 
-    if (postToDelete.postImage) {
-      const imgPublicId = postToDelete.postImage.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(imgPublicId);
+    if (postToDelete.postImages) {
+      postToDelete.postImages.map(async (img) => {
+        const imgPublicId = img.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(imgPublicId);
+      });
+    }
+
+    if (postToDelete.postAudio) {
+      const audPublicId = postToDelete.postAudio.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(audPublicId, {
+        resource_type: "video",
+      });
     }
 
     const deletedPost = await PostModel.deleteOne({ _id: req.body });
