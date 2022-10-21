@@ -16,6 +16,7 @@ const Followers = ({ follower, getUserInfo }) => {
   }, []);
 
   useEffect(() => {
+    if (!currentUserId) return;
     setIsCurrentUserFollow(follower.followers.includes(currentUserId));
   }, [currentUserId]);
 

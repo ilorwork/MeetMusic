@@ -2,7 +2,7 @@ import axios from "axios";
 
 const base_url = "http://localhost:7000";
 
-const getCurrentUserInfo = async () => {
+const getCurrentUserInfo = async (populated = false) => {
   const token = localStorage.getItem("token");
 
   try {
@@ -11,6 +11,7 @@ const getCurrentUserInfo = async () => {
       headers: {
         authorization: token,
       },
+      params: { populated },
     });
     return res.data;
   } catch (e) {
