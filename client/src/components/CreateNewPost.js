@@ -57,7 +57,7 @@ const CreateNewPost = ({ getAllPosts }) => {
   };
 
   const handleCreatePost = async () => {
-    if (!postText && !postImages && !postAudio) return;
+    if (!postText && !postImages.length && !postAudio) return;
 
     const token = localStorage.getItem("token");
     const newPost = { postText, postImages, postAudio };
@@ -83,6 +83,9 @@ const CreateNewPost = ({ getAllPosts }) => {
   };
 
   const handleImageSelection = (e) => {
+    // TODO: send a message to the user about the limit
+    if (postImages.length > 8) return;
+
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {

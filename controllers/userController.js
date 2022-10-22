@@ -135,6 +135,10 @@ const follow = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.user.email });
     const idOfUserFollowed = req.body._id;
+
+    if (user._id == idOfUserFollowed) return res.sendStatus(403);
+    if (user.following.includes(idOfUserFollowed)) return res.sendStatus(403);
+
     user.following.unshift(idOfUserFollowed);
     await user.save();
 

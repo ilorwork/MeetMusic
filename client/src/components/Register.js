@@ -88,12 +88,24 @@ const Register = () => {
 
     try {
       const res = await axios.post("http://localhost:7000/users", newUser);
-      await axios.post("http://localhost:7000/notifications", {
-        userToNote: res.data._id,
-        content: "Welcome to MeetMusic",
-      });
 
       await login(email, password);
+
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:7000/notifications",
+        {
+          userToNote: res.data._id,
+          content: "Welcome to MeetMusic",
+        },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+
       navigate("/");
     } catch (e) {
       console.error("Failed to login " + e);

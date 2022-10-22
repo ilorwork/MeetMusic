@@ -6,10 +6,14 @@ import {
   followUser,
   unfollowUser,
 } from "../helpers/userHelpers";
+import { useNavigate } from "react-router-dom";
 
 const Followers = ({ follower, getUserInfo }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(false);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCurrentUserId();
@@ -17,6 +21,10 @@ const Followers = ({ follower, getUserInfo }) => {
 
   useEffect(() => {
     if (!currentUserId) return;
+    if (follower._id === currentUserId) {
+      setIsCurrentUser(true);
+      return;
+    }
     setIsCurrentUserFollow(follower.followers.includes(currentUserId));
   }, [currentUserId]);
 
@@ -45,19 +53,25 @@ const Followers = ({ follower, getUserInfo }) => {
     }
   };
 
+  const navToUserPage = () => {
+    navigate(`/user-profile/${follower._id}`);
+  };
+
   return (
     <div className={style.personCard}>
-      <img
-        className={style.personPic}
-        width={70}
-        height={70}
-        src={follower.profilePic}
-        alt="user profile pic"
-      />
+      <button className={style.userProfileBtn} onClick={navToUserPage}>
+        <img
+          className={style.personPic}
+          width={70}
+          height={70}
+          src={follower.profilePic}
+          alt="user profile pic"
+        />
+      </button>
       <span className={style.personName}>
         {follower.firstName} {follower.lastName}
       </span>
-      {isCurrentUserFollow && (
+      {isCurrentUserFollow && !isCurrentUser && (
         <Button
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
@@ -66,13 +80,23 @@ const Followers = ({ follower, getUserInfo }) => {
           UnFollow
         </Button>
       )}
-      {!isCurrentUserFollow && (
+      {!isCurrentUserFollow && !isCurrentUser && (
         <Button
           style={{ background: "rgb(38, 165, 165)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}
         >
           Follow
+        </Button>
+      )}
+      {isCurrentUser && (
+        <Button
+          style={{ background: "disable", color: "black", fontSize: 10 }}
+          variant="contained"
+          onClick={handleFollowUser}
+          disabled
+        >
+          yourself
         </Button>
       )}
     </div>

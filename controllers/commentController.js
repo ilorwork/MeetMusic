@@ -15,12 +15,10 @@ const createComment = async (req, res) => {
     postCommented.commentsCount++;
     await postCommented.save();
 
-    return res
-      .status(201)
-      .json({
-        newComment: newComment,
-        commentsCount: postCommented.commentsCount,
-      });
+    return res.status(201).json({
+      newComment: newComment,
+      commentsCount: postCommented.commentsCount,
+    });
   } catch (e) {
     res.status(500).json("comment creation failed " + e);
   }
@@ -48,7 +46,7 @@ const deleteComment = async (req, res) => {
       _id: req.body._id,
     }).populate("creator");
     if (req.user.email !== commentToDelete.creator.email) {
-      return res.status(401).json("Can't delete other's comments");
+      return res.status(403).json("Can't delete other's comments");
     }
     const deletedComment = await CommentModel.deleteOne({ _id: req.body._id });
 
@@ -56,12 +54,10 @@ const deleteComment = async (req, res) => {
     postCommented.commentsCount--;
     await postCommented.save();
 
-    return res
-      .status(200)
-      .json({
-        deletedComment: deletedComment,
-        commentsCount: postCommented.commentsCount,
-      });
+    return res.status(200).json({
+      deletedComment: deletedComment,
+      commentsCount: postCommented.commentsCount,
+    });
   } catch (e) {
     return res.status(500).json("delete comment failed " + e);
   }

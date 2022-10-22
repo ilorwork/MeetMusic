@@ -6,11 +6,12 @@ const createPost = async (req, res) => {
   try {
     const creator = await UserModel.findOne({ email: req.user.email });
     req.body.creator = creator._id;
+
     if (req.body.postImages) {
       const urls = await Promise.all(
         req.body.postImages.map(async (img) => {
           const uploadedImgRes = await cloudinary.uploader.upload(img);
-          return uploadedImgRes.url;
+          return uploadedImgRes.secure_url;
         })
       );
       req.body.postImages = urls;
@@ -22,7 +23,7 @@ const createPost = async (req, res) => {
         { resource_type: "video" }
       );
 
-      req.body.postAudio = uploadedAudioRes.url;
+      req.body.postAudio = uploadedAudioRes.secure_url;
     }
     const newPost = await PostModel.create(req.body);
     await newPost.save();
@@ -75,18 +76,18 @@ const deletePost = async (req, res) => {
       "creator"
     );
     if (req.user.email !== postToDelete.creator.email)
-      return res.status(401).json("Can't delete other's posts");
+      return res.status(403).json("Can't delete other's posts");
 
-    if (postToDelete.postImages) {
-      postToDelete.postImages.map(async (img) => {
+    if (postToDelete.postImages.length) {
+      postToDelete.postImages.forEach((img) => {
         const imgPublicId = img.split("/").pop().split(".")[0];
-        await cloudinary.uploader.destroy(imgPublicId);
+        cloudinary.uploader.destroy(imgPublicId);
       });
     }
 
     if (postToDelete.postAudio) {
       const audPublicId = postToDelete.postAudio.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(audPublicId, {
+      cloudinary.uploader.destroy(audPublicId, {
         resource_type: "video",
       });
     }

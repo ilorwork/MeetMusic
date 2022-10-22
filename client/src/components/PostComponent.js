@@ -193,7 +193,7 @@ const PostComponent = ({ post, getPosts }) => {
         }
       ></CardHeader>
       {post.postText && <CardContent>{post.postText}</CardContent>}
-      {post.postImages && (
+      {post.postImages.length != 0 && (
         <ImageList cols={getImagesCols()} rowHeight={300}>
           {post.postImages.map((img) => (
             <ImageListItem key={uuid()}>
