@@ -57,7 +57,7 @@ const CreateNewPost = ({ getAllPosts }) => {
   };
 
   const handleCreatePost = async () => {
-    if (!postText && !postImages && !postAudio) return;
+    if (!postText && !postImages.length && !postAudio) return;
 
     const token = localStorage.getItem("token");
     const newPost = { postText, postImages, postAudio };
