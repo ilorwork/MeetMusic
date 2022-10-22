@@ -17,12 +17,10 @@ const createCommentToComment = async (req, res) => {
     commentCommented.commentsToCommentCount++;
     await commentCommented.save();
 
-    return res
-      .status(201)
-      .json({
-        newComment: newCommentToComment,
-        commentsToCommentCount: commentCommented.commentsToCommentCount,
-      });
+    return res.status(201).json({
+      newComment: newCommentToComment,
+      commentsToCommentCount: commentCommented.commentsToCommentCount,
+    });
   } catch (e) {
     res.status(500).json("comment to comment creation failed " + e);
   }
@@ -51,7 +49,7 @@ const deleteCommentToComment = async (req, res) => {
       _id: req.body._id,
     }).populate("creator");
     if (req.user.email !== commentToCommentToDelete.creator.email) {
-      return res.status(401).json("Can't delete other's comments");
+      return res.status(403).json("Can't delete other's comments");
     }
     const deletedCommentToComment = await CommentToCommentModel.deleteOne({
       _id: req.body._id,
@@ -63,12 +61,10 @@ const deleteCommentToComment = async (req, res) => {
     commentCommented.commentsToCommentCount--;
     await commentCommented.save();
 
-    return res
-      .status(200)
-      .json({
-        deletedCommentToComment: deletedCommentToComment,
-        commentsToCommentCount: commentCommented.commentsToCommentCount,
-      });
+    return res.status(200).json({
+      deletedCommentToComment: deletedCommentToComment,
+      commentsToCommentCount: commentCommented.commentsToCommentCount,
+    });
   } catch (e) {
     return res.status(500).json("delete comment to comment failed " + e);
   }
