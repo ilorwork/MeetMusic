@@ -78,16 +78,16 @@ const deletePost = async (req, res) => {
     if (req.user.email !== postToDelete.creator.email)
       return res.status(403).json("Can't delete other's posts");
 
-    if (postToDelete.postImages) {
-      postToDelete.postImages.map(async (img) => {
+    if (postToDelete.postImages.length) {
+      postToDelete.postImages.forEach((img) => {
         const imgPublicId = img.split("/").pop().split(".")[0];
-        await cloudinary.uploader.destroy(imgPublicId);
+        cloudinary.uploader.destroy(imgPublicId);
       });
     }
 
     if (postToDelete.postAudio) {
       const audPublicId = postToDelete.postAudio.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(audPublicId, {
+      cloudinary.uploader.destroy(audPublicId, {
         resource_type: "video",
       });
     }
