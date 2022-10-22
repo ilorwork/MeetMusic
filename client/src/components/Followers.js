@@ -9,6 +9,7 @@ import {
 
 const Followers = ({ follower, getUserInfo }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(false);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
 
   useEffect(() => {
@@ -17,6 +18,10 @@ const Followers = ({ follower, getUserInfo }) => {
 
   useEffect(() => {
     if (!currentUserId) return;
+    if (follower._id === currentUserId) {
+      setIsCurrentUser(true);
+      return;
+    }
     setIsCurrentUserFollow(follower.followers.includes(currentUserId));
   }, [currentUserId]);
 
@@ -57,7 +62,7 @@ const Followers = ({ follower, getUserInfo }) => {
       <span className={style.personName}>
         {follower.firstName} {follower.lastName}
       </span>
-      {isCurrentUserFollow && (
+      {isCurrentUserFollow && !isCurrentUser && (
         <Button
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
@@ -66,13 +71,23 @@ const Followers = ({ follower, getUserInfo }) => {
           UnFollow
         </Button>
       )}
-      {!isCurrentUserFollow && (
+      {!isCurrentUserFollow && !isCurrentUser && (
         <Button
           style={{ background: "rgb(38, 165, 165)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}
         >
           Follow
+        </Button>
+      )}
+      {isCurrentUser && (
+        <Button
+          style={{ background: "disable", color: "black", fontSize: 10 }}
+          variant="contained"
+          onClick={handleFollowUser}
+          disabled
+        >
+          yourself
         </Button>
       )}
     </div>

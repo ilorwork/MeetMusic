@@ -14,6 +14,7 @@ const Following = ({
   getPeopleYouMayKnow = () => {},
 }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(true);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
 
   const navigate = useNavigate();
@@ -24,6 +25,10 @@ const Following = ({
 
   useEffect(() => {
     if (!currentUserId) return;
+    if (followed._id === currentUserId) {
+      setIsCurrentUser(true);
+      return;
+    }
     setIsCurrentUserFollow(followed.followers.includes(currentUserId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUserId]);
@@ -71,7 +76,7 @@ const Following = ({
       <span className={style.personName}>
         {followed.firstName} {followed.lastName}
       </span>
-      {isCurrentUserFollow && (
+      {isCurrentUserFollow && !isCurrentUser && (
         <Button
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
@@ -80,13 +85,23 @@ const Following = ({
           UnFollow
         </Button>
       )}
-      {!isCurrentUserFollow && (
+      {!isCurrentUserFollow && !isCurrentUser && (
         <Button
           style={{ background: "rgb(38, 165, 165)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}
         >
           Follow
+        </Button>
+      )}
+      {isCurrentUser && (
+        <Button
+          style={{ background: "disable", color: "black", fontSize: 10 }}
+          variant="contained"
+          onClick={handleFollowUser}
+          disabled
+        >
+          yourself
         </Button>
       )}
     </div>
