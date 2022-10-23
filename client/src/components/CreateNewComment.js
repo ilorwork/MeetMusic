@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
 import axios from "axios";
+import UserContext from "./layout/UserContext";
+import { notifyUser } from "../helpers/userHelpers";
 
 const CreateNewComment = ({
   post,
@@ -12,6 +14,9 @@ const CreateNewComment = ({
   setCommentsCount,
 }) => {
   const [contentOfComment, setContentOfComment] = useState("");
+
+  const { currentUserInfo } = useContext(UserContext);
+
   const handleCreatingNewComment = async () => {
     if (!contentOfComment) return;
 
@@ -22,19 +27,21 @@ const CreateNewComment = ({
     };
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        "http://localhost:7000/comments/",
-        newComment,
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      await axios.post("http://localhost:7000/comments/", newComment, {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+      });
       setContentOfComment("");
       getCommentsOfPost();
       setCommentsCount(commentsCount + 1);
+
+      if (post.creator._id === currentUserInfo._id) return;
+      notifyUser(
+        post.creator._id,
+        `${currentUserInfo.firstName} ${currentUserInfo.lastName} commented on your post`
+      );
     } catch (e) {
       console.log("comment creation failed " + e);
     }
