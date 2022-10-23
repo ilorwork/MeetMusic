@@ -128,10 +128,7 @@ const Header = () => {
               onClose={() => setAnchorNotice(null)}
             >
               {notifications.map((notification) => (
-                <MenuItem
-                  key={notification}
-                  onClick={() => setAnchorNotice(null)}
-                >
+                <MenuItem key={uuid()} onClick={() => setAnchorNotice(null)}>
                   <Typography>{notification}</Typography>
                 </MenuItem>
               ))}

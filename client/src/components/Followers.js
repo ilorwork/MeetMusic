@@ -13,7 +13,7 @@ const Followers = ({ follower, getUserInfo }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (follower._id !== currentUserInfo._id) {
+    if (follower._id === currentUserInfo._id) {
       setIsCurrentUser(true);
       return;
     }
@@ -22,7 +22,7 @@ const Followers = ({ follower, getUserInfo }) => {
 
   const handleFollowUser = async () => {
     try {
-      await followUser(follower._id);
+      await followUser(follower._id, currentUserInfo);
       setIsCurrentUserFollow(true);
       getUserInfo();
     } catch (e) {

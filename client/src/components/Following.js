@@ -26,12 +26,7 @@ const Following = ({
 
   const handleFollowUser = async () => {
     try {
-      await followUser(followed._id);
-
-      await notifyUser(
-        followed._id,
-        `${currentUserInfo.firstName} ${currentUserInfo.lastName} started following you`
-      );
+      await followUser(followed._id, currentUserInfo);
       getPeopleYouMayKnow();
       getUserInfo();
     } catch (e) {

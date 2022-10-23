@@ -86,7 +86,7 @@ const getCurrentUserFollowers = async () => {
   }
 };
 
-const followUser = async (userId) => {
+const followUser = async (userId, currentUserInfo) => {
   const token = localStorage.getItem("token");
   try {
     await axios.patch(
@@ -102,6 +102,11 @@ const followUser = async (userId) => {
   } catch (e) {
     throw e;
   }
+
+  notifyUser(
+    userId,
+    `${currentUserInfo.firstName} ${currentUserInfo.lastName} started following you`
+  );
 };
 
 const unfollowUser = async (userId) => {
