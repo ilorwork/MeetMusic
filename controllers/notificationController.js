@@ -20,7 +20,7 @@ const getUserNotifications = async (req, res) => {
       userToNote: user._id,
     });
 
-    return res.status(200).json(userNotifications);
+    return res.status(200).json(userNotifications.reverse());
   } catch (e) {
     return res.status(500).json(`get user notifications failed ${e}`);
   }
