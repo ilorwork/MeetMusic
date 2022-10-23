@@ -28,6 +28,7 @@ const modalStyle = {
   width: 450,
   bgcolor: "background.paper",
   border: "2px solid #000",
+  borderRadius: 2,
   boxShadow: 24,
   p: 4,
 };
@@ -184,7 +185,7 @@ const CreateNewPost = ({ getAllPosts }) => {
             </Tooltip>
             <Button
               variant="contained"
-              color="secondary"
+              style={{ background: "rgb(209, 46, 100)" }}
               onClick={handleCreatePost}
             >
               Create post

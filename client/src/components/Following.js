@@ -78,7 +78,7 @@ const Following = ({
       </span>
       {isCurrentUserFollow && !isCurrentUser && (
         <Button
-          style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
+          style={{ background: "rgb(19 137 137)", fontSize: 10 }}
           variant="contained"
           onClick={handleUnfollowUser}
         >
@@ -87,7 +87,7 @@ const Following = ({
       )}
       {!isCurrentUserFollow && !isCurrentUser && (
         <Button
-          style={{ background: "rgb(38, 165, 165)", fontSize: 10 }}
+          style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}
         >
