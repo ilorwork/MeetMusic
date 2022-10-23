@@ -1,37 +1,24 @@
 import { Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import style from "./PeopleSideList.module.css";
-import {
-  getCurrentUserInfo,
-  followUser,
-  unfollowUser,
-} from "../helpers/userHelpers";
+import { followUser, unfollowUser } from "../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
+import UserContext from "./layout/UserContext";
 
 const Followers = ({ follower, getUserInfo }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
-  const [currentUserId, setCurrentUserId] = useState("");
 
+  const { currentUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getCurrentUserId();
-  }, []);
-
-  useEffect(() => {
-    if (!currentUserId) return;
-    if (follower._id === currentUserId) {
+    if (follower._id !== currentUserInfo._id) {
       setIsCurrentUser(true);
       return;
     }
-    setIsCurrentUserFollow(follower.followers.includes(currentUserId));
-  }, [currentUserId]);
-
-  const getCurrentUserId = async () => {
-    const userInfo = await getCurrentUserInfo();
-    setCurrentUserId(userInfo._id);
-  };
+    setIsCurrentUserFollow(follower.followers.includes(currentUserInfo._id));
+  }, []);
 
   const handleFollowUser = async () => {
     try {
