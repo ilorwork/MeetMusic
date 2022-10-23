@@ -5,6 +5,7 @@ import {
   getCurrentUserInfo,
   followUser,
   unfollowUser,
+  notifyUser,
 } from "../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
 
@@ -41,6 +42,8 @@ const Following = ({
   const handleFollowUser = async () => {
     try {
       await followUser(followed._id);
+      console.log("got here");
+      await notifyUser(followed._id, currentUserId + " started following you");
       getPeopleYouMayKnow();
       getUserInfo();
     } catch (e) {

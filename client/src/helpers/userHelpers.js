@@ -5,7 +5,7 @@ const base_url = "http://localhost:7000";
 const login = async (email, password) => {
   try {
     const res = await axios.post(
-      "http://localhost:7000/users/login",
+      `${base_url}/users/login`,
       { email, password },
       {
         withCredentials: true,
@@ -122,6 +122,27 @@ const unfollowUser = async (userId) => {
   }
 };
 
+const notifyUser = async (userId, notificationContent) => {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.post(
+      `${base_url}/notifications`,
+      {
+        userToNote: userId,
+        content: notificationContent,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getUserInfo = async (userId) => {
   try {
     const res = await axios.post(`${base_url}/users/user`, {
@@ -175,6 +196,7 @@ export {
   getCurrentUserFollowers,
   followUser,
   unfollowUser,
+  notifyUser,
   getUserInfo,
   getUserFollowing,
   getUserFollowers,

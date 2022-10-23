@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./Register.module.css";
 import { v4 as uuid } from "uuid";
-import { login } from "../helpers/userHelpers";
+import { login, notifyUser } from "../helpers/userHelpers";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -90,21 +90,7 @@ const Register = () => {
       const res = await axios.post("http://localhost:7000/users", newUser);
 
       await login(email, password);
-
-      const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:7000/notifications",
-        {
-          userToNote: res.data._id,
-          content: "Welcome to MeetMusic",
-        },
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      await notifyUser(res.data._id, "Welcome to MeetMusic");
 
       navigate("/");
     } catch (e) {
