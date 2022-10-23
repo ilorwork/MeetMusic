@@ -220,7 +220,7 @@ const PostComponent = ({ post, getPosts }) => {
         )}
         {isUserLikeThePost && (
           <IconButton onClick={removeLike}>
-            <ThumbUpIcon color="secondary" />
+            <ThumbUpIcon style={{ color: "rgb(209, 46, 100)" }} />
           </IconButton>
         )}
         <IconButton onClick={() => setIsCommentOpen(!isCommentOpen)}>

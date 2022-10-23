@@ -203,13 +203,18 @@ const Register = () => {
           </FormControl>
         </div>
 
-        <Button variant="contained" sx={{ my: 3 }} onClick={hanbleSubmitForm}>
+        <Button
+          variant="contained"
+          style={{ background: "rgb(209, 46, 100)" }}
+          sx={{ my: 3 }}
+          onClick={hanbleSubmitForm}
+        >
           Create a new account
         </Button>
         <div className={style.loginBtn}>
           <Button
             variant="contained"
-            color="success"
+            style={{ background: "rgb(19 137 137)" }}
             sx={{ width: 300 }}
             onClick={() => navigate("/login")}
           >

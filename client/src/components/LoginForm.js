@@ -38,13 +38,17 @@ const LoginForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button variant="contained" onClick={handleSumbitLogin}>
+        <Button
+          variant="contained"
+          style={{ background: "rgb(209, 46, 100)" }}
+          onClick={handleSumbitLogin}
+        >
           Login
         </Button>
         <div className={style.createAccountBtnWrapper}>
           <Button
             variant="contained"
-            color="success"
+            style={{ background: "rgb(19 137 137)" }}
             sx={{ width: 300 }}
             onClick={() => navigate("/register")}
           >
