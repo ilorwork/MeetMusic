@@ -29,6 +29,8 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const unreadCount = notifications.filter((n) => !n.isBeingRead).length;
+
   useEffect(() => {
     getAllUsersInfo();
     getUserNotifications();
@@ -49,7 +51,7 @@ const Header = () => {
       },
     });
 
-    setNotifications(res.data.map((n) => n.content));
+    setNotifications(res.data);
   };
 
   const handleProfileClicked = () => {
@@ -69,6 +71,48 @@ const Header = () => {
     } finally {
       localStorage.removeItem("token");
       navigate("/login");
+    }
+  };
+
+  const handleReadingNotification = async (notificationId) => {
+    const token = localStorage.getItem("token");
+    setAnchorNotice(null);
+    try {
+      // const res = await axios({
+      //   method: "put",
+      //   url: "http://localhost:7000/notifications/notification",
+      //   data: {
+      //     isBeingRead: true,
+      //   },
+
+      //   withCredentials: true,
+
+      //   headers: {
+      //     authorization: token,
+      //   },
+      //   params: { notificationId },
+      // });
+      await axios.put(
+        "http://localhost:7000/notifications/notification",
+        { isBeingRead: true },
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+          params: { notificationId: notificationId },
+        }
+      );
+
+      const updatedNotifications = notifications.map((n) => {
+        if (n._id === notificationId) n.isBeingRead = true;
+
+        return n;
+      });
+
+      setNotifications(updatedNotifications);
+    } catch (e) {
+      console.error("Failed to read notification " + e);
     }
   };
 
@@ -105,8 +149,8 @@ const Header = () => {
         />
         <div className={style.wrapperIcons}>
           <Box>
-            <Tooltip title="Notifications">
-              <Badge badgeContent={notifications.length} color="secondary">
+            <Tooltip title={`${unreadCount} Unread Notifications`}>
+              <Badge badgeContent={unreadCount} color="secondary">
                 <NotificationsIcon
                   onClick={(e) => setAnchorNotice(e.currentTarget)}
                   className={style.notificationsIcon}
@@ -128,8 +172,14 @@ const Header = () => {
               onClose={() => setAnchorNotice(null)}
             >
               {notifications.map((notification) => (
-                <MenuItem key={uuid()} onClick={() => setAnchorNotice(null)}>
-                  <Typography>{notification}</Typography>
+                <MenuItem
+                  key={uuid()}
+                  style={{
+                    background: notification.isBeingRead ? "white" : "#f7dadd",
+                  }}
+                  onClick={() => handleReadingNotification(notification._id)}
+                >
+                  <Typography>{notification.content}</Typography>
                 </MenuItem>
               ))}
             </Menu>
