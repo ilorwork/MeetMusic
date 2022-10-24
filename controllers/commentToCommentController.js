@@ -70,8 +70,30 @@ const deleteCommentToComment = async (req, res) => {
   }
 };
 
+const editCommentToComment = async (req, res) => {
+  try {
+    const commentToCommentToEdit = await CommentToCommentModel.findOne({
+      _id: req.body._id,
+    }).populate("creator");
+    if (req.user.email !== commentToCommentToEdit.creator.email) {
+      return res.status(403).json("Can't edit other's comments");
+    }
+    commentToCommentToEdit.content = req.body.content;
+    if (!commentToCommentToEdit.isEdited) {
+      commentToCommentToEdit.isEdited = true;
+    };
+    await commentToCommentToEdit.save();
+    return res.status(200).json({
+      editedCommentToComment: commentToCommentToEdit
+    });
+  } catch (e) {
+    return res.status(500).json("edit comment to comment failed " + e);
+  }
+};
+
 module.exports = {
   createCommentToComment,
   getCommentsOfComment,
   deleteCommentToComment,
+  editCommentToComment
 };
