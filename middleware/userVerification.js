@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 // seperate token gen and cookie creation to seperated funcs
 const generateAccessTokenHeader = (req, res, user) => {
   const accessToken = jwt.sign(
-    { email: user.email },
+    { email: user.email, _id: user._id },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: `15m` }
   );
@@ -14,7 +14,7 @@ const generateAccessTokenHeader = (req, res, user) => {
 
 const generateRefreshTokenCookie = (req, res, user) => {
   const refreshToken = jwt.sign(
-    { email: user.email },
+    { email: user.email, _id: user._id },
     process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: `1440m`,

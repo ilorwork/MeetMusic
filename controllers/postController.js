@@ -4,8 +4,7 @@ const { cloudinary } = require("../utils/cloudinary");
 
 const createPost = async (req, res) => {
   try {
-    const creator = await UserModel.findOne({ email: req.user.email });
-    req.body.creator = creator._id;
+    req.body.creator = req.user._id;
 
     if (req.body.postImages) {
       const urls = await Promise.all(
@@ -46,9 +45,8 @@ const getAllPosts = async (req, res) => {
 
 const getPostsOfCurrentUser = async (req, res) => {
   try {
-    const userWhoseProfile = await UserModel.findOne({ email: req.user.email });
     const userPosts = await PostModel.find({
-      creator: userWhoseProfile._id,
+      creator: req.user._id,
     }).populate("creator");
 
     userPosts.reverse();
