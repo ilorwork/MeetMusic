@@ -4,8 +4,7 @@ const UserModel = require("../models/userModel");
 
 const addLike = async (req, res) => {
   try {
-    const creator = await UserModel.findOne({ email: req.user.email });
-    req.body.creator = creator._id;
+    req.body.creator = req.user._id;
 
     const newLike = await LikeModel.create(req.body);
     await newLike.save();
@@ -25,8 +24,7 @@ const addLike = async (req, res) => {
 
 const removeLike = async (req, res) => {
   try {
-    const creator = await UserModel.findOne({ email: req.user.email });
-    req.body.creator = creator._id;
+    req.body.creator = req.user._id;
 
     const removedLike = await LikeModel.deleteOne({
       creator: req.body.creator,
@@ -49,8 +47,7 @@ const removeLike = async (req, res) => {
 
 const isUserLikeThePost = async (req, res) => {
   try {
-    const creator = await UserModel.findOne({ email: req.user.email });
-    req.body.creator = creator._id;
+    req.body.creator = req.user._id;
 
     const isUserLikeThePost = await LikeModel.findOne({
       creator: req.body.creator,

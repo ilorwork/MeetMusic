@@ -15,9 +15,8 @@ const createNotification = async (req, res) => {
 
 const getUserNotifications = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.user.email });
     const userNotifications = await NotificationModel.find({
-      userToNote: user._id,
+      userToNote: req.user._id,
     });
 
     return res.status(200).json(userNotifications);

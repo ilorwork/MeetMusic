@@ -5,8 +5,7 @@ const timeAgo = require("../helpers/calculationTime");
 
 const createComment = async (req, res) => {
   try {
-    const creator = await UserModel.findOne({ email: req.user.email });
-    req.body.creator = creator._id;
+    req.body.creator = req.user._id;
 
     const newComment = await CommentModel.create(req.body);
     await newComment.save();
