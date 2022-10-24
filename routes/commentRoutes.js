@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", verifyUser, commentController.createComment);
 router.post("/post-comments", verifyUser, commentController.getCommentsOfPost);
-// router.put("/", verifyUser, commentController.editComment);
+router.put("/", verifyUser, commentController.editComment);
 router.delete("/", verifyUser, commentController.deleteComment);
 
 module.exports = router;
