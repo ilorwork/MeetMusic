@@ -8,7 +8,7 @@ import UserContext from "./layout/UserContext";
 const Following = ({
   followed,
   getUserInfo,
-  getPeopleYouMayKnow = () => {},
+  getPeopleYouMayKnow = () => { },
 }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(true);
   const [isCurrentUser, setIsCurrentUser] = useState(false);

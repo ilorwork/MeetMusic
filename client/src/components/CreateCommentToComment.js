@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
@@ -13,6 +13,7 @@ const CreateCommentToComment = ({
   commentsToCommentCount,
   setCommentsToCommentCount,
   paddingXForCommentToComment,
+  setIsCommentsToCommentOpen
 }) => {
   const [contentOfCommentToComment, setContentOfCommentToComment] =
     useState("");
@@ -44,7 +45,8 @@ const CreateCommentToComment = ({
       setContentOfCommentToComment("");
       getCommentsOfComment();
       setCommentsToCommentCount(commentsToCommentCount + 1);
-
+      setIsCommentsToCommentOpen(true);
+      
       if (comment.creator._id === currentUserInfo._id) return;
       notifyUser(
         comment.creator._id,
@@ -55,15 +57,28 @@ const CreateCommentToComment = ({
     }
   };
 
+  const validationFunction = (e) => {
+    e.preventDefault();
+    let nonSpaceCharacters = 0;
+    const contentDividedBySpaces = contentOfCommentToComment.split(" ");
+    contentDividedBySpaces.forEach((cell) => {
+      if (cell) {
+        nonSpaceCharacters++;
+      }
+    })
+    if (nonSpaceCharacters > 0) return true;
+    return false;
+  }
+
   return (
     <FormControl sx={{ pl: paddingXForCommentToComment }}>
       <Textarea
         value={contentOfCommentToComment}
         onChange={(e) => setContentOfCommentToComment(e.target.value)}
         variant="standard"
-        placeholder="Write a comment to comment..."
+        placeholder={`Reply to ${comment.creator.firstName} ${comment.creator.lastName}`}
         onKeyDown={(e) => {
-          if (e.key === "Enter") handleCreatingCommentToComment();
+          if (e.key === "Enter" && validationFunction(e)) handleCreatingCommentToComment();
         }}
         endDecorator={
           <Box

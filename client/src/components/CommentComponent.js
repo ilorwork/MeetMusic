@@ -3,12 +3,13 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, TextField } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 import CreateCommentToComment from "./CreateCommentToComment";
 import CommentToCommentComponent from "./CommentToCommentComponent";
 import { v4 as uuid } from "uuid";
+import { getCurrentUserInfo } from "../helpers/userHelpers";
 
 const CommentComponent = ({
   comment,
@@ -17,19 +18,33 @@ const CommentComponent = ({
   commentsCount,
   setCommentsCount,
 }) => {
+  const [currentUserId, setCurrentUserId] = useState("");
   const [anchorCommentSettings, setAnchorCommentSettings] = useState(null);
-  const [isCommentToCommentOpen, setIsCommentToCommentOpen] = useState(false);
+
+  const [isCreateCommentToCommentOpen, setIsCreateCommentToCommentOpen] = useState(false);
+  const [isCommentsToCommentOpen, setIsCommentsToCommentOpen] = useState(false);
+
   const [commentsOfComment, setCommentsOfComment] = useState([]);
   const [commentsToCommentCount, setCommentsToCommentCount] = useState(
     comment.commentsToCommentCount
   );
 
+  const [isInEditingMode, setIsInEditingMode] = useState(false);
+  const [editedContent, setEditedContent] = useState(comment.content);
+  const [isEdited, setIsEdited] = useState(comment.isEdited);
+
   const paddingXSourceForCommentToComment = 2;
 
   useEffect(() => {
+    getCurrentUserId();
     getCommentsOfComment();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const getCurrentUserId = async () => {
+    const userInfo = await getCurrentUserInfo();
+    setCurrentUserId(userInfo._id);
+  };
 
   const getCommentsOfComment = async () => {
     const token = localStorage.getItem("token");
@@ -52,6 +67,45 @@ const CommentComponent = ({
     }
   };
 
+  const handleEditComment = async () => {
+    if (editedContent === comment.content) {
+      setIsInEditingMode(false);
+    } else {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.put(
+          "http://localhost:7000/comments/",
+          {
+            _id: comment._id,
+            content: editedContent,
+          },
+          {
+            withCredentials: true,
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        setIsInEditingMode(false);
+        setIsEdited(true);
+      } catch (e) {
+        console.log("edit comment failed " + e);
+      }
+    }
+  };
+
+  const validationFunction = () => {
+    let nonSpaceCharacters = 0;
+    const contentDividedBySpaces = editedContent.split(" ");
+    contentDividedBySpaces.forEach((cell) => {
+      if (cell) {
+        nonSpaceCharacters++;
+      }
+    })
+    if (nonSpaceCharacters > 0) return true;
+    return false;
+  }
+
   const handleDeleteComment = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -72,6 +126,7 @@ const CommentComponent = ({
       console.log("delete comment failed " + e);
     }
   };
+
 
   return (
     <>
@@ -96,8 +151,18 @@ const CommentComponent = ({
           }}
         >
           <Grid item xs>
-            <Typography>{comment.content}</Typography>
+            {!isInEditingMode && <Typography>{editedContent}</Typography>}
+            {isInEditingMode &&
+              <TextField fullWidth value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && validationFunction()) handleEditComment();
+                }}>
+              </TextField>}
           </Grid>
+          {isEdited && <Grid item width={30} fontWeight={200} fontSize={10} color={"rgb(209, 46, 101)"}>
+            edited
+          </Grid>}
         </Grid>
         <IconButton onClick={(e) => setAnchorCommentSettings(e.currentTarget)}>
           <MoreVertIcon />
@@ -116,19 +181,28 @@ const CommentComponent = ({
           open={Boolean(anchorCommentSettings)}
           onClose={() => setAnchorCommentSettings(null)}
         >
-          <MenuItem onClick={() => setAnchorCommentSettings(null)}>
+          {currentUserId === comment.creator._id && <MenuItem onClick={() => { setIsInEditingMode(true); setAnchorCommentSettings(null); }}>
             <Typography>Edit Comment</Typography>
-          </MenuItem>
-          <MenuItem onClick={handleDeleteComment}>
+          </MenuItem>}
+          {currentUserId === comment.creator._id && <MenuItem onClick={handleDeleteComment}>
             <Typography color={"error"}>Delete Comment</Typography>
-          </MenuItem>
+          </MenuItem>}
           <MenuItem
-            onClick={() => setIsCommentToCommentOpen(!isCommentToCommentOpen)}
+            onClick={() => { setIsCreateCommentToCommentOpen(!isCreateCommentToCommentOpen); setAnchorCommentSettings(null); }}
           >
-            <Typography color={"blue"}>
-              {isCommentToCommentOpen
+            <Typography color={"green"}>
+              {isCreateCommentToCommentOpen
                 ? "Hide reply's option"
                 : "Reply to comment"}
+            </Typography>
+          </MenuItem>
+          <MenuItem
+            onClick={() => { setIsCommentsToCommentOpen(!isCommentsToCommentOpen); setAnchorCommentSettings(null); }}
+          >
+            <Typography color={"blue"}>
+              {isCommentsToCommentOpen
+                ? `Hide ${commentsToCommentCount ? commentsToCommentCount : ""} replies`
+                : `show ${commentsToCommentCount ? commentsToCommentCount : ""} replies`}
             </Typography>
           </MenuItem>
         </Menu>
@@ -136,16 +210,17 @@ const CommentComponent = ({
       <p style={{ fontSize: 10, margin: "0 0 12px 0" }}>
         {comment.timeOfCreation}
       </p>
-      {isCommentToCommentOpen && (
+      {isCreateCommentToCommentOpen && (
         <CreateCommentToComment
           comment={comment}
           getCommentsOfComment={getCommentsOfComment}
           commentsToCommentCount={commentsToCommentCount}
           setCommentsToCommentCount={setCommentsToCommentCount}
           paddingXForCommentToComment={paddingXSourceForCommentToComment}
+          setIsCommentsToCommentOpen={setIsCommentsToCommentOpen}
         />
       )}
-      {isCommentToCommentOpen &&
+      {isCommentsToCommentOpen &&
         commentsOfComment.map((commentToComment) => (
           <CommentToCommentComponent
             commentToComment={commentToComment}

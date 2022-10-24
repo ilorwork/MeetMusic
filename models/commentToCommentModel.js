@@ -6,6 +6,7 @@ const commentToCommentSchema = new mongoose.Schema({
   timeOfCreation: Date,
   commentId: { type: mongoose.Types.ObjectId, ref: "Comment", required: true },
   commentsToCommentCount: { type: Number, default: 0 },
+  isEdited: { type: Boolean, default: false }
 });
 
 const CommentToCommentModel = mongoose.model(

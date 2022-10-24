@@ -11,15 +11,13 @@ const CreateNewComment = ({
   post,
   getCommentsOfPost,
   commentsCount,
-  setCommentsCount,
+  setCommentsCount
 }) => {
   const [contentOfComment, setContentOfComment] = useState("");
 
   const { currentUserInfo } = useContext(UserContext);
 
   const handleCreatingNewComment = async () => {
-    if (!contentOfComment) return;
-
     const newComment = {
       content: contentOfComment,
       timeOfCreation: Date.now(),
@@ -47,6 +45,19 @@ const CreateNewComment = ({
     }
   };
 
+  const validationFunction = (e) => {
+    e.preventDefault();
+    let nonSpaceCharacters = 0;
+    const contentDividedBySpaces = contentOfComment.split(" ");
+    contentDividedBySpaces.forEach((cell) => {
+      if (cell) {
+        nonSpaceCharacters++;
+      }
+    })
+    if (nonSpaceCharacters > 0) return true;
+    return false;
+  }
+
   return (
     <FormControl>
       <Textarea
@@ -55,7 +66,7 @@ const CreateNewComment = ({
         variant="standard"
         placeholder="Write a comment..."
         onKeyDown={(e) => {
-          if (e.key === "Enter") handleCreatingNewComment();
+          if (e.key === "Enter" && validationFunction(e)) handleCreatingNewComment();
         }}
         endDecorator={
           <Box
