@@ -5,7 +5,7 @@ const base_url = "http://localhost:7000";
 const login = async (email, password) => {
   try {
     const res = await axios.post(
-      "http://localhost:7000/users/login",
+      `${base_url}/users/login`,
       { email, password },
       {
         withCredentials: true,
@@ -86,7 +86,7 @@ const getCurrentUserFollowers = async () => {
   }
 };
 
-const followUser = async (userId) => {
+const followUser = async (userId, currentUserInfo) => {
   const token = localStorage.getItem("token");
   try {
     await axios.patch(
@@ -102,6 +102,11 @@ const followUser = async (userId) => {
   } catch (e) {
     throw e;
   }
+
+  notifyUser(
+    userId,
+    `${currentUserInfo.firstName} ${currentUserInfo.lastName} started following you`
+  );
 };
 
 const unfollowUser = async (userId) => {
@@ -110,6 +115,27 @@ const unfollowUser = async (userId) => {
     await axios.patch(
       `${base_url}/users/user/unfollow`,
       { _id: userId },
+      {
+        withCredentials: true,
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+  } catch (e) {
+    throw e;
+  }
+};
+
+const notifyUser = async (userId, notificationContent) => {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.post(
+      `${base_url}/notifications`,
+      {
+        userToNote: userId,
+        content: notificationContent,
+      },
       {
         withCredentials: true,
         headers: {
@@ -175,6 +201,7 @@ export {
   getCurrentUserFollowers,
   followUser,
   unfollowUser,
+  notifyUser,
   getUserInfo,
   getUserFollowing,
   getUserFollowers,

@@ -45,6 +45,7 @@ const CommentToCommentComponent = ({
     getCurrentUserId();
     getCommentsOfCommentToComment();
     setPaddingXForCurrentCommentToComment(paddingXForCommentToComment + 4);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getCurrentUserId = async () => {

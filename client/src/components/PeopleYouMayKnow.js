@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button } from "@mui/material";
 import style from "./PeopleSideList.module.css";
 import { useNavigate } from "react-router-dom";
 import { followUser } from "../helpers/userHelpers";
+import UserContext from "./layout/UserContext";
 
 const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo }) => {
+  const { currentUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
   const navToUserPage = () => {
@@ -13,7 +15,7 @@ const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo }) => {
 
   const handleFollowUser = async () => {
     try {
-      await followUser(user._id);
+      await followUser(user._id, currentUserInfo);
       getPeopleYouMayKnow();
       getUserInfo();
     } catch (e) {

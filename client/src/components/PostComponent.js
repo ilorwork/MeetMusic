@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import style from "./PostComponent.module.css";
@@ -10,7 +10,6 @@ import {
   Avatar,
   CardActions,
   CardContent,
-  CardMedia,
   IconButton,
   ImageList,
   ImageListItem,
@@ -24,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 import CommentComponent from "./CommentComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewComment from "./CreateNewComment";
+import UserContext from "./layout/UserContext";
+import { notifyUser } from "../helpers/userHelpers";
 
 const PostComponent = ({ post, getPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
@@ -33,9 +34,12 @@ const PostComponent = ({ post, getPosts }) => {
   const [likesCount, setLikesCount] = useState(post.likesCount);
   const [isUserLikeThePost, setIsUserLikeThePost] = useState(false);
 
+  const { currentUserInfo } = useContext(UserContext);
+
   useEffect(() => {
     getCommentsOfPost();
     getDataIsUserLikeThePost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getDataIsUserLikeThePost = async () => {
@@ -62,7 +66,7 @@ const PostComponent = ({ post, getPosts }) => {
   const addLike = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:7000/likes/",
         {
           postId: post._id,
@@ -76,6 +80,12 @@ const PostComponent = ({ post, getPosts }) => {
       );
       setIsUserLikeThePost(!isUserLikeThePost);
       setLikesCount(likesCount + 1);
+
+      if (post.creator._id === currentUserInfo._id) return;
+      notifyUser(
+        post.creator._id,
+        `${currentUserInfo.firstName} ${currentUserInfo.lastName} liked your post`
+      );
     } catch (e) {
       console.error("add like failed " + e);
     }
@@ -193,11 +203,11 @@ const PostComponent = ({ post, getPosts }) => {
         }
       ></CardHeader>
       {post.postText && <CardContent>{post.postText}</CardContent>}
-      {post.postImages.length != 0 && (
+      {post.postImages.length !== 0 && (
         <ImageList cols={getImagesCols()} rowHeight={300}>
           {post.postImages.map((img) => (
             <ImageListItem key={uuid()}>
-              <img src={img} />
+              <img src={img} alt="post img" />
             </ImageListItem>
           ))}
         </ImageList>
