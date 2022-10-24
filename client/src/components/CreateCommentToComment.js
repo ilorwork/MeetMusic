@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
 import axios from "axios";
+import { notifyUser } from "../helpers/userHelpers";
+import UserContext from "./layout/UserContext";
 
 const CreateCommentToComment = ({
   comment,
@@ -15,6 +17,8 @@ const CreateCommentToComment = ({
   const [contentOfCommentToComment, setContentOfCommentToComment] =
     useState("");
 
+  const { currentUserInfo } = useContext(UserContext);
+
   const handleCreatingCommentToComment = async () => {
     if (!contentOfCommentToComment) return;
 
@@ -23,9 +27,10 @@ const CreateCommentToComment = ({
       timeOfCreation: Date.now(),
       commentId: comment._id,
     };
+
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:7000/comments-to-comments/",
         newCommentToComment,
         {
@@ -35,9 +40,16 @@ const CreateCommentToComment = ({
           },
         }
       );
+
       setContentOfCommentToComment("");
       getCommentsOfComment();
       setCommentsToCommentCount(commentsToCommentCount + 1);
+
+      if (comment.creator._id === currentUserInfo._id) return;
+      notifyUser(
+        comment.creator._id,
+        `${currentUserInfo.firstName} ${currentUserInfo.lastName} replyed to your comment`
+      );
     } catch (e) {
       console.log("comment to comment creation failed " + e);
     }
