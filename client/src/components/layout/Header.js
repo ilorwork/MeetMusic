@@ -78,20 +78,6 @@ const Header = () => {
     const token = localStorage.getItem("token");
     setAnchorNotice(null);
     try {
-      // const res = await axios({
-      //   method: "put",
-      //   url: "http://localhost:7000/notifications/notification",
-      //   data: {
-      //     isBeingRead: true,
-      //   },
-
-      //   withCredentials: true,
-
-      //   headers: {
-      //     authorization: token,
-      //   },
-      //   params: { notificationId },
-      // });
       await axios.put(
         "http://localhost:7000/notifications/notification",
         { isBeingRead: true },
