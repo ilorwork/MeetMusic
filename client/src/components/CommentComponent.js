@@ -28,6 +28,7 @@ const CommentComponent = ({
 
   useEffect(() => {
     getCommentsOfComment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getCommentsOfComment = async () => {
@@ -54,7 +55,7 @@ const CommentComponent = ({
   const handleDeleteComment = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.delete("http://localhost:7000/comments/", {
+      await axios.delete("http://localhost:7000/comments/", {
         withCredentials: true,
         headers: {
           authorization: token,

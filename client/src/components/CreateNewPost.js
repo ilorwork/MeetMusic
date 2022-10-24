@@ -44,6 +44,7 @@ const CreateNewPost = ({ getAllPosts }) => {
 
   useEffect(() => {
     getUserInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getUserInfo = async () => {
@@ -142,7 +143,7 @@ const CreateNewPost = ({ getAllPosts }) => {
             <ImageList cols={postImages.length < 5 ? 2 : 3} rowHeight={164}>
               {postImages.map((img) => (
                 <ImageListItem key={uuid()}>
-                  <img src={img} />
+                  <img src={img} alt="post img" />
                 </ImageListItem>
               ))}
             </ImageList>

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import style from "./PeopleSideList.module.css";
-import { followUser, unfollowUser, notifyUser } from "../helpers/userHelpers";
+import { followUser, unfollowUser } from "../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
 import UserContext from "./layout/UserContext";
 
@@ -22,6 +22,7 @@ const Following = ({
       return;
     }
     setIsCurrentUserFollow(followed.followers.includes(currentUserInfo._id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFollowUser = async () => {

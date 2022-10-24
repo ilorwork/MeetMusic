@@ -34,6 +34,7 @@ const CommentToCommentComponent = ({
   useEffect(() => {
     getCommentsOfCommentToComment();
     setPaddingXForCurrentCommentToComment(paddingXForCommentToComment + 4);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getCommentsOfCommentToComment = async () => {

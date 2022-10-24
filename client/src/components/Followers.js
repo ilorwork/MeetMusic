@@ -18,6 +18,7 @@ const Followers = ({ follower, getUserInfo }) => {
       return;
     }
     setIsCurrentUserFollow(follower.followers.includes(currentUserInfo._id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFollowUser = async () => {

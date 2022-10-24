@@ -39,6 +39,7 @@ const PostComponent = ({ post, getPosts }) => {
   useEffect(() => {
     getCommentsOfPost();
     getDataIsUserLikeThePost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getDataIsUserLikeThePost = async () => {
@@ -202,11 +203,11 @@ const PostComponent = ({ post, getPosts }) => {
         }
       ></CardHeader>
       {post.postText && <CardContent>{post.postText}</CardContent>}
-      {post.postImages.length != 0 && (
+      {post.postImages.length !== 0 && (
         <ImageList cols={getImagesCols()} rowHeight={300}>
           {post.postImages.map((img) => (
             <ImageListItem key={uuid()}>
-              <img src={img} />
+              <img src={img} alt="post img" />
             </ImageListItem>
           ))}
         </ImageList>
