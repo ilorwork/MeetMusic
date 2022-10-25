@@ -2,11 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import style from "./UserSearchCard.module.css";
 
-const UserSearchCard = ({ user }) => {
+const UserSearchCard = (props) => {
+  const { user } = props;
   const navigate = useNavigate();
 
-  const navToUserPage = () => {
+  const navToUserPage = (e) => {
     navigate(`user-profile/${user._id}`);
+    props.onClick(e);
+    props.setAutoVal("");
   };
 
   return (
