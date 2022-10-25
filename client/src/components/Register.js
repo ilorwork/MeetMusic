@@ -125,7 +125,7 @@ const Register = () => {
       <Paper
         className={style.registrationFormPaper}
         elevation={3}
-        sx={{ width: 400, height: 550 }}
+        sx={{ width: 400, height: 570 }}
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
