@@ -103,17 +103,6 @@ const Header = () => {
     }
   };
 
-  const checkIfClear = (e) => {
-    console.log(e.currentTarget);
-    if (
-      // e.target.dataset.testid === "CloseIcon" ||
-      // e.target.viewportElement?.dataset === "CloseIcon"
-      e.currentTarget.title === "Clear"
-    ) {
-      setAutoVal("");
-    }
-  };
-
   return (
     <AppBar position="sticky" className={style.appBar}>
       <Toolbar className={style.toolBar}>
@@ -132,8 +121,6 @@ const Header = () => {
           options={allUsers}
           onBlur={() => setAutoVal("")}
           onChange={() => setAutoVal("")}
-          // onChange={(e) => checkIfClear(e)}
-          // clearOnBlur
           getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
           renderOption={(props, option) => (
             <UserSearchCard
