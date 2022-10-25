@@ -112,6 +112,10 @@ const Register = () => {
     } catch (e) {
       if (e.response.data.includes("duplicate key"))
         setError("Account with same Email already exist");
+      else if (e.response.data.includes("Invalid email"))
+        setError("Invalid email address");
+      else if (e.response.data.includes("strong"))
+        setError("Password isn't strong enough");
       else setError("An error has accured");
     }
   };
