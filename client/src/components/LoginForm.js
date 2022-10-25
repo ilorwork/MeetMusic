@@ -42,11 +42,13 @@ const LoginForm = () => {
           label="Email"
           autoFocus
           value={email}
+          type="email"
           onChange={(e) => onFieldChange(e, setEmail)}
         />
         <TextField
           label="Password"
           value={password}
+          type="password"
           onChange={(e) => onFieldChange(e, setPassword)}
         />
         {error && <div className={style.error}>{error}</div>}

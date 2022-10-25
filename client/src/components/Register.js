@@ -140,11 +140,14 @@ const Register = () => {
         <TextField
           label="Email"
           value={email}
+          type="email"
           onChange={(e) => onFieldChange(e, setEmail)}
         />
         <TextField
+          // error={error ? true : false}
           label="Password"
           value={password}
+          type="password"
           onChange={(e) => onFieldChange(e, setPassword)}
         />
         <div className={style.flexRowCenterGroup}>
