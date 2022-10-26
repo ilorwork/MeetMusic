@@ -3,13 +3,14 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { IconButton, Menu, MenuItem, TextField } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 import CreateCommentToComment from "./CreateCommentToComment";
 import CommentToCommentComponent from "./CommentToCommentComponent";
 import { v4 as uuid } from "uuid";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
+import Textarea from "@mui/joy/Textarea";
 
 const CommentComponent = ({
   comment,
@@ -153,7 +154,7 @@ const CommentComponent = ({
           <Grid item xs>
             {!isInEditingMode && <Typography>{editedContent}</Typography>}
             {isInEditingMode && (
-              <TextField
+              <Textarea
                 fullWidth
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
@@ -161,7 +162,7 @@ const CommentComponent = ({
                   if (e.key === "Enter" && validationFunction())
                     handleEditComment();
                 }}
-              ></TextField>
+              ></Textarea>
             )}
           </Grid>
           {isEdited && (
@@ -226,15 +227,11 @@ const CommentComponent = ({
               setAnchorCommentSettings(null);
             }}
           >
-            <Typography color={"blue"}>
+            {(commentsToCommentCount > 0) && <Typography color={"blue"}>
               {isCommentsToCommentOpen
-                ? `Hide ${
-                    commentsToCommentCount ? commentsToCommentCount : ""
-                  } replies`
-                : `show ${
-                    commentsToCommentCount ? commentsToCommentCount : ""
-                  } replies`}
-            </Typography>
+                ? `Hide ${commentsToCommentCount} replies`
+                : `show ${commentsToCommentCount} replies`}
+            </Typography>}
           </MenuItem>
         </Menu>
       </Box>
