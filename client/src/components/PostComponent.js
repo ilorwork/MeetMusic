@@ -30,6 +30,7 @@ import Textarea from "@mui/joy/Textarea";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import DeleteIcon from "@mui/icons-material/Delete";
+import config from "../config/config.json";
 
 const PostComponent = ({ post, getPosts }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
@@ -57,7 +58,7 @@ const PostComponent = ({ post, getPosts }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:7000/likes/has-liked",
+        `${config.base_url}/likes/has-liked`,
         {
           postId: post._id,
         },
@@ -78,7 +79,7 @@ const PostComponent = ({ post, getPosts }) => {
     const token = localStorage.getItem("token");
     try {
       await axios.post(
-        "http://localhost:7000/likes/",
+        `${config.base_url}/likes/`,
         {
           postId: post._id,
         },
@@ -105,7 +106,7 @@ const PostComponent = ({ post, getPosts }) => {
   const removeLike = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete("http://localhost:7000/likes/", {
+      await axios.delete(`${config.base_url}/likes/`, {
         withCredentials: true,
         headers: {
           authorization: token,
@@ -125,7 +126,7 @@ const PostComponent = ({ post, getPosts }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:7000/comments/post-comments/",
+        `${config.base_url}/comments/post-comments/`,
         {
           _id: post._id,
         },
@@ -148,7 +149,7 @@ const PostComponent = ({ post, getPosts }) => {
     const token = localStorage.getItem("token");
 
     try {
-      await axios.delete("http://localhost:7000/posts/", {
+      await axios.delete(`${config.base_url}/posts/`, {
         withCredentials: true,
         headers: {
           authorization: token,
@@ -195,26 +196,27 @@ const PostComponent = ({ post, getPosts }) => {
   };
 
   const handleDeleteImg = (img) => {
-    setPostImages(postImages.filter(currentImg => currentImg !== img));
-  }
+    setPostImages(postImages.filter((currentImg) => currentImg !== img));
+  };
 
   const handleDeleteAudio = () => {
     setPostAudio("");
-  }
+  };
 
   const handleEditPost = async () => {
     if (!postText && !postImages.length && !postAudio) return;
-    if (postText === post.postText && postImages === post.postImages &&
-      postAudio === post.postAudio) {
+    if (
+      postText === post.postText &&
+      postImages === post.postImages &&
+      postAudio === post.postAudio
+    ) {
       setIsInEditingMode(false);
     } else {
-
       const token = localStorage.getItem("token");
       const newPost = { _id: post._id, postText, postImages, postAudio };
 
       try {
-        await axios.put("http://localhost:7000/posts/", newPost, {
-
+        await axios.put(`${config.base_url}/posts/`, newPost, {
           withCredentials: true,
           headers: {
             authorization: token,
@@ -243,20 +245,28 @@ const PostComponent = ({ post, getPosts }) => {
         subheader={new Date(post.timeOfCreation).toLocaleString()}
         action={
           <>
-
             <div className={style.threePoints}>
               {currentUserInfo._id === post.creator._id && (
-                <IconButton onClick={(e) => setAnchorPostSettings(e.currentTarget)}>
+                <IconButton
+                  onClick={(e) => setAnchorPostSettings(e.currentTarget)}
+                >
                   <MoreVertIcon />
-                </IconButton>)}
+                </IconButton>
+              )}
               {isEdited && (
-                <div style={{
-                  width: 60, textAlign: "end", fontWeight: "bold", fontSize: 14,
-                  marginTop: 10, color: "#92a5de"
-                }}
+                <div
+                  style={{
+                    width: 60,
+                    textAlign: "end",
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    marginTop: 10,
+                    color: "#92a5de",
+                  }}
                 >
                   edited
-                </div>)}
+                </div>
+              )}
             </div>
             <Menu
               anchorEl={anchorPostSettings}
@@ -271,7 +281,6 @@ const PostComponent = ({ post, getPosts }) => {
               open={Boolean(anchorPostSettings)}
               onClose={() => setAnchorPostSettings(null)}
             >
-
               <MenuItem
                 onClick={() => {
                   setIsInEditingMode(true);
@@ -289,7 +298,6 @@ const PostComponent = ({ post, getPosts }) => {
         }
       ></CardHeader>
 
-
       {isInEditingMode && (
         <Box>
           <Textarea
@@ -300,10 +308,11 @@ const PostComponent = ({ post, getPosts }) => {
           {postImages && (
             <ImageList cols={postImages.length < 5 ? 2 : 3} rowHeight={164}>
               {postImages.map((img) => (
-                <div key={uuid()} style={{ border: "solid gray 1px" }}
-                >
+                <div key={uuid()} style={{ border: "solid gray 1px" }}>
                   <Button
-                    onClick={() => { handleDeleteImg(img) }}
+                    onClick={() => {
+                      handleDeleteImg(img);
+                    }}
                     style={{ fontSize: 10, color: "red" }}
                     variant="outlined"
                     startIcon={<DeleteIcon color="error" />}
@@ -318,12 +327,18 @@ const PostComponent = ({ post, getPosts }) => {
             </ImageList>
           )}
           {postAudio && (
-            <div style={{
-              display: "flex", justifyContent: "center", alignItems: "center",
-              border: "solid gray 1px"
-            }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                border: "solid gray 1px",
+              }}
+            >
               <Button
-                onClick={() => { handleDeleteAudio() }}
+                onClick={() => {
+                  handleDeleteAudio();
+                }}
                 sx={{ fontSize: 10, color: "red" }}
                 variant="outlined"
                 startIcon={<DeleteIcon color="error" />}
@@ -336,37 +351,42 @@ const PostComponent = ({ post, getPosts }) => {
             </div>
           )}
           <div>
+            {postImages.length <= 8 && (
+              <IconButton
+                sx={{ fontSize: 16 }}
+                color="primary"
+                aria-label="upload picture"
+                component="label"
+              >
+                <input
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageSelection}
+                />
+                <AddPhotoAlternateIcon />
+                Upload Image
+              </IconButton>
+            )}
 
-            {(postImages.length <= 8) && (<IconButton sx={{ fontSize: 16 }}
-              color="primary"
-              aria-label="upload picture"
-              component="label"
-            >
-              <input
-                hidden
-                accept="image/*"
-                type="file"
-                onChange={handleImageSelection}
-              />
-              <AddPhotoAlternateIcon />
-              Upload Image
-            </IconButton>)}
-
-            {!postAudio && <IconButton sx={{ fontSize: 16 }} title="Upload Audio"
-              color="primary"
-              aria-label="upload audio"
-              component="label"
-            >
-              <input
-                hidden
-                accept="audio/*"
-                type="file"
-                onChange={handleAudioSelection}
-              />
-              <AudioFileIcon />
-              Upload Audio
-            </IconButton>}
-
+            {!postAudio && (
+              <IconButton
+                sx={{ fontSize: 16 }}
+                title="Upload Audio"
+                color="primary"
+                aria-label="upload audio"
+                component="label"
+              >
+                <input
+                  hidden
+                  accept="audio/*"
+                  type="file"
+                  onChange={handleAudioSelection}
+                />
+                <AudioFileIcon />
+                Upload Audio
+              </IconButton>
+            )}
           </div>
           <Button
             variant="contained"
@@ -378,26 +398,28 @@ const PostComponent = ({ post, getPosts }) => {
         </Box>
       )}
 
-
-      {!isInEditingMode && <CardContent>
-        {postText && <Box>{postText}</Box>}
-        {(postImages.length !== 0) && (
-          <ImageList
-            cols={getImagesCols()} rowHeight={getImagesCols() < 2 ? 400 : 200}
-          >
-            {postImages.map((img) => (
-              <ImageListItem sx={{ overflow: "hidden" }} key={uuid()}>
-                <img src={img} alt="post img" />
-              </ImageListItem>
-            ))}
-          </ImageList>
-        )}
-        {postAudio && (
-          <audio controls>
-            <source src={postAudio} />
-          </audio>
-        )}
-      </CardContent>}
+      {!isInEditingMode && (
+        <CardContent>
+          {postText && <Box>{postText}</Box>}
+          {postImages.length !== 0 && (
+            <ImageList
+              cols={getImagesCols()}
+              rowHeight={getImagesCols() < 2 ? 400 : 200}
+            >
+              {postImages.map((img) => (
+                <ImageListItem sx={{ overflow: "hidden" }} key={uuid()}>
+                  <img src={img} alt="post img" />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          )}
+          {postAudio && (
+            <audio controls>
+              <source src={postAudio} />
+            </audio>
+          )}
+        </CardContent>
+      )}
 
       <Box className={style.footerIndecators}>
         <div>{likesCount} Likes</div>
@@ -415,14 +437,16 @@ const PostComponent = ({ post, getPosts }) => {
             <ThumbUpIcon style={{ color: "rgb(209, 46, 100)" }} />
           </IconButton>
         )}
-        {!isCommentOpen &&
+        {!isCommentOpen && (
           <IconButton onClick={() => setIsCommentOpen(!isCommentOpen)}>
             <ChatBubbleIcon color="inherit" />
-          </IconButton>}
-        {isCommentOpen &&
+          </IconButton>
+        )}
+        {isCommentOpen && (
           <IconButton onClick={() => setIsCommentOpen(!isCommentOpen)}>
             <ChatBubbleIcon style={{ color: "#92a5de" }} />
-          </IconButton>}
+          </IconButton>
+        )}
         <IconButton>
           <ScreenShareIcon />
         </IconButton>

@@ -18,6 +18,7 @@ import { getCurrentUserInfo } from "../helpers/userHelpers";
 import { v4 as uuid } from "uuid";
 import Followers from "./Followers";
 import Following from "./Following";
+import config from "../config/config.json";
 
 const CurrentUserProfile = () => {
   const [user, setUser] = useState("");
@@ -44,15 +45,12 @@ const CurrentUserProfile = () => {
 
   const getUserPosts = async () => {
     const token = localStorage.getItem("token");
-    const res = await axios.get(
-      "http://localhost:7000/posts/current-user-posts",
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const res = await axios.get(`${config.base_url}/posts/current-user-posts`, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
     setUserPosts(res.data);
   };
 
@@ -77,16 +75,12 @@ const CurrentUserProfile = () => {
 
   const updateUser = async (fieldsToUpdate) => {
     const token = localStorage.getItem("token");
-    const res = await axios.put(
-      "http://localhost:7000/users/",
-      fieldsToUpdate,
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const res = await axios.put(`${config.base_url}/users/`, fieldsToUpdate, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
     setUser(res.data);
   };
 

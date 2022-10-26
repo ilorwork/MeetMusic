@@ -15,6 +15,7 @@ import Following from "./Following";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import { v4 as uuid } from "uuid";
+import config from "../config/config.json";
 
 const UserProfile = () => {
   const [user, setUser] = useState("");
@@ -31,7 +32,7 @@ const UserProfile = () => {
 
   const getUserInfo = async () => {
     try {
-      const res = await axios.post("http://localhost:7000/users/user", {
+      const res = await axios.post(`${config.base_url}/users/user`, {
         _id: id,
       });
 
@@ -44,7 +45,7 @@ const UserProfile = () => {
   };
 
   const getUserPosts = async () => {
-    const res = await axios.post("http://localhost:7000/posts/user-posts", {
+    const res = await axios.post(`${config.base_url}/posts/user-posts`, {
       _id: id,
     });
 
