@@ -8,8 +8,8 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
+app.use(bodyParser.json({ limit: "20mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "20mb" }));
 // Allows the app to get a json format
 app.use(express.json());
 app.use(cookieParser());

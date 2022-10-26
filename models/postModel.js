@@ -9,6 +9,7 @@ const postSchema = new mongoose.Schema({
   sharedCount: { type: Number, default: 0 },
   creator: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   timeOfCreation: { type: Date, default: Date.now() },
+  isEdited: { type: Boolean, default: false }
 });
 
 const PostModel = mongoose.model("Post", postSchema);

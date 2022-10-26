@@ -3,12 +3,13 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { IconButton, Menu, MenuItem, TextField } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 import CreateCommentToComment from "./CreateCommentToComment";
 import { v4 as uuid } from "uuid";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
+import Textarea from "@mui/joy/Textarea";
 
 const CommentToCommentComponent = ({
   commentToComment,
@@ -165,7 +166,7 @@ const CommentToCommentComponent = ({
           <Grid item xs>
             {!isInEditingMode && <Typography>{editedContent}</Typography>}
             {isInEditingMode && (
-              <TextField
+              <Textarea
                 fullWidth
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
@@ -173,7 +174,7 @@ const CommentToCommentComponent = ({
                   if (e.key === "Enter" && validationFunction())
                     handleEditCommentToComment();
                 }}
-              ></TextField>
+              ></Textarea>
             )}
           </Grid>
           {isEdited && (
@@ -245,19 +246,11 @@ const CommentToCommentComponent = ({
               setAnchorCommentToCommentSettings(null);
             }}
           >
-            <Typography color={"blue"}>
+            {(commentsOfCommentToCommentCount > 0) && <Typography color={"blue"}>
               {isCommentsOfCommentToCommentOpen
-                ? `Hide ${
-                    commentsOfCommentToCommentCount
-                      ? commentsOfCommentToCommentCount
-                      : ""
-                  } replies`
-                : `show ${
-                    commentsOfCommentToCommentCount
-                      ? commentsOfCommentToCommentCount
-                      : ""
-                  } replies`}
-            </Typography>
+                ? `Hide ${commentsOfCommentToCommentCount} replies`
+                : `show ${commentsOfCommentToCommentCount} replies`}
+            </Typography>}
           </MenuItem>
         </Menu>
       </Box>

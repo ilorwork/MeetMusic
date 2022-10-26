@@ -5,7 +5,7 @@ const generateAccessTokenHeader = (req, res, user) => {
   const accessToken = jwt.sign(
     { email: user.email, _id: user._id },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: `15m` }
+    { expiresIn: "15m" }
   );
 
   res.setHeader("Authorization", accessToken);
@@ -17,13 +17,12 @@ const generateRefreshTokenCookie = (req, res, user) => {
     { email: user.email, _id: user._id },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: `1440m`,
+      expiresIn: "24h",
     }
   );
 
   res.cookie("refreshToken", refreshToken, {
-    // Is age really needed when we limited the token expiration date?
-    maxAge: 900000, // 15 min
+    maxAge: 60 * 60 * 25 * 1000, // 25 hours
     httpOnly: true,
     sameSite: "None",
     secure: true,

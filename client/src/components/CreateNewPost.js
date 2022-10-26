@@ -4,9 +4,7 @@ import {
   Button,
   Card,
   Box,
-  Typography,
   Modal,
-  TextField,
   IconButton,
   ImageList,
   ImageListItem,
@@ -19,6 +17,8 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
+import Textarea from "@mui/joy/Textarea";
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const modalStyle = {
   position: "absolute",
@@ -58,6 +58,14 @@ const CreateNewPost = ({ getAllPosts }) => {
     }
   };
 
+  const handleRemoveImg = (img) => {
+    setPostImages(postImages.filter(currentImg => currentImg !== img));
+  }
+
+  const handleRemoveAudio = () => {
+    setPostAudio("");
+  }
+
   const handleCreatePost = async () => {
     if (!postText && !postImages.length && !postAudio) return;
 
@@ -85,7 +93,6 @@ const CreateNewPost = ({ getAllPosts }) => {
   };
 
   const handleImageSelection = (e) => {
-    // TODO: send a message to the user about the limit
     if (postImages.length > 8) return;
 
     const reader = new FileReader();
@@ -131,10 +138,7 @@ const CreateNewPost = ({ getAllPosts }) => {
       </Card>
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
         <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Create New Post
-          </Typography>
-          <TextField
+          <Textarea
             placeholder="Write some text"
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
@@ -142,48 +146,86 @@ const CreateNewPost = ({ getAllPosts }) => {
           {postImages && (
             <ImageList cols={postImages.length < 5 ? 2 : 3} rowHeight={164}>
               {postImages.map((img) => (
-                <ImageListItem key={uuid()}>
-                  <img src={img} alt="post img" />
-                </ImageListItem>
+                <div key={uuid()}>
+                  <Tooltip title="remove Image">
+                    <Button
+                      onClick={() => { handleRemoveImg(img) }}
+                      style={{
+                        marginBottom: -30, zIndex: 1, width: 10, border: "none"
+                      }}
+                      variant="outlined"
+                      startIcon={<RemoveIcon color="error" style={{ fontSize: 30 }} />}
+                    >
+                    </Button>
+                  </Tooltip>
+
+                  <ImageListItem sx={{ overflow: "hidden" }} >
+                    <img src={img} alt="post img" />
+                  </ImageListItem>
+                </div>
               ))}
             </ImageList>
           )}
+
           {postAudio && (
-            <audio controls>
-              <source src={postAudio} />
-            </audio>
+            <div style={{
+              display: "flex", justifyContent: "center", alignItems: "center", border: "none"
+            }}>
+              <Tooltip title="remove audio">
+                <Button
+                  style={{
+                    marginRight: -70, marginBottom: 40, zIndex: 1, width: 10, border: "none"
+                  }}
+                  onClick={() => { handleRemoveAudio() }}
+                  sx={{ fontSize: 10, color: "red" }}
+                  variant="outlined"
+                  startIcon={<RemoveIcon color="error" style={{ fontSize: 30 }} />}
+                >
+                </Button>
+              </Tooltip>
+
+              <audio controls>
+                <source src={postAudio} />
+              </audio>
+            </div>
           )}
-          <div>
-            <Tooltip title="Upload Image">
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="label"
-              >
-                <input
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  onChange={handleImageSelection}
-                />
-                <AddPhotoAlternateIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Upload Audio">
-              <IconButton
-                color="primary"
-                aria-label="upload audio"
-                component="label"
-              >
-                <input
-                  hidden
-                  accept="audio/*"
-                  type="file"
-                  onChange={handleAudioSelection}
-                />
-                <AudioFileIcon />
-              </IconButton>
-            </Tooltip>
+
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div style={{
+              padding: "0 48px 0 0"
+            }}>
+              {postImages.length <= 8 && <Tooltip title="Upload Image">
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    onChange={handleImageSelection}
+                  />
+                  <AddPhotoAlternateIcon />
+                </IconButton>
+              </Tooltip>}
+
+              {!postAudio && <Tooltip title="Upload Audio">
+                <IconButton
+                  color="primary"
+                  aria-label="upload audio"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept="audio/*"
+                    type="file"
+                    onChange={handleAudioSelection}
+                  />
+                  <AudioFileIcon />
+                </IconButton>
+              </Tooltip>}
+            </div>
             <Button
               variant="contained"
               style={{ background: "rgb(209, 46, 100)" }}
@@ -191,7 +233,9 @@ const CreateNewPost = ({ getAllPosts }) => {
             >
               Create post
             </Button>
+
           </div>
+
         </Box>
       </Modal>
     </>
