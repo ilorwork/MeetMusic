@@ -19,6 +19,10 @@
   padding: 4px 8px;
 }
 
+.error {
+  color: red;
+}
+
 .loginBtn {
   border-top: 2px dotted green;
   padding: 24px;
