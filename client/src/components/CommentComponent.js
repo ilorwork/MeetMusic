@@ -11,6 +11,7 @@ import CommentToCommentComponent from "./CommentToCommentComponent";
 import { v4 as uuid } from "uuid";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
 import Textarea from "@mui/joy/Textarea";
+import config from "../config/config.json";
 
 const CommentComponent = ({
   comment,
@@ -52,7 +53,7 @@ const CommentComponent = ({
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:7000/comments-to-comments/comment-comments/",
+        `${config.base_url}/comments-to-comments/comment-comments/`,
         {
           _id: comment._id,
         },
@@ -76,7 +77,7 @@ const CommentComponent = ({
       const token = localStorage.getItem("token");
       try {
         await axios.put(
-          "http://localhost:7000/comments/",
+          `${config.base_url}/comments/`,
           {
             _id: comment._id,
             content: editedContent,
@@ -111,7 +112,7 @@ const CommentComponent = ({
   const handleDeleteComment = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete("http://localhost:7000/comments/", {
+      await axios.delete(`${config.base_url}/comments/`, {
         withCredentials: true,
         headers: {
           authorization: token,
@@ -227,11 +228,13 @@ const CommentComponent = ({
               setAnchorCommentSettings(null);
             }}
           >
-            {(commentsToCommentCount > 0) && <Typography color={"blue"}>
-              {isCommentsToCommentOpen
-                ? `Hide ${commentsToCommentCount} replies`
-                : `show ${commentsToCommentCount} replies`}
-            </Typography>}
+            {commentsToCommentCount > 0 && (
+              <Typography color={"blue"}>
+                {isCommentsToCommentOpen
+                  ? `Hide ${commentsToCommentCount} replies`
+                  : `show ${commentsToCommentCount} replies`}
+              </Typography>
+            )}
           </MenuItem>
         </Menu>
       </Box>

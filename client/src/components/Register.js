@@ -17,6 +17,7 @@ import axios from "axios";
 import style from "./Register.module.css";
 import { v4 as uuid } from "uuid";
 import { login, notifyUser } from "../helpers/userHelpers";
+import config from "../config/config.json";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -103,7 +104,7 @@ const Register = () => {
     };
 
     try {
-      const res = await axios.post("http://localhost:7000/users", newUser);
+      const res = await axios.post(`${config.base_url}/users`, newUser);
 
       await login(email, password);
       await notifyUser(res.data._id, "Welcome to MeetMusic");

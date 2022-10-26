@@ -6,6 +6,7 @@ import Textarea from "@mui/joy/Textarea";
 import axios from "axios";
 import { notifyUser } from "../helpers/userHelpers";
 import UserContext from "./layout/UserContext";
+import config from "../config/config.json";
 
 const CreateCommentToComment = ({
   comment,
@@ -32,7 +33,7 @@ const CreateCommentToComment = ({
     const token = localStorage.getItem("token");
     try {
       await axios.post(
-        "http://localhost:7000/comments-to-comments/",
+        `${config.base_url}/comments-to-comments/`,
         newCommentToComment,
         {
           withCredentials: true,

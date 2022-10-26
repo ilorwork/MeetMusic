@@ -10,6 +10,7 @@ import CreateCommentToComment from "./CreateCommentToComment";
 import { v4 as uuid } from "uuid";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
 import Textarea from "@mui/joy/Textarea";
+import config from "../config/config.json";
 
 const CommentToCommentComponent = ({
   commentToComment,
@@ -63,7 +64,7 @@ const CommentToCommentComponent = ({
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:7000/comments-to-comments/comment-comments/",
+        `${config.base_url}/comments-to-comments/comment-comments/`,
         {
           _id: commentToComment._id,
         },
@@ -87,7 +88,7 @@ const CommentToCommentComponent = ({
       const token = localStorage.getItem("token");
       try {
         await axios.put(
-          "http://localhost:7000/comments-to-comments/",
+          `${config.base_url}/comments-to-comments/`,
           {
             _id: commentToComment._id,
             content: editedContent,
@@ -122,7 +123,7 @@ const CommentToCommentComponent = ({
   const handleDeleteCommentToComment = async () => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete("http://localhost:7000/comments-to-comments/", {
+      await axios.delete(`${config.base_url}/comments-to-comments/`, {
         withCredentials: true,
         headers: {
           authorization: token,
@@ -246,11 +247,13 @@ const CommentToCommentComponent = ({
               setAnchorCommentToCommentSettings(null);
             }}
           >
-            {(commentsOfCommentToCommentCount > 0) && <Typography color={"blue"}>
-              {isCommentsOfCommentToCommentOpen
-                ? `Hide ${commentsOfCommentToCommentCount} replies`
-                : `show ${commentsOfCommentToCommentCount} replies`}
-            </Typography>}
+            {commentsOfCommentToCommentCount > 0 && (
+              <Typography color={"blue"}>
+                {isCommentsOfCommentToCommentOpen
+                  ? `Hide ${commentsOfCommentToCommentCount} replies`
+                  : `show ${commentsOfCommentToCommentCount} replies`}
+              </Typography>
+            )}
           </MenuItem>
         </Menu>
       </Box>
