@@ -26,6 +26,7 @@ const Header = () => {
   const [anchorNotice, setAnchorNotice] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [autoVal, setAutoVal] = useState("");
 
   const navigate = useNavigate();
 
@@ -114,14 +115,24 @@ const Header = () => {
           </Tooltip>
         </div>
         <Autocomplete
-          // freeSolo
+          freeSolo
+          inputValue={autoVal}
+          disableClearable
           options={allUsers}
+          onBlur={() => setAutoVal("")}
+          onChange={() => setAutoVal("")}
           getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
           renderOption={(props, option) => (
-            <UserSearchCard key={uuid()} user={option} />
+            <UserSearchCard
+              {...props}
+              key={uuid()}
+              user={option}
+              setAutoVal={setAutoVal}
+            />
           )}
           renderInput={(params) => (
             <TextField
+              onChange={(e) => setAutoVal(e.target.value)}
               sx={{ width: 300, px: 2 }}
               variant="standard"
               className={style.searchField}
