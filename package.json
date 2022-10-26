@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"nodemon server.js\" \"cd client && npm start\"",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "render-post-build": "cd client && yarn install && yarn build"
   },
   "repository": {
     "type": "git",
