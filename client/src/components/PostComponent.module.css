@@ -4,6 +4,11 @@
   cursor: pointer;
 }
 
+.threePoints {
+  width: 79px;
+  text-align: end;
+}
+
 .footerIndecators {
   display: flex;
   justify-content: space-around;

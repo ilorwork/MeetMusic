@@ -100,13 +100,56 @@ const deletePost = async (req, res) => {
 
 const editPost = async (req, res) => {
   try {
-    // check if the userId is equal to creatorId
-    const editedPost = await PostModel.findOne({ _id: req.body });
-    editedPost.postText = req.body.postText;
-    editedPost.postImage = req.body.postImage;
-    editedPost.postAudio = req.body.postAudio;
-    await editedPost.save();
-    return res.status(200).json(editedPost);
+    const postToEdit = await PostModel.findOne({ _id: req.body });
+    if (req.user._id != postToEdit.creator) {
+      return res.status(403).json("Can't edit other's posts");
+    }
+
+    const postImagesFromClient = req.body.postImages;
+    if (postImagesFromClient && (JSON.stringify(postToEdit.postImages) !== JSON.stringify(postImagesFromClient))) {
+      const imagesToDestroy = postToEdit.postImages.filter((img) => (!postImagesFromClient.includes(img)));
+      imagesToDestroy?.forEach((img) => {
+        const imgPublicId = img.split("/").pop().split(".")[0];
+        cloudinary.uploader.destroy(imgPublicId);
+      });
+      const imagesToUpload = postImagesFromClient.filter((img) => (!postToEdit.postImages.includes(img)));
+      const urls = await Promise.all(
+        imagesToUpload?.map(async (img) => {
+          const uploadedImgRes = await cloudinary.uploader.upload(img);
+          return uploadedImgRes.secure_url;
+        })
+      );
+
+      req.body.postImages = postImagesFromClient.filter((img) => (postToEdit.postImages.includes(img)));
+      req.body.postImages = [...req.body.postImages, ...urls];
+      postToEdit.postImages = req.body.postImages;
+    }
+
+    if (req.body.postAudio !== undefined && (JSON.stringify(postToEdit.postAudio) !== JSON.stringify(req.body.postAudio))) {
+      const audPublicId = postToEdit.postAudio.split("/").pop().split(".")[0];
+      cloudinary.uploader.destroy(audPublicId, {
+        resource_type: "video",
+      });
+      if (req.body.postAudio.length) {
+        const uploadedAudioRes = await cloudinary.uploader.upload(
+          req.body.postAudio,
+          { resource_type: "video" }
+        );
+        req.body.postAudio = uploadedAudioRes.secure_url;
+      }
+      postToEdit.postAudio = req.body.postAudio;
+    }
+
+    if (req.body.postText !== undefined && (JSON.stringify(postToEdit.postText) !== JSON.stringify(req.body.postText))) {
+      postToEdit.postText = req.body.postText;
+    }
+
+    if (!postToEdit.isEdited) {
+      postToEdit.isEdited = true;
+    };
+
+    await postToEdit.save();
+    return res.status(200).json(postToEdit);
   } catch (e) {
     res.status(500).json("edit post failed " + e);
   }
