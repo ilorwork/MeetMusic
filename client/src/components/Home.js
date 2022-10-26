@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import style from "./Home.module.css";
 import Following from "./Following";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
@@ -7,15 +7,18 @@ import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
+import UserContext from "./layout/UserContext";
 
 const Home = () => {
   const [user, setUser] = useState("");
-  const [allPosts, setAllPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
+
+  const { currentUserInfo } = useContext(UserContext);
 
   useEffect(() => {
     getUserInfo();
-    getAllPosts();
+    getPosts();
     getPeopleYouMayKnow();
   }, []);
 
@@ -24,9 +27,22 @@ const Home = () => {
     setUser(info);
   };
 
-  const getAllPosts = async () => {
-    const res = await axios.get("http://localhost:7000/posts/");
-    setAllPosts(res.data);
+  const getPosts = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(
+        "http://localhost:7000/posts/",
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setPosts(res.data);
+    } catch (e) {
+      console.error("get posts is failed " + e);
+    }
   };
 
   const getPeopleYouMayKnow = async () => {
@@ -54,14 +70,15 @@ const Home = () => {
             getPeopleYouMayKnow={getPeopleYouMayKnow}
             getUserInfo={getUserInfo}
             key={uuid()}
+            getPosts={getPosts}
           />
         ))}
       </div>
       <div className={style.containerPostComponents}>
-        <CreateNewPost getAllPosts={getAllPosts} />
+        <CreateNewPost getPosts={getPosts} />
 
-        {allPosts.map((post) => (
-          <PostComponent post={post} getPosts={getAllPosts} key={uuid()} />
+        {posts.map((post) => (
+          <PostComponent post={post} getPosts={getPosts} key={uuid()} />
         ))}
       </div>
       <div className={style.peopleYouFollow}>
@@ -72,6 +89,7 @@ const Home = () => {
             followed={followed}
             getUserInfo={getUserInfo}
             getPeopleYouMayKnow={getPeopleYouMayKnow}
+            getPosts={getPosts}
           />
         ))}
       </div>

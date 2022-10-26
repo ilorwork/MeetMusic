@@ -3,7 +3,7 @@ const postController = require("../controllers/postController");
 const { verifyUser } = require("../middleware/userVerification");
 const router = express.Router();
 
-router.get("/", postController.getAllPosts);
+router.get("/", verifyUser, postController.getPosts);
 router.get(
   "/current-user-posts",
   verifyUser,

@@ -32,14 +32,31 @@ const createPost = async (req, res) => {
   }
 };
 
-const getAllPosts = async (req, res) => {
+const getPosts = async (req, res) => {
   try {
-    const allPostsWithCreator = await PostModel.find({}).populate("creator");
-    allPostsWithCreator.reverse();
 
-    return res.status(200).json(allPostsWithCreator);
+    const allPostsWithCreator = await PostModel.find({}).populate("creator");
+    const currentUser = await UserModel.findOne({ _id: req.user._id });
+    const filteredPostsWithCreator = allPostsWithCreator.filter((post) => (currentUser.following.includes(post.creator._id) || req.user._id == post.creator._id));
+    filteredPostsWithCreator.reverse();
+
+    const unfolowedRelatadPeoplePosts = allPostsWithCreator.filter((post) => (!currentUser.following.includes(post.creator._id) && currentUser.country === post.creator.country && req.user._id != post.creator._id));
+    const idsOfRelatedPeople = unfolowedRelatadPeoplePosts.map((post) => (post.creator._id));
+    const uniqIds = [...new Set(idsOfRelatedPeople)];
+
+    const postsArraysByUsers = uniqIds.map((uniqId) => {
+      return unfolowedRelatadPeoplePosts.filter((post) => post.creator._id == uniqId);
+    })
+
+    const singlePostOfEachUser = postsArraysByUsers.map((postsArr) => {
+      return postsArr[Math.floor(Math.random() * postsArr.length)];
+    })
+
+    const allPosts = filteredPostsWithCreator.concat(singlePostOfEachUser);
+
+    return res.status(200).json(allPosts);
   } catch (e) {
-    res.status(500).json(`Failed to get all posts ${e}`);
+    res.status(500).json(`Failed to get posts ${e}`);
   }
 };
 
@@ -183,7 +200,7 @@ const removeLike = async (req, res) => {
 };
 
 module.exports = {
-  getAllPosts,
+  getPosts,
   getPostsOfCurrentUser,
   getPostsOfUser,
   createPost,

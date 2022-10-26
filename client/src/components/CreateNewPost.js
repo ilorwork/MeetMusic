@@ -33,7 +33,7 @@ const modalStyle = {
   p: 4,
 };
 
-const CreateNewPost = ({ getAllPosts }) => {
+const CreateNewPost = ({ getPosts }) => {
   const [userInfo, setUserInfo] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [postText, setPostText] = useState("");
@@ -84,7 +84,7 @@ const CreateNewPost = ({ getAllPosts }) => {
       setPostImages([]);
       setPostText("");
       setIsOpen(false);
-      getAllPosts();
+      getPosts();
     } catch (e) {
       if (e.response.status === 401) {
         navigate("/login");

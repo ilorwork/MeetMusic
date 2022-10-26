@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { followUser } from "../helpers/userHelpers";
 import UserContext from "./layout/UserContext";
 
-const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo }) => {
+const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo, getPosts }) => {
   const { currentUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -18,6 +18,7 @@ const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo }) => {
       await followUser(user._id, currentUserInfo);
       getPeopleYouMayKnow();
       getUserInfo();
+      getPosts();
     } catch (e) {
       throw new Error("follow user failed " + e);
     }
