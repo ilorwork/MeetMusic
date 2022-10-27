@@ -18,7 +18,7 @@ import AudioFileIcon from "@mui/icons-material/AudioFile";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 import Textarea from "@mui/joy/Textarea";
-import RemoveIcon from "@mui/icons-material/Remove";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import config from "../config/config.json";
 
 const modalStyle = {
@@ -116,7 +116,7 @@ const CreateNewPost = ({ getPosts }) => {
   };
 
   return (
-    <>
+    <div style={{ padding: 2 }}>
       <Card className={style.createNewPostCard}>
         <button
           className={style.profileBtn}
@@ -148,22 +148,27 @@ const CreateNewPost = ({ getPosts }) => {
             <ImageList cols={postImages.length < 5 ? 2 : 3} rowHeight={164}>
               {postImages.map((img) => (
                 <div key={uuid()}>
-                  <Tooltip title="remove Image">
-                    <Button
+                  <Tooltip title="Remove Image">
+                    <IconButton
                       onClick={() => {
                         handleRemoveImg(img);
                       }}
                       style={{
-                        marginBottom: -30,
+                        marginBottom: -45,
+                        marginLeft: -5,
                         zIndex: 1,
-                        width: 10,
                         border: "none",
                       }}
-                      variant="outlined"
-                      startIcon={
-                        <RemoveIcon color="error" style={{ fontSize: 30 }} />
-                      }
-                    ></Button>
+                    >
+                      <CloseOutlinedIcon
+                        style={{
+                          color: "white",
+                          fontSize: 25,
+                          background: "gray",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    </IconButton>
                   </Tooltip>
 
                   <ImageListItem sx={{ overflow: "hidden" }}>
@@ -184,23 +189,26 @@ const CreateNewPost = ({ getPosts }) => {
               }}
             >
               <Tooltip title="remove audio">
-                <Button
+                <IconButton
                   style={{
-                    marginRight: -70,
-                    marginBottom: 40,
+                    marginRight: -30,
+                    marginBottom: 30,
                     zIndex: 1,
-                    width: 10,
                     border: "none",
                   }}
                   onClick={() => {
                     handleRemoveAudio();
                   }}
-                  sx={{ fontSize: 10, color: "red" }}
-                  variant="outlined"
-                  startIcon={
-                    <RemoveIcon color="error" style={{ fontSize: 30 }} />
-                  }
-                ></Button>
+                >
+                  <CloseOutlinedIcon
+                    style={{
+                      color: "white",
+                      fontSize: 25,
+                      background: "gray",
+                      borderRadius: "50%",
+                    }}
+                  />
+                </IconButton>
               </Tooltip>
 
               <audio controls>
@@ -267,7 +275,7 @@ const CreateNewPost = ({ getPosts }) => {
           </div>
         </Box>
       </Modal>
-    </>
+    </div>
   );
 };
 
