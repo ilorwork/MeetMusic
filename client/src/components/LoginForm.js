@@ -7,18 +7,29 @@ import style from "./LoginForm.module.css";
 const LoginForm = () => {
   const [email, setEmail] = useState("shilat@gmail.com");
   const [password, setPassword] = useState("shilat23");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   const handleSumbitLogin = async () => {
-    if (!email || !password) return;
+    if (!email || !password) {
+      setError("Email and Password requried");
+      return;
+    }
 
     try {
       await login(email, password);
       navigate("/");
-    } catch (err) {
-      throw new Error("Login user has failed " + err);
+    } catch (e) {
+      if (e.response.status === 401) setError("Wrong email or password");
+      else if (e.response.status === 404) setError("User not found");
+      else setError("An error has accured");
     }
+  };
+
+  const onFieldChange = (e, setStateFunc) => {
+    setStateFunc(e.target.value);
+    setError("");
   };
 
   return (
@@ -31,19 +42,22 @@ const LoginForm = () => {
           label="Email"
           autoFocus
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          onChange={(e) => onFieldChange(e, setEmail)}
         />
         <TextField
           label="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          onChange={(e) => onFieldChange(e, setPassword)}
         />
+        {error && <div className={style.error}>{error}</div>}
         <Button
           variant="contained"
           style={{ background: "rgb(209, 46, 100)" }}
           onClick={handleSumbitLogin}
         >
-          Login
+          Log In
         </Button>
         <div className={style.createAccountBtnWrapper}>
           <Button

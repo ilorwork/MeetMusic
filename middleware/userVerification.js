@@ -22,7 +22,6 @@ const generateRefreshTokenCookie = (req, res, user) => {
   );
 
   res.cookie("refreshToken", refreshToken, {
-    // Is age really needed when we limited the token expiration date?
     maxAge: 60 * 60 * 25 * 1000, // 25 hours
     httpOnly: true,
     sameSite: "None",

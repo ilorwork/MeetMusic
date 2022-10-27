@@ -7,6 +7,7 @@ import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
+import config from "../config/config.json";
 
 const Home = () => {
   const [user, setUser] = useState("");
@@ -28,7 +29,7 @@ const Home = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.get(
-        "http://localhost:7000/posts/",
+        `${config.base_url}/posts/`,
         {
           withCredentials: true,
           headers: {
@@ -46,7 +47,7 @@ const Home = () => {
     const token = localStorage.getItem("token");
 
     const res = await axios.get(
-      "http://localhost:7000/users/user/people-user-may-know",
+      `${config.base_url}/users/user/people-user-may-know`,
       {
         withCredentials: true,
         headers: {

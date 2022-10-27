@@ -17,6 +17,7 @@ import axios from "axios";
 import style from "./Register.module.css";
 import { v4 as uuid } from "uuid";
 import { login, notifyUser } from "../helpers/userHelpers";
+import config from "../config/config.json";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -29,6 +30,7 @@ const Register = () => {
   const [city, setCity] = useState("");
   const [countriesAndCities, setCountriesAndCities] = useState([]);
   const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -54,9 +56,15 @@ const Register = () => {
     },
   };
 
+  const onFieldChange = (e, setStateFunc) => {
+    setStateFunc(e.target.value);
+    setError("");
+  };
+
   const handleCountryChange = (e) => {
     setCountry(e.target.value);
     setCity("");
+    setError("");
   };
 
   const getAllCountriesAndCities = async () => {
@@ -72,8 +80,17 @@ const Register = () => {
   };
 
   const hanbleSubmitForm = async () => {
-    if (!firstName || !lastName || !email || !password || !gender || !birthDate)
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !gender ||
+      !birthDate
+    ) {
+      setError("One or more mendatory fields are empty");
       return;
+    }
 
     const newUser = {
       firstName: firstName,
@@ -87,15 +104,20 @@ const Register = () => {
     };
 
     try {
-      const res = await axios.post("http://localhost:7000/users", newUser);
+      const res = await axios.post(`${config.base_url}/users`, newUser);
 
       await login(email, password);
       await notifyUser(res.data._id, "Welcome to MeetMusic");
 
       navigate("/");
     } catch (e) {
-      console.error("Failed to login " + e);
-      // TODO: Present some error to the user
+      if (e.response.data.includes("duplicate key"))
+        setError("Account with same Email already exist");
+      else if (e.response.data.includes("Invalid email"))
+        setError("Invalid email address");
+      else if (e.response.data.includes("strong"))
+        setError("Password isn't strong enough");
+      else setError("An error has accured");
     }
   };
 
@@ -104,7 +126,7 @@ const Register = () => {
       <Paper
         className={style.registrationFormPaper}
         elevation={3}
-        sx={{ width: 400, height: 550 }}
+        sx={{ width: 400, height: 570 }}
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
@@ -112,30 +134,33 @@ const Register = () => {
             autoFocus
             sx={{ marginRight: 3 }}
             value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            onChange={(e) => onFieldChange(e, setFirstName)}
           />
           <TextField
             label="Last name"
             value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => onFieldChange(e, setLastName)}
           />
         </div>
         <TextField
           label="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          onChange={(e) => onFieldChange(e, setEmail)}
         />
         <TextField
+          // error={error ? true : false}
           label="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          onChange={(e) => onFieldChange(e, setPassword)}
         />
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
             <FormLabel>Gender</FormLabel>
             <RadioGroup
               row
-              onChange={(e) => setGender(e.target.value)}
+              onChange={(e) => onFieldChange(e, setGender)}
               value={gender}
             >
               <FormControlLabel value="male" control={<Radio />} label="Male" />
@@ -151,7 +176,7 @@ const Register = () => {
             <TextField
               type="date"
               value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
+              onChange={(e) => onFieldChange(e, setBirthDate)}
             />
           </FormControl>
         </div>
@@ -176,7 +201,7 @@ const Register = () => {
             <InputLabel>City</InputLabel>
             <Select
               value={city}
-              onChange={(e) => setCity(e.target.value)}
+              onChange={(e) => onFieldChange(e, setCity)}
               label="City"
               MenuProps={MenuProps}
             >
@@ -188,7 +213,7 @@ const Register = () => {
             </Select>
           </FormControl>
         </div>
-
+        {error && <div className={style.error}>{error}</div>}
         <Button
           variant="contained"
           style={{ background: "rgb(209, 46, 100)" }}

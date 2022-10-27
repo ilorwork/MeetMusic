@@ -20,12 +20,14 @@ import axios from "axios";
 import { getAllUsers } from "../../helpers/userHelpers";
 import UserSearchCard from "../UserSearchCard";
 import { v4 as uuid } from "uuid";
+import config from "../../config/config.json";
 
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorNotice, setAnchorNotice] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [autoVal, setAutoVal] = useState("");
 
   const navigate = useNavigate();
 
@@ -44,7 +46,7 @@ const Header = () => {
   const getUserNotifications = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await axios.get("http://localhost:7000/notifications", {
+    const res = await axios.get(`${config.base_url}/notifications`, {
       withCredentials: true,
       headers: {
         authorization: token,
@@ -63,7 +65,7 @@ const Header = () => {
     setAnchorElUser(null);
 
     try {
-      await axios.delete("http://localhost:7000/users/logout", {
+      await axios.delete(`${config.base_url}/users/logout`, {
         withCredentials: true,
       });
     } catch (e) {
@@ -79,7 +81,7 @@ const Header = () => {
     setAnchorNotice(null);
     try {
       await axios.put(
-        "http://localhost:7000/notifications/notification",
+        `${config.base_url}/notifications/notification`,
         { isBeingRead: true },
         {
           withCredentials: true,
@@ -114,14 +116,24 @@ const Header = () => {
           </Tooltip>
         </div>
         <Autocomplete
-          // freeSolo
+          freeSolo
+          inputValue={autoVal}
+          disableClearable
           options={allUsers}
+          onBlur={() => setAutoVal("")}
+          onChange={() => setAutoVal("")}
           getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
           renderOption={(props, option) => (
-            <UserSearchCard key={uuid()} user={option} />
+            <UserSearchCard
+              {...props}
+              key={uuid()}
+              user={option}
+              setAutoVal={setAutoVal}
+            />
           )}
           renderInput={(params) => (
             <TextField
+              onChange={(e) => setAutoVal(e.target.value)}
               sx={{ width: 300, px: 2 }}
               variant="standard"
               className={style.searchField}

@@ -13,6 +13,10 @@
   justify-content: space-evenly;
 }
 
+.error {
+  color: red;
+}
+
 .createAccountBtnWrapper {
   display: flex;
   justify-content: center;

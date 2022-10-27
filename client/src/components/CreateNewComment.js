@@ -6,12 +6,13 @@ import Textarea from "@mui/joy/Textarea";
 import axios from "axios";
 import UserContext from "./layout/UserContext";
 import { notifyUser } from "../helpers/userHelpers";
+import config from "../config/config.json";
 
 const CreateNewComment = ({
   post,
   getCommentsOfPost,
   commentsCount,
-  setCommentsCount
+  setCommentsCount,
 }) => {
   const [contentOfComment, setContentOfComment] = useState("");
 
@@ -25,7 +26,7 @@ const CreateNewComment = ({
     };
     const token = localStorage.getItem("token");
     try {
-      await axios.post("http://localhost:7000/comments/", newComment, {
+      await axios.post(`${config.base_url}/comments/`, newComment, {
         withCredentials: true,
         headers: {
           authorization: token,
@@ -53,10 +54,10 @@ const CreateNewComment = ({
       if (cell) {
         nonSpaceCharacters++;
       }
-    })
+    });
     if (nonSpaceCharacters > 0) return true;
     return false;
-  }
+  };
 
   return (
     <FormControl>
@@ -66,7 +67,8 @@ const CreateNewComment = ({
         variant="standard"
         placeholder="Write a comment..."
         onKeyDown={(e) => {
-          if (e.key === "Enter" && validationFunction(e)) handleCreatingNewComment();
+          if (e.key === "Enter" && validationFunction(e))
+            handleCreatingNewComment();
         }}
         endDecorator={
           <Box

@@ -18,7 +18,8 @@ import AudioFileIcon from "@mui/icons-material/AudioFile";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 import Textarea from "@mui/joy/Textarea";
-import RemoveIcon from '@mui/icons-material/Remove';
+import RemoveIcon from "@mui/icons-material/Remove";
+import config from "../config/config.json";
 
 const modalStyle = {
   position: "absolute",
@@ -59,12 +60,12 @@ const CreateNewPost = ({ getPosts }) => {
   };
 
   const handleRemoveImg = (img) => {
-    setPostImages(postImages.filter(currentImg => currentImg !== img));
-  }
+    setPostImages(postImages.filter((currentImg) => currentImg !== img));
+  };
 
   const handleRemoveAudio = () => {
     setPostAudio("");
-  }
+  };
 
   const handleCreatePost = async () => {
     if (!postText && !postImages.length && !postAudio) return;
@@ -73,7 +74,7 @@ const CreateNewPost = ({ getPosts }) => {
     const newPost = { postText, postImages, postAudio };
 
     try {
-      await axios.post("http://localhost:7000/posts/", newPost, {
+      await axios.post(`${config.base_url}/posts/`, newPost, {
         withCredentials: true,
         headers: {
           authorization: token,
@@ -149,17 +150,23 @@ const CreateNewPost = ({ getPosts }) => {
                 <div key={uuid()}>
                   <Tooltip title="remove Image">
                     <Button
-                      onClick={() => { handleRemoveImg(img) }}
+                      onClick={() => {
+                        handleRemoveImg(img);
+                      }}
                       style={{
-                        marginBottom: -30, zIndex: 1, width: 10, border: "none"
+                        marginBottom: -30,
+                        zIndex: 1,
+                        width: 10,
+                        border: "none",
                       }}
                       variant="outlined"
-                      startIcon={<RemoveIcon color="error" style={{ fontSize: 30 }} />}
-                    >
-                    </Button>
+                      startIcon={
+                        <RemoveIcon color="error" style={{ fontSize: 30 }} />
+                      }
+                    ></Button>
                   </Tooltip>
 
-                  <ImageListItem sx={{ overflow: "hidden" }} >
+                  <ImageListItem sx={{ overflow: "hidden" }}>
                     <img src={img} alt="post img" />
                   </ImageListItem>
                 </div>
@@ -168,20 +175,32 @@ const CreateNewPost = ({ getPosts }) => {
           )}
 
           {postAudio && (
-            <div style={{
-              display: "flex", justifyContent: "center", alignItems: "center", border: "none"
-            }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                border: "none",
+              }}
+            >
               <Tooltip title="remove audio">
                 <Button
                   style={{
-                    marginRight: -70, marginBottom: 40, zIndex: 1, width: 10, border: "none"
+                    marginRight: -70,
+                    marginBottom: 40,
+                    zIndex: 1,
+                    width: 10,
+                    border: "none",
                   }}
-                  onClick={() => { handleRemoveAudio() }}
+                  onClick={() => {
+                    handleRemoveAudio();
+                  }}
                   sx={{ fontSize: 10, color: "red" }}
                   variant="outlined"
-                  startIcon={<RemoveIcon color="error" style={{ fontSize: 30 }} />}
-                >
-                </Button>
+                  startIcon={
+                    <RemoveIcon color="error" style={{ fontSize: 30 }} />
+                  }
+                ></Button>
               </Tooltip>
 
               <audio controls>
@@ -190,41 +209,53 @@ const CreateNewPost = ({ getPosts }) => {
             </div>
           )}
 
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <div style={{
-              padding: "0 48px 0 0"
-            }}>
-              {postImages.length <= 8 && <Tooltip title="Upload Image">
-                <IconButton
-                  color="primary"
-                  aria-label="upload picture"
-                  component="label"
-                >
-                  <input
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    onChange={handleImageSelection}
-                  />
-                  <AddPhotoAlternateIcon />
-                </IconButton>
-              </Tooltip>}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                padding: "0 48px 0 0",
+              }}
+            >
+              {postImages.length <= 8 && (
+                <Tooltip title="Upload Image">
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                  >
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleImageSelection}
+                    />
+                    <AddPhotoAlternateIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
 
-              {!postAudio && <Tooltip title="Upload Audio">
-                <IconButton
-                  color="primary"
-                  aria-label="upload audio"
-                  component="label"
-                >
-                  <input
-                    hidden
-                    accept="audio/*"
-                    type="file"
-                    onChange={handleAudioSelection}
-                  />
-                  <AudioFileIcon />
-                </IconButton>
-              </Tooltip>}
+              {!postAudio && (
+                <Tooltip title="Upload Audio">
+                  <IconButton
+                    color="primary"
+                    aria-label="upload audio"
+                    component="label"
+                  >
+                    <input
+                      hidden
+                      accept="audio/*"
+                      type="file"
+                      onChange={handleAudioSelection}
+                    />
+                    <AudioFileIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
             </div>
             <Button
               variant="contained"
@@ -233,9 +264,7 @@ const CreateNewPost = ({ getPosts }) => {
             >
               Create post
             </Button>
-
           </div>
-
         </Box>
       </Modal>
     </>

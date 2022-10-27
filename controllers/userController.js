@@ -5,6 +5,7 @@ const {
   generateRefreshTokenCookie,
 } = require("../middleware/userVerification");
 const { cloudinary } = require("../utils/cloudinary");
+const validator = require("validator");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -17,9 +18,15 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const newUser = await UserModel.create(req.body);
+    const isEmail = validator.isEmail(req.body.email);
+    if (!isEmail) return res.status(500).json(`Invalid email`);
 
-    newUser.password = await bcrypt.hash(newUser.password, 10);
+    const isStrong = validator.isStrongPassword(req.body.password);
+    if (!isStrong) return res.status(500).json(`Password isn't strong enough`);
+
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+
+    const newUser = await UserModel.create(req.body);
     await newUser.save();
 
     newUser.password = "Unable to send sensitive data";

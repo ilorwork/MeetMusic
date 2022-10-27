@@ -1,6 +1,7 @@
 import axios from "axios";
+import config from "../config/config.json";
 
-const base_url = "http://localhost:7000";
+const base_url = config.base_url;
 
 const login = async (email, password) => {
   try {
