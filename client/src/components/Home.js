@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Home.module.css";
 import Following from "./Following";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
@@ -7,14 +7,11 @@ import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
-import UserContext from "./layout/UserContext";
 
 const Home = () => {
   const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
-
-  const { currentUserInfo } = useContext(UserContext);
 
   useEffect(() => {
     getUserInfo();

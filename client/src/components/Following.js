@@ -31,7 +31,6 @@ const Following = ({
       await followUser(followed._id, currentUserInfo);
       getPeopleYouMayKnow();
       getUserInfo();
-      // getPosts();
     } catch (e) {
       throw new Error("follow user failed " + e);
     }
