@@ -9,6 +9,7 @@ const Following = ({
   followed,
   getUserInfo,
   getPeopleYouMayKnow = () => { },
+  getPosts = () => { }
 }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(true);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
@@ -40,6 +41,7 @@ const Following = ({
       await unfollowUser(followed._id);
       getPeopleYouMayKnow();
       getUserInfo();
+      getPosts();
     } catch (e) {
       throw new Error("unfollow user failed " + e);
     }

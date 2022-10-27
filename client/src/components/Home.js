@@ -11,12 +11,12 @@ import config from "../config/config.json";
 
 const Home = () => {
   const [user, setUser] = useState("");
-  const [allPosts, setAllPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
 
   useEffect(() => {
     getUserInfo();
-    getAllPosts();
+    getPosts();
     getPeopleYouMayKnow();
   }, []);
 
@@ -25,9 +25,22 @@ const Home = () => {
     setUser(info);
   };
 
-  const getAllPosts = async () => {
-    const res = await axios.get(`${config.base_url}/posts/`);
-    setAllPosts(res.data);
+  const getPosts = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get(
+        `${config.base_url}/posts/`,
+        {
+          withCredentials: true,
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setPosts(res.data);
+    } catch (e) {
+      console.error("get posts is failed " + e);
+    }
   };
 
   const getPeopleYouMayKnow = async () => {
@@ -55,14 +68,15 @@ const Home = () => {
             getPeopleYouMayKnow={getPeopleYouMayKnow}
             getUserInfo={getUserInfo}
             key={uuid()}
+            getPosts={getPosts}
           />
         ))}
       </div>
       <div className={style.containerPostComponents}>
-        <CreateNewPost getAllPosts={getAllPosts} />
+        <CreateNewPost getPosts={getPosts} />
 
-        {allPosts.map((post) => (
-          <PostComponent post={post} getPosts={getAllPosts} key={uuid()} />
+        {posts.map((post) => (
+          <PostComponent post={post} getPosts={getPosts} key={uuid()} />
         ))}
       </div>
       <div className={style.peopleYouFollow}>
@@ -73,6 +87,7 @@ const Home = () => {
             followed={followed}
             getUserInfo={getUserInfo}
             getPeopleYouMayKnow={getPeopleYouMayKnow}
+            getPosts={getPosts}
           />
         ))}
       </div>

@@ -11,11 +11,27 @@
 }
 
 .peopleYouMayKnow {
-  width: 25rem;
+  width: 30rem;
+  overflow: auto;
+  height: 91vh;
+}
+
+.peopleYouMayKnow::-webkit-scrollbar {
+  width: 5px;
+}
+
+.peopleYouMayKnow::-webkit-scrollbar-thumb {
+  background: #92a5de;
 }
 
 .containerPostComponents {
-  width: 30rem;
+  width: 35rem;
+  overflow: auto;
+  height: 91vh;
+}
+
+.containerPostComponents::-webkit-scrollbar {
+  width: 0;
 }
 
 .titleOfPeopleYouFollow {
@@ -25,11 +41,27 @@
 }
 
 .peopleYouFollow {
-  width: 25rem;
+  width: 30rem;
+  overflow: auto;
+  height: 91vh;
 }
 
-@media (max-width: 800px) {
+.peopleYouFollow::-webkit-scrollbar {
+  width: 5px;
+}
+
+.peopleYouFollow::-webkit-scrollbar-thumb {
+  background: #92a5de;
+}
+
+@media screen and (max-width: 1000px) {
   .homePage {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .containerPostComponents {
     justify-content: center;
   }
 
