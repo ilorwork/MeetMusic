@@ -1,5 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  //  useRef, 
+  useState
+} from "react";
 import style from "./Home.module.css";
 import Following from "./Following";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
@@ -8,8 +12,24 @@ import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
 import config from "../config/config.json";
+// import useLazyLoading from "react-simple-lazy-loading";
 
 const Home = () => {
+  // const loadingRef = useRef(null);
+  // const options = {
+  //   refTriger: loadingRef,
+  //   rootMargin: "100px",
+  //   threshold: 1.0,
+  //   url: `${config.base_url}/posts/`
+  // }
+
+
+  // const { data, loading, page } = useLazyLoading(options);
+
+  // useEffect(() => {
+  //   console.log(data, loading, page);
+  // }, [data]);
+
   const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
@@ -76,8 +96,10 @@ const Home = () => {
         <CreateNewPost getPosts={getPosts} />
 
         {posts.map((post) => (
-          <PostComponent post={post} getPosts={getPosts} key={uuid()} />
+          <PostComponent post={post} getPosts={getPosts}
+            getPeopleYouMayKnow={getPeopleYouMayKnow} getUserInfo={getUserInfo} key={uuid()} />
         ))}
+        {/* <div ref={loadingRef} sx={{ height: "200px", background: "red" }}></div> */}
       </div>
       <div className={style.peopleYouFollow}>
         <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
