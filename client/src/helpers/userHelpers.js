@@ -36,6 +36,22 @@ const getCurrentUserInfo = async (populated = false) => {
   }
 };
 
+const editUser = async (fieldsToUpdate) => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await axios.put(`${config.base_url}/users/`, fieldsToUpdate, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getPeopleYouMayKnow = async () => {
   const token = localStorage.getItem("token");
 
@@ -197,6 +213,7 @@ const getAllUsers = async () => {
 export {
   login,
   getCurrentUserInfo,
+  editUser,
   getPeopleYouMayKnow,
   getCurrentUserFollowing,
   getCurrentUserFollowers,
