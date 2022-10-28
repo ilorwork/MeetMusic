@@ -120,7 +120,7 @@ const CreateNewPost = ({ getPosts }) => {
       <Card className={style.createNewPostCard}>
         <button
           className={style.profileBtn}
-          onClick={() => navigate("current-user-profile")}
+          onClick={() => navigate(`/user-profile/${userInfo._id}`)}
         >
           <Avatar
             alt="user profileic"
