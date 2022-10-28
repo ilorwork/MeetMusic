@@ -12,19 +12,15 @@ import React, { useEffect, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./UserInfo.module.css";
 import { v4 as uuid } from "uuid";
-import { login, notifyUser } from "../helpers/userHelpers";
-import config from "../config/config.json";
+import { editUser } from "../helpers/userHelpers";
 
-const Register = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [gender, setGender] = useState("");
+const EditUser = ({ user, setUser, setIsOpen }) => {
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [gender, setGender] = useState(user.gender);
   const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
@@ -32,10 +28,9 @@ const Register = () => {
   const [citiesOfSelectedCountry, setCitiesOfSelectedCountry] = useState([]);
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     getAllCountriesAndCities();
+    setBirthDate(user.birthDate.split("T")[0]);
   }, []);
 
   useEffect(() => {
@@ -46,6 +41,14 @@ const Register = () => {
       setCitiesOfSelectedCountry(countriesAndCities[indexOfCountry].cities);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
+
+  useEffect(() => {
+    if (countriesAndCities.length) setCountry(user.country);
+  }, [countriesAndCities]);
+
+  useEffect(() => {
+    if (citiesOfSelectedCountry.length) setCity(user.city);
+  }, [citiesOfSelectedCountry]);
 
   const MenuProps = {
     PaperProps: {
@@ -80,23 +83,14 @@ const Register = () => {
   };
 
   const hanbleSubmitForm = async () => {
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !password ||
-      !gender ||
-      !birthDate
-    ) {
+    if (!firstName || !lastName || !gender || !birthDate) {
       setError("One or more mendatory fields are empty");
       return;
     }
 
-    const newUser = {
+    const fieldsToUpdate = {
       firstName: firstName,
       lastName: lastName,
-      email: email,
-      password: password,
       gender: gender,
       birthDate: birthDate,
       country: country,
@@ -104,29 +98,20 @@ const Register = () => {
     };
 
     try {
-      const res = await axios.post(`${config.base_url}/users`, newUser);
-
-      await login(email, password);
-      await notifyUser(res.data._id, "Welcome to MeetMusic");
-
-      navigate("/");
+      const updatedUser = await editUser(fieldsToUpdate);
+      setUser(updatedUser);
+      setIsOpen(false);
     } catch (e) {
-      if (e.response.data.includes("duplicate key"))
-        setError("Account with same Email already exist");
-      else if (e.response.data.includes("Invalid email"))
-        setError("Invalid email address");
-      else if (e.response.data.includes("strong"))
-        setError("Password isn't strong enough");
-      else setError("An error has accured");
+      setError("An error has accured");
     }
   };
 
   return (
-    <div className={style.registerFormContainer}>
+    <div className={style.editFormContainer}>
       <Paper
         className={style.userInfoFormPaper}
         elevation={3}
-        sx={{ width: 400, height: 570 }}
+        sx={{ width: 400, height: 480 }}
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
@@ -142,19 +127,7 @@ const Register = () => {
             onChange={(e) => onFieldChange(e, setLastName)}
           />
         </div>
-        <TextField
-          label="Email"
-          value={email}
-          type="email"
-          onChange={(e) => onFieldChange(e, setEmail)}
-        />
-        <TextField
-          // error={error ? true : false}
-          label="Password"
-          value={password}
-          type="password"
-          onChange={(e) => onFieldChange(e, setPassword)}
-        />
+
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
             <FormLabel>Gender</FormLabel>
@@ -220,21 +193,11 @@ const Register = () => {
           sx={{ my: 3 }}
           onClick={hanbleSubmitForm}
         >
-          Create a new account
+          Update
         </Button>
-        <div className={style.loginBtn}>
-          <Button
-            variant="contained"
-            style={{ background: "rgb(19 137 137)" }}
-            sx={{ width: 300 }}
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </Button>
-        </div>
       </Paper>
     </div>
   );
 };
 
-export default Register;
+export default EditUser;

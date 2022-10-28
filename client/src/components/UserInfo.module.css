@@ -1,5 +1,11 @@
-.registrationFormContainer {
+.registerFormContainer {
   height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.editFormContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +17,7 @@
   align-items: center;
 }
 
-.registrationFormPaper {
+.userInfoFormPaper {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

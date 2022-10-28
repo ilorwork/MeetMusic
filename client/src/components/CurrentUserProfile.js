@@ -13,16 +13,31 @@ import PostComponent from "./PostComponent";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import EditIcon from "@mui/icons-material/Edit";
-import { Button, IconButton, Tooltip } from "@mui/material";
-import { getCurrentUserInfo } from "../helpers/userHelpers";
+import { Box, Button, IconButton, Modal, Tooltip } from "@mui/material";
+import { editUser, getCurrentUserInfo } from "../helpers/userHelpers";
 import { v4 as uuid } from "uuid";
 import Followers from "./Followers";
 import Following from "./Following";
 import config from "../config/config.json";
+import EditUser from "./EditUser";
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 450,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 4,
+};
 
 const CurrentUserProfile = () => {
   const [user, setUser] = useState("");
   const [userPosts, setUserPosts] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -60,28 +75,20 @@ const CurrentUserProfile = () => {
       (365.25 * 24 * 60 * 60 * 1000)
     ).toFixed(1);
 
-  const handleEditProfile = () => {};
+  const handleEditProfile = () => {
+    setIsOpen(true);
+  };
 
   const handlePicChange = (e) => {
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       if (reader.readyState === 2) {
-        updateUser({ profilePic: reader.result });
+        const updatedUser = await editUser({ profilePic: reader.result });
+        setUser(updatedUser);
       }
     };
 
     reader.readAsDataURL(e.target.files[0]);
-  };
-
-  const updateUser = async (fieldsToUpdate) => {
-    const token = localStorage.getItem("token");
-    const res = await axios.put(`${config.base_url}/users/`, fieldsToUpdate, {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-    });
-    setUser(res.data);
   };
 
   return (
@@ -111,13 +118,15 @@ const CurrentUserProfile = () => {
               <h1>
                 {user.firstName} {user.lastName}
               </h1>
-              <Button
-                className={style.editProfileBtn}
-                size="small"
-                onClick={handleEditProfile}
-              >
-                <EditIcon />
-              </Button>
+              <Tooltip title="Edit Info">
+                <Button
+                  className={style.editProfileBtn}
+                  size="small"
+                  onClick={handleEditProfile}
+                >
+                  <EditIcon />
+                </Button>
+              </Tooltip>
             </div>
 
             <div className={style.personalInfoContainer}>
@@ -156,6 +165,12 @@ const CurrentUserProfile = () => {
           </CardContent>
         </Card>
       </div>
+
+      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+        <Box sx={modalStyle}>
+          <EditUser user={user} setUser={setUser} setIsOpen={setIsOpen} />
+        </Box>
+      </Modal>
 
       <div className={style.homePage}>
         <div className={style.peopleYouMayKnow}>
