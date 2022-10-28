@@ -122,7 +122,7 @@ const Register = () => {
   };
 
   return (
-    <div className={style.userInfoFormContainer}>
+    <div className={style.registerFormContainer}>
       <Paper
         className={style.userInfoFormPaper}
         elevation={3}

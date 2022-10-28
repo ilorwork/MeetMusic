@@ -118,13 +118,15 @@ const CurrentUserProfile = () => {
               <h1>
                 {user.firstName} {user.lastName}
               </h1>
-              <Button
-                className={style.editProfileBtn}
-                size="small"
-                onClick={handleEditProfile}
-              >
-                <EditIcon />
-              </Button>
+              <Tooltip title="Edit Info">
+                <Button
+                  className={style.editProfileBtn}
+                  size="small"
+                  onClick={handleEditProfile}
+                >
+                  <EditIcon />
+                </Button>
+              </Tooltip>
             </div>
 
             <div className={style.personalInfoContainer}>

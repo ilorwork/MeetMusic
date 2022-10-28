@@ -107,11 +107,11 @@ const EditUser = ({ user, setUser, setIsOpen }) => {
   };
 
   return (
-    <div className={style.userInfoFormContainer}>
+    <div className={style.editFormContainer}>
       <Paper
         className={style.userInfoFormPaper}
         elevation={3}
-        sx={{ width: 400, height: 570 }}
+        sx={{ width: 400, height: 480 }}
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
