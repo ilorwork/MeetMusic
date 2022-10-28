@@ -108,7 +108,8 @@ const CommentToCommentComponent = ({
     }
   };
 
-  const validationFunction = () => {
+  const validationFunction = (e) => {
+    e.preventDefault();
     let nonSpaceCharacters = 0;
     const contentDividedBySpaces = editedContent.split(" ");
     contentDividedBySpaces.forEach((cell) => {
@@ -172,7 +173,7 @@ const CommentToCommentComponent = ({
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && validationFunction())
+                  if (e.key === "Enter" && validationFunction(e))
                     handleEditCommentToComment();
                 }}
               ></Textarea>

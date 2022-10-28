@@ -121,16 +121,14 @@ const getUserById = async (req, res) => {
 
 const getPeopleUserMayKnow = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.user.email });
+    const currentUser = await UserModel.findOne({ email: req.user.email });
 
-    const usersToExclude = user.following;
-    usersToExclude.push(user._id);
-
+    const usersToExclude = currentUser.following;
+    usersToExclude.push(currentUser._id);
     const idsToExclude = usersToExclude.map((userId) => {
       return { _id: { $ne: userId } };
     });
-
-    const peopleUserMayKnow = await UserModel.find({ $and: idsToExclude });
+    const peopleUserMayKnow = await UserModel.find({ $and: idsToExclude, country: currentUser.country });
 
     return res.status(200).json(peopleUserMayKnow);
   } catch (e) {

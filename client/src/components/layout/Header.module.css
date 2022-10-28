@@ -20,6 +20,10 @@
   border-radius: 8px;
 }
 
+.musicIcon:hover {
+  cursor: pointer;
+}
+
 .searchField {
   display: flex;
   flex-direction: column;
@@ -40,6 +44,14 @@
   margin-left: 12px;
 }
 
+.notificationsIcon:hover {
+  cursor: pointer;
+}
+
 .accountIcon {
   color: rgb(237, 226, 226);
+}
+
+.accountIcon:hover {
+  cursor: pointer;
 }

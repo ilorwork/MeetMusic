@@ -25,14 +25,14 @@ import CommentComponent from "./CommentComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewComment from "./CreateNewComment";
 import UserContext from "./layout/UserContext";
-import { notifyUser } from "../helpers/userHelpers";
+import { followUser, notifyUser } from "../helpers/userHelpers";
 import Textarea from "@mui/joy/Textarea";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import config from "../config/config.json";
 
-const PostComponent = ({ post, getPosts }) => {
+const PostComponent = ({ post, getPosts, getPeopleYouMayKnow, getUserInfo }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentsOfPost, setCommentsOfPost] = useState([]);
@@ -53,6 +53,17 @@ const PostComponent = ({ post, getPosts }) => {
     getDataIsUserLikeThePost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleFollowUser = async () => {
+    try {
+      await followUser(post.creator._id, currentUserInfo);
+      getPeopleYouMayKnow();
+      getUserInfo();
+      getPosts();
+    } catch (e) {
+      throw new Error("follow user failed " + e);
+    }
+  };
 
   const getDataIsUserLikeThePost = async () => {
     const token = localStorage.getItem("token");
@@ -254,21 +265,30 @@ const PostComponent = ({ post, getPosts }) => {
                     <MoreVertIcon />
                   </IconButton>
                 )}
-                {isEdited && (
-                  <div
-                    style={{
-                      width: 60,
-                      textAlign: "end",
-                      fontWeight: "bold",
-                      fontSize: 14,
-                      marginTop: 10,
-                      color: "#92a5de",
-                    }}
+
+                {(!post.creator.followers.includes(currentUserInfo._id) && post.creator._id !== currentUserInfo._id) && (
+                  <Button
+                    style={{ background: "rgb(209, 46, 100)", fontSize: 8, padding: 4 }}
+                    variant="contained"
+                    onClick={handleFollowUser}
                   >
-                    edited
-                  </div>
+                    Follow
+                  </Button>
                 )}
               </div>
+              {isEdited && (
+                <span
+                  style={{
+                    width: 60,
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    marginTop: 10,
+                    color: "#92a5de",
+                  }}
+                >
+                  edited
+                </span>
+              )}
               <Menu
                 anchorEl={anchorPostSettings}
                 anchorOrigin={{

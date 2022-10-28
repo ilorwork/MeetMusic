@@ -147,7 +147,7 @@ const Header = () => {
         />
         <div className={style.wrapperIcons}>
           <Box>
-            <Tooltip title={`${unreadCount} Unread Notifications`}>
+            <Tooltip title={unreadCount ? `${unreadCount} Unread Notifications` : `Notifications`}>
               <Badge badgeContent={unreadCount} color="secondary">
                 <NotificationsIcon
                   onClick={(e) => setAnchorNotice(e.currentTarget)}
@@ -207,7 +207,7 @@ const Header = () => {
                 <Typography>Profile</Typography>
               </MenuItem>
               <MenuItem onClick={handleLogout}>
-                <Typography>Logout</Typography>
+                <Typography>Log out</Typography>
               </MenuItem>
             </Menu>
           </Box>

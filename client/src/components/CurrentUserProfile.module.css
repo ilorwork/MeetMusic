@@ -62,7 +62,7 @@
 }
 
 .peopleYouMayKnow {
-  width: 30rem;
+  width: 25rem;
   overflow: auto;
   height: 58vh;
 }
@@ -76,7 +76,7 @@
 }
 
 .containerPostComponents {
-  width: 30rem;
+  width: 40rem;
   overflow: auto;
   height: 58vh;
 }
@@ -92,7 +92,7 @@
 }
 
 .peopleYouFollow {
-  width: 30rem;
+  width: 25rem;
   overflow: auto;
   height: 58vh;
 }

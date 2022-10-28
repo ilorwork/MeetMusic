@@ -5,8 +5,12 @@
 }
 
 .threePoints {
+  height: 50px;
   width: 79px;
   text-align: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footerIndecators {
