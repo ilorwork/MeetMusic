@@ -33,10 +33,7 @@ const createPost = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
-  // let page = req.query.page || 1;
-  // let limit = req.query.limit || 10;
   try {
-
     const allPostsWithCreator = await PostModel.find({}).populate("creator");
     const currentUser = await UserModel.findOne({ _id: req.user._id });
     const filteredPostsWithCreator = allPostsWithCreator.filter((post) => (currentUser.following.includes(post.creator._id) || req.user._id == post.creator._id));
@@ -55,8 +52,6 @@ const getPosts = async (req, res) => {
     })
 
     const allPosts = filteredPostsWithCreator.concat(singlePostOfEachUser);
-    // const renderedPosts = allPosts.filter((post, index) => (index >= ((page - 1) * limit) && index < (page * limit)));
-    // return res.status(200).json(renderedPosts);
     return res.status(200).json(allPosts);
   } catch (e) {
     res.status(500).json(`Failed to get posts ${e}`);
