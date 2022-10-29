@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
@@ -18,8 +17,8 @@ import { editUser, getCurrentUserInfo } from "../helpers/userHelpers";
 import { v4 as uuid } from "uuid";
 import Followers from "./Followers";
 import Following from "./Following";
-import config from "../config/config.json";
 import EditUser from "./EditUser";
+import { getCurrentUserPosts } from "../helpers/postHelpers";
 
 const modalStyle = {
   position: "absolute",
@@ -59,14 +58,8 @@ const CurrentUserProfile = () => {
   };
 
   const getUserPosts = async () => {
-    const token = localStorage.getItem("token");
-    const res = await axios.get(`${config.base_url}/posts/current-user-posts`, {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-    });
-    setUserPosts(res.data);
+    const userPosts = await getCurrentUserPosts();
+    setUserPosts(userPosts);
   };
 
   const calculateAge = () =>

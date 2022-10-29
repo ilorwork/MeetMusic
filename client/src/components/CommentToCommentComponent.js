@@ -5,12 +5,15 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import axios from "axios";
 import CreateCommentToComment from "./CreateCommentToComment";
 import { v4 as uuid } from "uuid";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
 import Textarea from "@mui/joy/Textarea";
-import config from "../config/config.json";
+import {
+  deleteReply,
+  editReply,
+  getReplyReplies,
+} from "../helpers/postHelpers";
 
 const CommentToCommentComponent = ({
   commentToComment,
@@ -61,50 +64,26 @@ const CommentToCommentComponent = ({
   };
 
   const getCommentsOfCommentToComment = async () => {
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        `${config.base_url}/comments-to-comments/comment-comments/`,
-        {
-          _id: commentToComment._id,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      setCommentsOfCommentToComment(res.data);
+      const replyReplies = await getReplyReplies(commentToComment._id);
+      setCommentsOfCommentToComment(replyReplies);
     } catch (e) {
-      console.log("get comments of comment to comment failed " + e);
+      console.error("get replies to reply failed " + e);
     }
   };
 
   const handleEditCommentToComment = async () => {
     if (editedContent === commentToComment.content) {
       setIsInEditingMode(false);
-    } else {
-      const token = localStorage.getItem("token");
-      try {
-        await axios.put(
-          `${config.base_url}/comments-to-comments/`,
-          {
-            _id: commentToComment._id,
-            content: editedContent,
-          },
-          {
-            withCredentials: true,
-            headers: {
-              authorization: token,
-            },
-          }
-        );
-        setIsInEditingMode(false);
-        setIsEdited(true);
-      } catch (e) {
-        console.log("edit comment to comment failed " + e);
-      }
+      return;
+    }
+
+    try {
+      await editReply(commentToComment._id, editedContent);
+      setIsInEditingMode(false);
+      setIsEdited(true);
+    } catch (e) {
+      console.error("edit reply failed " + e);
     }
   };
 
@@ -122,23 +101,13 @@ const CommentToCommentComponent = ({
   };
 
   const handleDeleteCommentToComment = async () => {
-    const token = localStorage.getItem("token");
     try {
-      await axios.delete(`${config.base_url}/comments-to-comments/`, {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-        data: {
-          _id: commentToComment._id,
-          commentId: comment._id,
-        },
-      });
+      await deleteReply(commentToComment._id, comment._id);
       getCommentsOfComment();
       setCommentsToCommentCount(commentsToCommentCount - 1);
       setAnchorCommentToCommentSettings(null);
     } catch (e) {
-      console.log("delete comment to comment failed " + e);
+      console.error("delete reply failed " + e);
     }
   };
   return (

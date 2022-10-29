@@ -16,12 +16,14 @@ import {
 } from "@mui/material";
 import style from "./Header.module.css";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import axios from "axios";
-import { getAllUsers } from "../../helpers/userHelpers";
+import { getAllUsers, logout } from "../../helpers/userHelpers";
 import UserSearchCard from "../UserSearchCard";
 import { v4 as uuid } from "uuid";
-import config from "../../config/config.json";
 import UserContext from "./UserContext";
+import {
+  getAllNotifications,
+  readNotification,
+} from "../../helpers/notificationHelpers";
 
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -46,16 +48,8 @@ const Header = () => {
   };
 
   const getUserNotifications = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await axios.get(`${config.base_url}/notifications`, {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-    });
-
-    setNotifications(res.data);
+    const allNotifications = await getAllNotifications();
+    setNotifications(allNotifications);
   };
 
   const handleProfileClicked = () => {
@@ -67,9 +61,7 @@ const Header = () => {
     setAnchorElUser(null);
 
     try {
-      await axios.delete(`${config.base_url}/users/logout`, {
-        withCredentials: true,
-      });
+      await logout();
     } catch (e) {
       console.error("Failed to logout " + e);
     } finally {
@@ -79,20 +71,10 @@ const Header = () => {
   };
 
   const handleReadingNotification = async (notificationId) => {
-    const token = localStorage.getItem("token");
     setAnchorNotice(null);
+
     try {
-      await axios.put(
-        `${config.base_url}/notifications/notification`,
-        { isBeingRead: true },
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-          params: { notificationId: notificationId },
-        }
-      );
+      await readNotification(notificationId);
 
       const updatedNotifications = notifications.map((n) => {
         if (n._id === notificationId) n.isBeingRead = true;

@@ -3,6 +3,15 @@ import config from "../config/config.json";
 
 const base_url = config.base_url;
 
+const register = async (newUser) => {
+  try {
+    const res = await axios.post(`${base_url}/users`, newUser);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 const login = async (email, password) => {
   try {
     const res = await axios.post(
@@ -14,6 +23,16 @@ const login = async (email, password) => {
     );
 
     localStorage.setItem("token", res.headers.authorization);
+  } catch (e) {
+    throw e;
+  }
+};
+
+const logout = async () => {
+  try {
+    await axios.delete(`${base_url}/users/logout`, {
+      withCredentials: true,
+    });
   } catch (e) {
     throw e;
   }
@@ -36,10 +55,21 @@ const getCurrentUserInfo = async (populated = false) => {
   }
 };
 
+const getUserInfoById = async (userId) => {
+  try {
+    const res = await axios.post(`${base_url}/users/user`, {
+      _id: userId,
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 const editUser = async (fieldsToUpdate) => {
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.put(`${config.base_url}/users/`, fieldsToUpdate, {
+    const res = await axios.put(`${base_url}/users/`, fieldsToUpdate, {
       withCredentials: true,
       headers: {
         authorization: token,
@@ -52,7 +82,7 @@ const editUser = async (fieldsToUpdate) => {
   }
 };
 
-const getPeopleYouMayKnow = async () => {
+const getPeopleYouMayKnowHelper = async () => {
   const token = localStorage.getItem("token");
 
   try {
@@ -211,10 +241,13 @@ const getAllUsers = async () => {
 };
 
 export {
+  register,
   login,
+  logout,
   getCurrentUserInfo,
+  getUserInfoById,
   editUser,
-  getPeopleYouMayKnow,
+  getPeopleYouMayKnowHelper,
   getCurrentUserFollowing,
   getCurrentUserFollowers,
   followUser,

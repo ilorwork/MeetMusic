@@ -1,17 +1,15 @@
-import axios from "axios";
-import React, {
-  useEffect,
-  useState
-} from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Home.module.css";
 import Following from "./Following";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
-import { getCurrentUserInfo } from "../helpers/userHelpers";
-import config from "../config/config.json";
-
+import {
+  getCurrentUserInfo,
+  getPeopleYouMayKnowHelper,
+} from "../helpers/userHelpers";
+import { getHomePosts } from "../helpers/postHelpers";
 
 const Home = () => {
   const [user, setUser] = useState("");
@@ -30,36 +28,17 @@ const Home = () => {
   };
 
   const getPosts = async () => {
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.get(
-        `${config.base_url}/posts/`,
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      setPosts(res.data);
+      const posts = await getHomePosts();
+      setPosts(posts);
     } catch (e) {
       console.error("get posts is failed " + e);
     }
   };
 
   const getPeopleYouMayKnow = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await axios.get(
-      `${config.base_url}/users/user/people-user-may-know`,
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
-    setPeopleUserMayKnow(res.data);
+    const people = await getPeopleYouMayKnowHelper();
+    setPeopleUserMayKnow(people);
   };
 
   return (
@@ -80,8 +59,13 @@ const Home = () => {
         <CreateNewPost getPosts={getPosts} />
 
         {posts.map((post) => (
-          <PostComponent post={post} getPosts={getPosts}
-            getPeopleYouMayKnow={getPeopleYouMayKnow} getUserInfo={getUserInfo} key={uuid()} />
+          <PostComponent
+            post={post}
+            getPosts={getPosts}
+            getPeopleYouMayKnow={getPeopleYouMayKnow}
+            getUserInfo={getUserInfo}
+            key={uuid()}
+          />
         ))}
       </div>
       <div className={style.peopleYouFollow}>

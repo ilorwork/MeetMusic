@@ -3,10 +3,9 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
-import axios from "axios";
 import UserContext from "./layout/UserContext";
 import { notifyUser } from "../helpers/userHelpers";
-import config from "../config/config.json";
+import { createComment } from "../helpers/postHelpers";
 
 const CreateNewComment = ({
   post,
@@ -24,14 +23,9 @@ const CreateNewComment = ({
       timeOfCreation: Date.now(),
       postId: post._id,
     };
-    const token = localStorage.getItem("token");
+
     try {
-      await axios.post(`${config.base_url}/comments/`, newComment, {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      });
+      await createComment(newComment);
       setContentOfComment("");
       getCommentsOfPost();
       setCommentsCount(commentsCount + 1);
@@ -42,7 +36,7 @@ const CreateNewComment = ({
         `${currentUserInfo.firstName} ${currentUserInfo.lastName} commented on your post`
       );
     } catch (e) {
-      console.log("comment creation failed " + e);
+      console.error("comment creation failed " + e);
     }
   };
 

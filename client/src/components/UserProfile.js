@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
@@ -15,7 +14,8 @@ import Following from "./Following";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import { v4 as uuid } from "uuid";
-import config from "../config/config.json";
+import { getPostsByUserId } from "../helpers/postHelpers";
+import { getUserInfoById } from "../helpers/userHelpers";
 
 const UserProfile = () => {
   const [user, setUser] = useState("");
@@ -32,11 +32,9 @@ const UserProfile = () => {
 
   const getUserInfo = async () => {
     try {
-      const res = await axios.post(`${config.base_url}/users/user`, {
-        _id: id,
-      });
+      const userInfo = await getUserInfoById(id);
 
-      setUser(res.data);
+      setUser(userInfo);
     } catch (e) {
       if (e.response.status === 401) {
         navigate("/login");
@@ -45,11 +43,8 @@ const UserProfile = () => {
   };
 
   const getUserPosts = async () => {
-    const res = await axios.post(`${config.base_url}/posts/user-posts`, {
-      _id: id,
-    });
-
-    setUserPosts(res.data);
+    const posts = await getPostsByUserId(id);
+    setUserPosts(posts);
   };
 
   const calculateAge = () =>

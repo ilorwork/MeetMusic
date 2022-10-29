@@ -16,8 +16,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./UserInfo.module.css";
 import { v4 as uuid } from "uuid";
-import { login, notifyUser } from "../helpers/userHelpers";
-import config from "../config/config.json";
+import { login, notifyUser, register } from "../helpers/userHelpers";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -104,10 +103,9 @@ const Register = () => {
     };
 
     try {
-      const res = await axios.post(`${config.base_url}/users`, newUser);
-
+      const createdUser = await register(newUser);
       await login(email, password);
-      await notifyUser(res.data._id, "Welcome to MeetMusic");
+      await notifyUser(createdUser._id, "Welcome to MeetMusic");
 
       navigate("/");
     } catch (e) {
