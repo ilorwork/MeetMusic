@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import style from "./Home.module.css";
 import Following from "./Following";
@@ -6,8 +5,10 @@ import PeopleYouMayKnow from "./PeopleYouMayKnow";
 import PostComponent from "./PostComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewPost from "./CreateNewPost";
-import { getCurrentUserInfo } from "../helpers/userHelpers";
-import config from "../config/config.json";
+import {
+  getCurrentUserInfo,
+  getPeopleYouMayKnowHelper,
+} from "../helpers/userHelpers";
 import { getHomePosts } from "../helpers/postHelpers";
 
 const Home = () => {
@@ -36,18 +37,8 @@ const Home = () => {
   };
 
   const getPeopleYouMayKnow = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await axios.get(
-      `${config.base_url}/users/user/people-user-may-know`,
-      {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      }
-    );
-    setPeopleUserMayKnow(res.data);
+    const people = await getPeopleYouMayKnowHelper();
+    setPeopleUserMayKnow(people);
   };
 
   return (

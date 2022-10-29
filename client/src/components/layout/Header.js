@@ -17,7 +17,7 @@ import {
 import style from "./Header.module.css";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import axios from "axios";
-import { getAllUsers } from "../../helpers/userHelpers";
+import { getAllUsers, logout } from "../../helpers/userHelpers";
 import UserSearchCard from "../UserSearchCard";
 import { v4 as uuid } from "uuid";
 import config from "../../config/config.json";
@@ -67,9 +67,7 @@ const Header = () => {
     setAnchorElUser(null);
 
     try {
-      await axios.delete(`${config.base_url}/users/logout`, {
-        withCredentials: true,
-      });
+      await logout();
     } catch (e) {
       console.error("Failed to logout " + e);
     } finally {
