@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -21,6 +21,7 @@ import { getAllUsers } from "../../helpers/userHelpers";
 import UserSearchCard from "../UserSearchCard";
 import { v4 as uuid } from "uuid";
 import config from "../../config/config.json";
+import UserContext from "./UserContext";
 
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -30,6 +31,7 @@ const Header = () => {
   const [autoVal, setAutoVal] = useState("");
 
   const navigate = useNavigate();
+  const { currentUserInfo } = useContext(UserContext);
 
   const unreadCount = notifications.filter((n) => !n.isBeingRead).length;
 
@@ -58,7 +60,7 @@ const Header = () => {
 
   const handleProfileClicked = () => {
     setAnchorElUser(null);
-    navigate("current-user-profile");
+    navigate(`/user-profile/${currentUserInfo._id}`);
   };
 
   const handleLogout = async () => {
@@ -147,7 +149,13 @@ const Header = () => {
         />
         <div className={style.wrapperIcons}>
           <Box>
-            <Tooltip title={unreadCount ? `${unreadCount} Unread Notifications` : `Notifications`}>
+            <Tooltip
+              title={
+                unreadCount
+                  ? `${unreadCount} Unread Notifications`
+                  : `Notifications`
+              }
+            >
               <Badge badgeContent={unreadCount} color="secondary">
                 <NotificationsIcon
                   onClick={(e) => setAnchorNotice(e.currentTarget)}
