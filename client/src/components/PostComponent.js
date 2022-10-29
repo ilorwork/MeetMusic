@@ -16,6 +16,7 @@ import {
   ImageListItem,
   Menu,
   MenuItem,
+  Modal,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
@@ -38,6 +39,18 @@ import {
   unlikePost,
 } from "../helpers/postHelpers";
 
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  border: "2px solid #000",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 4,
+};
+
 const PostComponent = ({
   post,
   getPosts,
@@ -56,6 +69,7 @@ const PostComponent = ({
   const [postImages, setPostImages] = useState(post.postImages);
   const [postAudio, setPostAudio] = useState(post.postAudio);
   const [isEdited, setIsEdited] = useState(post.isEdited);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { currentUserInfo } = useContext(UserContext);
 
@@ -123,6 +137,7 @@ const PostComponent = ({
   const navigate = useNavigate();
 
   const handleDeletePost = async () => {
+    setIsDeleteModalOpen(false);
     try {
       await deletePost(post._id);
 
@@ -266,14 +281,39 @@ const PostComponent = ({
                   <Typography>Edit Post</Typography>
                 </MenuItem>
 
-                <MenuItem onClick={handleDeletePost}>
+                <MenuItem onClick={() => setIsDeleteModalOpen(true)}>
                   <Typography color={"error"}>Delete Post</Typography>
                 </MenuItem>
               </Menu>
             </>
           }
         ></CardHeader>
-
+        <Modal
+          open={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+        >
+          <Box sx={modalStyle} className={style.deletePostModal}>
+            <Typography variant="h6" component="h2">
+              Are You Sure?
+            </Typography>
+            <div className={style.modalBtns}>
+              <Button
+                variant="contained"
+                style={{ background: "rgb(209, 46, 100)" }}
+                onClick={handleDeletePost}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="contained"
+                style={{ background: "rgb(19, 137, 137)" }}
+                onClick={() => setIsDeleteModalOpen(false)}
+              >
+                No
+              </Button>
+            </div>
+          </Box>
+        </Modal>
         {isInEditingMode && (
           <Box>
             <Textarea
