@@ -5,7 +5,7 @@ import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
 import UserContext from "./layout/UserContext";
 import { notifyUser } from "../helpers/userHelpers";
-import { createComment } from "../helpers/postHelpers";
+import { createComment, textValidation } from "../helpers/postHelpers";
 
 const CreateNewComment = ({
   post,
@@ -40,19 +40,6 @@ const CreateNewComment = ({
     }
   };
 
-  const validationFunction = (e) => {
-    e.preventDefault();
-    let nonSpaceCharacters = 0;
-    const contentDividedBySpaces = contentOfComment.split(" ");
-    contentDividedBySpaces.forEach((cell) => {
-      if (cell) {
-        nonSpaceCharacters++;
-      }
-    });
-    if (nonSpaceCharacters > 0) return true;
-    return false;
-  };
-
   return (
     <FormControl>
       <Textarea
@@ -61,7 +48,7 @@ const CreateNewComment = ({
         variant="standard"
         placeholder="Write a comment..."
         onKeyDown={(e) => {
-          if (e.key === "Enter" && validationFunction(e))
+          if (e.key === "Enter" && textValidation(e, contentOfComment))
             handleCreatingNewComment();
         }}
         endDecorator={

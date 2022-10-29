@@ -5,7 +5,7 @@ import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
 import { notifyUser } from "../helpers/userHelpers";
 import UserContext from "./layout/UserContext";
-import { createReply } from "../helpers/postHelpers";
+import { createReply, textValidation } from "../helpers/postHelpers";
 
 const CreateCommentToComment = ({
   comment,
@@ -47,19 +47,6 @@ const CreateCommentToComment = ({
     }
   };
 
-  const validationFunction = (e) => {
-    e.preventDefault();
-    let nonSpaceCharacters = 0;
-    const contentDividedBySpaces = contentOfCommentToComment.split(" ");
-    contentDividedBySpaces.forEach((cell) => {
-      if (cell) {
-        nonSpaceCharacters++;
-      }
-    });
-    if (nonSpaceCharacters > 0) return true;
-    return false;
-  };
-
   return (
     <FormControl sx={{ pl: paddingXForCommentToComment }}>
       <Textarea
@@ -68,7 +55,7 @@ const CreateCommentToComment = ({
         variant="standard"
         placeholder={`Reply to ${comment.creator.firstName} ${comment.creator.lastName}`}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && validationFunction(e))
+          if (e.key === "Enter" && textValidation(e, contentOfCommentToComment))
             handleCreatingCommentToComment();
         }}
         endDecorator={

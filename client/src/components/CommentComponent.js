@@ -14,6 +14,7 @@ import {
   deleteComment,
   editComment,
   getCommentReplies,
+  textValidation,
 } from "../helpers/postHelpers";
 
 const CommentComponent = ({
@@ -75,19 +76,6 @@ const CommentComponent = ({
     }
   };
 
-  const validationFunction = (e) => {
-    e.preventDefault();
-    let nonSpaceCharacters = 0;
-    const contentDividedBySpaces = editedContent.split(" ");
-    contentDividedBySpaces.forEach((cell) => {
-      if (cell) {
-        nonSpaceCharacters++;
-      }
-    });
-    if (nonSpaceCharacters > 0) return true;
-    return false;
-  };
-
   const handleDeleteComment = async () => {
     try {
       await deleteComment(comment._id, post._id);
@@ -129,7 +117,7 @@ const CommentComponent = ({
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && validationFunction(e))
+                  if (e.key === "Enter" && textValidation(e, editedContent))
                     handleEditComment();
                 }}
               ></Textarea>

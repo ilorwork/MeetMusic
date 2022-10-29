@@ -13,6 +13,7 @@ import {
   deleteReply,
   editReply,
   getReplyReplies,
+  textValidation,
 } from "../helpers/postHelpers";
 
 const CommentToCommentComponent = ({
@@ -87,19 +88,6 @@ const CommentToCommentComponent = ({
     }
   };
 
-  const validationFunction = (e) => {
-    e.preventDefault();
-    let nonSpaceCharacters = 0;
-    const contentDividedBySpaces = editedContent.split(" ");
-    contentDividedBySpaces.forEach((cell) => {
-      if (cell) {
-        nonSpaceCharacters++;
-      }
-    });
-    if (nonSpaceCharacters > 0) return true;
-    return false;
-  };
-
   const handleDeleteCommentToComment = async () => {
     try {
       await deleteReply(commentToComment._id, comment._id);
@@ -142,7 +130,7 @@ const CommentToCommentComponent = ({
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && validationFunction(e))
+                  if (e.key === "Enter" && textValidation(e, editedContent))
                     handleEditCommentToComment();
                 }}
               ></Textarea>
