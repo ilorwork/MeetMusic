@@ -314,6 +314,11 @@ const unlikePost = async (postId) => {
   }
 };
 
+const textValidation = (e, text) => {
+  e.preventDefault();
+  return !!text.trim().length;
+};
+
 export {
   createPost,
   editPost,
@@ -333,4 +338,5 @@ export {
   checkIsUserLikeThePost,
   likePost,
   unlikePost,
+  textValidation,
 };

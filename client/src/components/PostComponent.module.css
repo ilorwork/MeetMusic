@@ -26,3 +26,21 @@
   display: flex;
   justify-content: space-around;
 }
+
+.deletePostModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+}
+
+.modalBtns {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  padding-top: 20px;
+}
+
+.modalBtns button {
+  width: 5rem;
+}
