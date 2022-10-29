@@ -187,6 +187,7 @@ const PostComponent = ({
 
   const handleEditPost = async () => {
     if (!postText && !postImages.length && !postAudio) return;
+    if (!postText.trim().length) return;
     if (
       postText === post.postText &&
       postImages === post.postImages &&

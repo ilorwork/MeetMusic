@@ -18,6 +18,9 @@ const CreateNewComment = ({
   const { currentUserInfo } = useContext(UserContext);
 
   const handleCreatingNewComment = async () => {
+    if (!contentOfComment) return;
+    if (!contentOfComment.trim().length) return;
+
     const newComment = {
       content: contentOfComment,
       timeOfCreation: Date.now(),

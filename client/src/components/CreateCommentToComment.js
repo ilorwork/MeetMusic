@@ -22,6 +22,7 @@ const CreateCommentToComment = ({
 
   const handleCreatingCommentToComment = async () => {
     if (!contentOfCommentToComment) return;
+    if (!contentOfCommentToComment.trim().length) return;
 
     const newReply = {
       content: contentOfCommentToComment,
