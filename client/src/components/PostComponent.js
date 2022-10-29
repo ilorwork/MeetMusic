@@ -19,7 +19,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CommentComponent from "./CommentComponent";
 import { v4 as uuid } from "uuid";
@@ -30,9 +29,21 @@ import Textarea from "@mui/joy/Textarea";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import DeleteIcon from "@mui/icons-material/Delete";
-import config from "../config/config.json";
+import {
+  checkIsUserLikeThePost,
+  deletePost,
+  editPost,
+  getPostComments,
+  likePost,
+  unlikePost,
+} from "../helpers/postHelpers";
 
-const PostComponent = ({ post, getPosts, getPeopleYouMayKnow, getUserInfo }) => {
+const PostComponent = ({
+  post,
+  getPosts,
+  getPeopleYouMayKnow,
+  getUserInfo,
+}) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentsOfPost, setCommentsOfPost] = useState([]);
@@ -66,41 +77,17 @@ const PostComponent = ({ post, getPosts, getPeopleYouMayKnow, getUserInfo }) => 
   };
 
   const getDataIsUserLikeThePost = async () => {
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        `${config.base_url}/likes/has-liked`,
-        {
-          postId: post._id,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      setIsUserLikeThePost(res.data.isUserLikeThePost);
+      const isLiked = await checkIsUserLikeThePost(post._id);
+      setIsUserLikeThePost(isLiked);
     } catch (e) {
       console.error("get data is user like the post failed " + e);
     }
   };
 
   const addLike = async () => {
-    const token = localStorage.getItem("token");
     try {
-      await axios.post(
-        `${config.base_url}/likes/`,
-        {
-          postId: post._id,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      await likePost(post._id);
       setIsUserLikeThePost(!isUserLikeThePost);
       setLikesCount(likesCount + 1);
 
@@ -110,65 +97,34 @@ const PostComponent = ({ post, getPosts, getPeopleYouMayKnow, getUserInfo }) => 
         `${currentUserInfo.firstName} ${currentUserInfo.lastName} liked your post`
       );
     } catch (e) {
-      console.error("add like failed " + e);
+      console.error("Like post failed " + e);
     }
   };
 
   const removeLike = async () => {
-    const token = localStorage.getItem("token");
     try {
-      await axios.delete(`${config.base_url}/likes/`, {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-        data: {
-          postId: post._id,
-        },
-      });
+      await unlikePost(post._id);
       setIsUserLikeThePost(!isUserLikeThePost);
       setLikesCount(likesCount - 1);
     } catch (e) {
-      console.error("remove like failed " + e);
+      console.error("unlike failed " + e);
     }
   };
 
   const getCommentsOfPost = async () => {
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        `${config.base_url}/comments/post-comments/`,
-        {
-          _id: post._id,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      setCommentsOfPost(res.data);
+      const postComments = await getPostComments(post._id);
+      setCommentsOfPost(postComments);
     } catch (e) {
-      console.error("get comments of post failed " + e);
+      console.error("get post comments failed " + e);
     }
   };
 
   const navigate = useNavigate();
 
   const handleDeletePost = async () => {
-    const token = localStorage.getItem("token");
-
     try {
-      await axios.delete(`${config.base_url}/posts/`, {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-        data: {
-          _id: post._id,
-        },
-      });
+      await deletePost(post._id);
 
       getPosts();
       setAnchorPostSettings(null);
@@ -222,22 +178,16 @@ const PostComponent = ({ post, getPosts, getPeopleYouMayKnow, getUserInfo }) => 
       postAudio === post.postAudio
     ) {
       setIsInEditingMode(false);
-    } else {
-      const token = localStorage.getItem("token");
-      const newPost = { _id: post._id, postText, postImages, postAudio };
+      return;
+    }
 
-      try {
-        await axios.put(`${config.base_url}/posts/`, newPost, {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        });
-        setIsInEditingMode(false);
-        setIsEdited(true);
-      } catch (e) {
-        console.log("edit post failed " + e);
-      }
+    const updatedPost = { _id: post._id, postText, postImages, postAudio };
+    try {
+      await editPost(updatedPost);
+      setIsInEditingMode(false);
+      setIsEdited(true);
+    } catch (e) {
+      console.error("edit post failed " + e);
     }
   };
 
@@ -266,15 +216,20 @@ const PostComponent = ({ post, getPosts, getPeopleYouMayKnow, getUserInfo }) => 
                   </IconButton>
                 )}
 
-                {(!post.creator.followers.includes(currentUserInfo._id) && post.creator._id !== currentUserInfo._id) && (
-                  <Button
-                    style={{ background: "rgb(209, 46, 100)", fontSize: 8, padding: 4 }}
-                    variant="contained"
-                    onClick={handleFollowUser}
-                  >
-                    Follow
-                  </Button>
-                )}
+                {!post.creator.followers.includes(currentUserInfo._id) &&
+                  post.creator._id !== currentUserInfo._id && (
+                    <Button
+                      style={{
+                        background: "rgb(209, 46, 100)",
+                        fontSize: 8,
+                        padding: 4,
+                      }}
+                      variant="contained"
+                      onClick={handleFollowUser}
+                    >
+                      Follow
+                    </Button>
+                  )}
               </div>
               {isEdited && (
                 <span

@@ -16,10 +16,9 @@ import { getCurrentUserInfo } from "../helpers/userHelpers";
 import style from "./CreateNewPost.module.css";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
-import axios from "axios";
 import { v4 as uuid } from "uuid";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import config from "../config/config.json";
+import { createPost } from "../helpers/postHelpers";
 
 const modalStyle = {
   position: "absolute",
@@ -70,16 +69,10 @@ const CreateNewPost = ({ getPosts }) => {
   const handleCreatePost = async () => {
     if (!postText && !postImages.length && !postAudio) return;
 
-    const token = localStorage.getItem("token");
     const newPost = { postText, postImages, postAudio };
 
     try {
-      await axios.post(`${config.base_url}/posts/`, newPost, {
-        withCredentials: true,
-        headers: {
-          authorization: token,
-        },
-      });
+      await createPost(newPost);
 
       setPostAudio("");
       setPostImages([]);

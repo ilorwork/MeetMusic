@@ -3,10 +3,9 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
-import axios from "axios";
 import { notifyUser } from "../helpers/userHelpers";
 import UserContext from "./layout/UserContext";
-import config from "../config/config.json";
+import { createReply } from "../helpers/postHelpers";
 
 const CreateCommentToComment = ({
   comment,
@@ -24,24 +23,14 @@ const CreateCommentToComment = ({
   const handleCreatingCommentToComment = async () => {
     if (!contentOfCommentToComment) return;
 
-    const newCommentToComment = {
+    const newReply = {
       content: contentOfCommentToComment,
       timeOfCreation: Date.now(),
       commentId: comment._id,
     };
 
-    const token = localStorage.getItem("token");
     try {
-      await axios.post(
-        `${config.base_url}/comments-to-comments/`,
-        newCommentToComment,
-        {
-          withCredentials: true,
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      await createReply(newReply);
 
       setContentOfCommentToComment("");
       getCommentsOfComment();
@@ -54,7 +43,7 @@ const CreateCommentToComment = ({
         `${currentUserInfo.firstName} ${currentUserInfo.lastName} replyed to your comment`
       );
     } catch (e) {
-      console.log("comment to comment creation failed " + e);
+      console.error("reply creation failed " + e);
     }
   };
 

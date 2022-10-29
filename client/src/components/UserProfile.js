@@ -16,6 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import { v4 as uuid } from "uuid";
 import config from "../config/config.json";
+import { getPostsByUserId } from "../helpers/postHelpers";
 
 const UserProfile = () => {
   const [user, setUser] = useState("");
@@ -45,11 +46,8 @@ const UserProfile = () => {
   };
 
   const getUserPosts = async () => {
-    const res = await axios.post(`${config.base_url}/posts/user-posts`, {
-      _id: id,
-    });
-
-    setUserPosts(res.data);
+    const posts = await getPostsByUserId(id);
+    setUserPosts(posts);
   };
 
   const calculateAge = () =>
