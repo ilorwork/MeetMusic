@@ -13,3 +13,9 @@
 .createNewPostBtn {
   width: 100%;
 }
+
+.createNewPostModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

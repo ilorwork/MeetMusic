@@ -9,6 +9,7 @@ import {
   ImageList,
   ImageListItem,
   Tooltip,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUserInfo } from "../helpers/userHelpers";
@@ -17,7 +18,6 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
-import Textarea from "@mui/joy/Textarea";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import config from "../config/config.json";
 
@@ -138,9 +138,11 @@ const CreateNewPost = ({ getPosts }) => {
         </Button>
       </Card>
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-        <Box sx={modalStyle}>
-          <Textarea
+        <Box sx={modalStyle} className={style.createNewPostModal}>
+          <TextField
             placeholder="Write some text"
+            multiline
+            sx={{ width: 350 }}
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
           />
