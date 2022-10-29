@@ -113,7 +113,7 @@ const CommentComponent = ({
             {!isInEditingMode && <Typography>{editedContent}</Typography>}
             {isInEditingMode && (
               <Textarea
-                fullWidth
+                fullwidth="true"
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={(e) => {
