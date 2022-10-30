@@ -6,6 +6,12 @@ const createPost = async (req, res) => {
   try {
     req.body.creator = req.user._id;
 
+    if (req.body.originPost) {
+      const post = await PostModel.findOne({ _id: req.body.originPost });
+      post.sharedCount += 1;
+      post.save();
+    }
+
     if (req.body.postImages) {
       const urls = await Promise.all(
         req.body.postImages.map(async (img) => {
