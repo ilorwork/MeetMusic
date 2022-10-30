@@ -23,9 +23,28 @@ const login = async (email, password) => {
     );
 
     localStorage.setItem("token", res.headers.authorization);
+
+    setRecentConnection(res.data);
   } catch (e) {
     throw e;
   }
+};
+
+const setRecentConnection = (newUser) => {
+  let recentConnections = [];
+  if (localStorage.getItem("recentConnections")) {
+    recentConnections = JSON.parse(localStorage.getItem("recentConnections"));
+
+    const alreadyExist = recentConnections.find(
+      (user) => user.email === newUser.email
+    );
+    if (alreadyExist) return;
+
+    if (recentConnections.length === 3) recentConnections.pop();
+  }
+
+  recentConnections.unshift(newUser);
+  localStorage.setItem("recentConnections", JSON.stringify(recentConnections));
 };
 
 const logout = async () => {
