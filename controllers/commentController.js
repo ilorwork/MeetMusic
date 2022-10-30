@@ -1,5 +1,4 @@
 const PostModel = require("../models/postModel");
-const UserModel = require("../models/userModel");
 const CommentModel = require("../models/commentModel");
 const timeAgo = require("../helpers/calculationTime");
 
@@ -67,16 +66,19 @@ const editComment = async (req, res) => {
     const commentToEdit = await CommentModel.findOne({
       _id: req.body._id,
     }).populate("creator");
+
     if (req.user.email !== commentToEdit.creator.email) {
       return res.status(403).json("Can't edit other's comments");
     }
+
     commentToEdit.content = req.body.content;
     if (!commentToEdit.isEdited) {
       commentToEdit.isEdited = true;
-    };
+    }
+
     await commentToEdit.save();
     return res.status(200).json({
-      editedComment: commentToEdit
+      editedComment: commentToEdit,
     });
   } catch (e) {
     return res.status(500).json("edit comment failed " + e);
@@ -87,5 +89,5 @@ module.exports = {
   createComment,
   getCommentsOfPost,
   deleteComment,
-  editComment
+  editComment,
 };
