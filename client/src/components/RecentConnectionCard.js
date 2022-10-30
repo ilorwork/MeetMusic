@@ -123,6 +123,7 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
           </Typography>
           <TextField
             label="Password"
+            autoFocus
             value={password}
             type="password"
             onChange={(e) => setPassword(e.target.value)}

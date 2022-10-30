@@ -136,6 +136,7 @@ const CreateNewPost = ({ getPosts }) => {
           <TextField
             placeholder="Write some text"
             multiline
+            autoFocus
             sx={{ width: 350 }}
             value={postText}
             onChange={(e) => setPostText(e.target.value)}

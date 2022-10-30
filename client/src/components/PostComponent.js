@@ -17,6 +17,8 @@ import {
   Menu,
   MenuItem,
   Modal,
+  Paper,
+  TextField,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
@@ -32,12 +34,14 @@ import AudioFileIcon from "@mui/icons-material/AudioFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   checkIsUserLikeThePost,
+  createPost,
   deletePost,
   editPost,
   getPostComments,
   likePost,
   unlikePost,
 } from "../helpers/postHelpers";
+import SharedPost from "./SharedPost";
 
 const modalStyle = {
   position: "absolute",
@@ -70,6 +74,8 @@ const PostComponent = ({
   const [postAudio, setPostAudio] = useState(post.postAudio);
   const [isEdited, setIsEdited] = useState(post.isEdited);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [sharedPostText, setSharedPostText] = useState("");
+  const [isSharePostOpen, setIsSharePostOpen] = useState(false);
 
   const { currentUserInfo } = useContext(UserContext);
 
@@ -204,6 +210,21 @@ const PostComponent = ({
       setIsEdited(true);
     } catch (e) {
       console.error("edit post failed " + e);
+    }
+  };
+
+  const handleSharePost = async () => {
+    const sharedPost = { postText: sharedPostText, originPost: post._id };
+
+    try {
+      await createPost(sharedPost);
+
+      setSharedPostText("");
+      getPosts();
+    } catch (e) {
+      if (e.response.status === 401) {
+        navigate("/login");
+      } else throw e;
     }
   };
 
@@ -437,6 +458,7 @@ const PostComponent = ({
             )}
           </CardContent>
         )}
+        {post.originPost && <SharedPost postId={post.originPost} />}
 
         <Box className={style.footerIndecators}>
           <div>{likesCount} Likes</div>
@@ -464,9 +486,36 @@ const PostComponent = ({
               <ChatBubbleIcon style={{ color: "#92a5de" }} />
             </IconButton>
           )}
-          <IconButton>
+          <IconButton onClick={() => setIsSharePostOpen(true)}>
             <ScreenShareIcon />
           </IconButton>
+          <Modal
+            open={isSharePostOpen}
+            onClose={() => setIsSharePostOpen(false)}
+          >
+            <Paper className={style.shareModal}>
+              <Typography style={{ fontWeight: "bold", fontSize: 17 }}>
+                You can add some text before sharing
+              </Typography>
+              <TextField
+                label="Write some text"
+                multiline
+                autoFocus
+                sx={{ width: 300 }}
+                value={sharedPostText}
+                onChange={(e) => setSharedPostText(e.target.value)}
+              />
+
+              <Button
+                variant="contained"
+                style={{ background: "rgb(209, 46, 100)" }}
+                sx={{ my: 3 }}
+                onClick={handleSharePost}
+              >
+                Share
+              </Button>
+            </Paper>
+          </Modal>
         </CardActions>
         {isCommentOpen && (
           <CreateNewComment
