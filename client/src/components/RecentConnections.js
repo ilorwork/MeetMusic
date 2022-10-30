@@ -1,27 +1,31 @@
-import { Grid } from "@mui/material";
-import React, { useState } from "react";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import RecentConnectionCard from "./RecentConnectionCard";
 import style from "./RecentConnections.module.css";
+import cardStyle from "./RecentConnectionCard.module.css";
+import { v4 as uuid } from "uuid";
 
 const RecentConnections = () => {
-  const [userExist /* , setUserExist */] = useState({
-    isThere: true,
-    img: "https://images.pexels.com/photos/874158/pexels-photo-874158.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    name: "miki",
-  });
-  const [userNoExist /* , setUserNoExist */] = useState({
-    isThere: false,
-    img: "https://images.pexels.com/photos/1549004/pexels-photo-1549004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    name: "",
-  });
+  const [recentUsers, setRecentUsers] = useState([]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("recentConnections")) return;
+
+    const recentConnections = JSON.parse(
+      localStorage.getItem("recentConnections")
+    );
+    setRecentUsers(recentConnections);
+  }, []);
 
   return (
     <div className={style.wrapper}>
       <h1>
         <span className={style.h1}>MeetMusic</span>
       </h1>
-      <h2 className={style.h2}>recent connections</h2>
-      <p className={style.p}>click your photo to sign in or add an account</p>
+      <h2 className={style.h2}>Recent Connections</h2>
+      {recentUsers.length > 0 && (
+        <p className={style.p}>Click your photo to sign in</p>
+      )}
       <Grid
         container
         direction="row"
@@ -29,15 +33,32 @@ const RecentConnections = () => {
         alignItems="center"
         sx={{ mt: 4 }}
       >
-        <Grid item lg={4}>
-          {userExist.isThere && <RecentConnectionCard userExist={userExist} />}
-        </Grid>
-        <Grid item lg={4}>
-          {userExist.isThere && <RecentConnectionCard userExist={userExist} />}
-        </Grid>
-        <Grid item lg={4}>
-          <RecentConnectionCard userExist={userNoExist} />
-        </Grid>
+        {recentUsers.map((user) => (
+          <Grid key={uuid()} item lg={4}>
+            <RecentConnectionCard user={user} setRecentUsers={setRecentUsers} />
+          </Grid>
+        ))}
+
+        {!recentUsers.length && (
+          <Grid item lg={4}>
+            <div className={cardStyle.containsCard}>
+              <Card className={cardStyle.card} sx={{ width: 150 }}>
+                <CardContent
+                  sx={{
+                    height: 190,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography sx={{ fontSize: 16 }}>
+                    {"No recent connections"}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </div>
+          </Grid>
+        )}
       </Grid>
     </div>
   );

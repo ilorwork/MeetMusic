@@ -1,56 +1,143 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Card,
   CardContent,
   CardMedia,
+  IconButton,
+  Modal,
+  TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import style from "./RecentConnectionCard.module.css";
-import Icon from "@mui/material/Icon";
+import { login } from "../helpers/userHelpers";
+import { useNavigate } from "react-router-dom";
 
-const RecentConnectionCard = ({ userExist }) => {
+const RecentConnectionCard = ({ user, setRecentUsers }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSumbitLogin = async () => {
+    if (!password) {
+      setError("Password requried");
+      return;
+    }
+
+    try {
+      await login(user.email, password);
+      navigate("/");
+    } catch (e) {
+      if (e.response.status === 401) setError("Wrong password");
+      else setError("An error has accured");
+    }
+  };
+
+  const handleRemoveConnection = () => {
+    const recentConnections = JSON.parse(
+      localStorage.getItem("recentConnections")
+    );
+
+    const indexOfUser = recentConnections.findIndex(
+      (connection) => connection.email === user.email
+    );
+
+    recentConnections.splice(indexOfUser, 1);
+
+    localStorage.setItem(
+      "recentConnections",
+      JSON.stringify(recentConnections)
+    );
+
+    setRecentUsers(recentConnections);
+  };
+
+  const closeLoginModal = () => {
+    setPassword("");
+    setError("");
+    setIsOpen(false);
+  };
   return (
-    <div className={style.containsCard}>
-      <Card className={style.card} sx={{ width: 150 }}>
-        {userExist.isThere ? (
-          <Button
-            sx={{ width: 150, height: 30, fontSize: 10 }}
-            variant="outlined"
-            startIcon={<DeleteIcon />}
+    <>
+      <div className={style.containsCard}>
+        <Tooltip title="Remove connection">
+          <IconButton
+            onClick={() => {
+              handleRemoveConnection();
+            }}
+            style={{
+              marginBottom: -40,
+              marginLeft: -120,
+              zIndex: 1,
+              border: "none",
+            }}
           >
-            Remove account
-          </Button>
-        ) : (
-          <Button
-            sx={{ width: 150, height: 30, fontSize: 10 }}
-            variant="outlined"
-            startIcon={<Icon color="primary">add_circle</Icon>}
+            <CloseOutlinedIcon
+              style={{
+                color: "white",
+                fontSize: 20,
+                background: "gray",
+                borderRadius: "50%",
+              }}
+            />
+          </IconButton>
+        </Tooltip>
+        <Card className={style.card} sx={{ width: 150 }}>
+          <CardMedia
+            component="img"
+            height="150"
+            image={`${user.profilePic}`}
+            alt="user profile pic"
+            sx={{ cursor: "pointer" }}
+            onClick={() => setIsOpen(true)}
+          ></CardMedia>
+          <CardContent
+            sx={{
+              height: 20,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            Add account
-          </Button>
-        )}
-        <CardMedia
-          component="img"
-          height="150"
-          image={`${userExist.img}`}
-          alt="man pic"
-        ></CardMedia>
-        <CardContent
-          sx={{
-            height: 20,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography sx={{ fontSize: 16, fontWeight: "bold" }}>
-            {`${userExist.name}`}
+            <Typography sx={{ fontSize: 16 }}>
+              {`${user.firstName} ${user.lastName}`}
+            </Typography>
+          </CardContent>
+        </Card>
+      </div>
+      <Modal open={isOpen} onClose={closeLoginModal}>
+        <Card className={style.modalCard}>
+          <CardMedia
+            component={"div"}
+            className={style.cardImg}
+            sx={{ backgroundImage: `url(${user.profilePic})` }}
+            alt="user profile pic"
+            onClick={() => setIsOpen(true)}
+          ></CardMedia>
+          <Typography sx={{ fontSize: 16, textAlign: "center" }}>
+            {`${user.firstName} ${user.lastName}`}
           </Typography>
-        </CardContent>
-      </Card>
-    </div>
+          <TextField
+            label="Password"
+            value={password}
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {error && <div className={style.error}>{error}</div>}
+          <Button
+            variant="contained"
+            style={{ background: "rgb(209, 46, 100)" }}
+            onClick={handleSumbitLogin}
+          >
+            Log In
+          </Button>
+        </Card>
+      </Modal>
+    </>
   );
 };
 

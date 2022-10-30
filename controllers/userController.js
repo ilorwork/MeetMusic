@@ -48,7 +48,7 @@ const login = async (req, res) => {
     generateAccessTokenHeader(req, res, user);
     generateRefreshTokenCookie(req, res, user);
 
-    res.status(200).json("User login succeeded");
+    res.status(200).json(user);
   } catch (e) {
     return res.status(500).json(`Login proccess failed ${e}`);
   }
@@ -128,7 +128,10 @@ const getPeopleUserMayKnow = async (req, res) => {
     const idsToExclude = usersToExclude.map((userId) => {
       return { _id: { $ne: userId } };
     });
-    const peopleUserMayKnow = await UserModel.find({ $and: idsToExclude, country: currentUser.country });
+    const peopleUserMayKnow = await UserModel.find({
+      $and: idsToExclude,
+      country: currentUser.country,
+    });
 
     return res.status(200).json(peopleUserMayKnow);
   } catch (e) {
