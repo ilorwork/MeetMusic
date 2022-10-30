@@ -48,6 +48,22 @@ const deletePost = async (postId) => {
   }
 };
 
+const getPostById = async (postId) => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await axios.get(`${base_url}/posts/post`, {
+      withCredentials: true,
+      headers: {
+        authorization: token,
+      },
+      params: { postId },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getCurrentUserPosts = async () => {
   const token = localStorage.getItem("token");
   try {
@@ -323,6 +339,7 @@ export {
   createPost,
   editPost,
   deletePost,
+  getPostById,
   getCurrentUserPosts,
   getHomePosts,
   getPostsByUserId,

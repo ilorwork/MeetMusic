@@ -32,24 +32,48 @@ const createPost = async (req, res) => {
   }
 };
 
+const getPostById = async (req, res) => {
+  try {
+    const post = await PostModel.findOne({ _id: req.query.postId }).populate(
+      "creator"
+    );
+    return res.status(200).json(post);
+  } catch (e) {
+    return res.status(500).json(`Get post by id failed ${e}`);
+  }
+};
+
 const getPosts = async (req, res) => {
   try {
     const allPostsWithCreator = await PostModel.find({}).populate("creator");
     const currentUser = await UserModel.findOne({ _id: req.user._id });
-    const filteredPostsWithCreator = allPostsWithCreator.filter((post) => (currentUser.following.includes(post.creator._id) || req.user._id == post.creator._id));
+    const filteredPostsWithCreator = allPostsWithCreator.filter(
+      (post) =>
+        currentUser.following.includes(post.creator._id) ||
+        req.user._id == post.creator._id
+    );
     filteredPostsWithCreator.reverse();
 
-    const unfolowedRelatadPeoplePosts = allPostsWithCreator.filter((post) => (!currentUser.following.includes(post.creator._id) && currentUser.country === post.creator.country && req.user._id != post.creator._id));
-    const idsOfRelatedPeople = unfolowedRelatadPeoplePosts.map((post) => (post.creator._id));
+    const unfolowedRelatadPeoplePosts = allPostsWithCreator.filter(
+      (post) =>
+        !currentUser.following.includes(post.creator._id) &&
+        currentUser.country === post.creator.country &&
+        req.user._id != post.creator._id
+    );
+    const idsOfRelatedPeople = unfolowedRelatadPeoplePosts.map(
+      (post) => post.creator._id
+    );
     const uniqIds = [...new Set(idsOfRelatedPeople)];
 
     const postsArraysByUsers = uniqIds.map((uniqId) => {
-      return unfolowedRelatadPeoplePosts.filter((post) => post.creator._id == uniqId);
-    })
+      return unfolowedRelatadPeoplePosts.filter(
+        (post) => post.creator._id == uniqId
+      );
+    });
 
     const singlePostOfEachUser = postsArraysByUsers.map((postsArr) => {
       return postsArr[Math.floor(Math.random() * postsArr.length)];
-    })
+    });
 
     const allPosts = filteredPostsWithCreator.concat(singlePostOfEachUser);
     return res.status(200).json(allPosts);
@@ -121,13 +145,21 @@ const editPost = async (req, res) => {
     }
 
     const postImagesFromClient = req.body.postImages;
-    if (postImagesFromClient && (JSON.stringify(postToEdit.postImages) !== JSON.stringify(postImagesFromClient))) {
-      const imagesToDestroy = postToEdit.postImages.filter((img) => (!postImagesFromClient.includes(img)));
+    if (
+      postImagesFromClient &&
+      JSON.stringify(postToEdit.postImages) !==
+        JSON.stringify(postImagesFromClient)
+    ) {
+      const imagesToDestroy = postToEdit.postImages.filter(
+        (img) => !postImagesFromClient.includes(img)
+      );
       imagesToDestroy?.forEach((img) => {
         const imgPublicId = img.split("/").pop().split(".")[0];
         cloudinary.uploader.destroy(imgPublicId);
       });
-      const imagesToUpload = postImagesFromClient.filter((img) => (!postToEdit.postImages.includes(img)));
+      const imagesToUpload = postImagesFromClient.filter(
+        (img) => !postToEdit.postImages.includes(img)
+      );
       const urls = await Promise.all(
         imagesToUpload?.map(async (img) => {
           const uploadedImgRes = await cloudinary.uploader.upload(img);
@@ -135,12 +167,18 @@ const editPost = async (req, res) => {
         })
       );
 
-      req.body.postImages = postImagesFromClient.filter((img) => (postToEdit.postImages.includes(img)));
+      req.body.postImages = postImagesFromClient.filter((img) =>
+        postToEdit.postImages.includes(img)
+      );
       req.body.postImages = [...req.body.postImages, ...urls];
       postToEdit.postImages = req.body.postImages;
     }
 
-    if (req.body.postAudio !== undefined && (JSON.stringify(postToEdit.postAudio) !== JSON.stringify(req.body.postAudio))) {
+    if (
+      req.body.postAudio !== undefined &&
+      JSON.stringify(postToEdit.postAudio) !==
+        JSON.stringify(req.body.postAudio)
+    ) {
       const audPublicId = postToEdit.postAudio.split("/").pop().split(".")[0];
       cloudinary.uploader.destroy(audPublicId, {
         resource_type: "video",
@@ -155,13 +193,16 @@ const editPost = async (req, res) => {
       postToEdit.postAudio = req.body.postAudio;
     }
 
-    if (req.body.postText !== undefined && (JSON.stringify(postToEdit.postText) !== JSON.stringify(req.body.postText))) {
+    if (
+      req.body.postText !== undefined &&
+      JSON.stringify(postToEdit.postText) !== JSON.stringify(req.body.postText)
+    ) {
       postToEdit.postText = req.body.postText;
     }
 
     if (!postToEdit.isEdited) {
       postToEdit.isEdited = true;
-    };
+    }
 
     await postToEdit.save();
     return res.status(200).json(postToEdit);
@@ -199,6 +240,7 @@ const removeLike = async (req, res) => {
 
 module.exports = {
   getPosts,
+  getPostById,
   getPostsOfCurrentUser,
   getPostsOfUser,
   createPost,
