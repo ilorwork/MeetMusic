@@ -214,7 +214,9 @@ const PostComponent = ({
   };
 
   const handleSharePost = async () => {
-    const sharedPost = { postText: sharedPostText, originPost: post._id };
+    setIsSharePostOpen(false);
+    const originPost = post.originPost ? post.originPost : post._id;
+    const sharedPost = { postText: sharedPostText, originPost: originPost };
 
     try {
       await createPost(sharedPost);
