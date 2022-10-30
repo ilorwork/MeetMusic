@@ -494,7 +494,9 @@ const PostComponent = ({
             onClose={() => setIsSharePostOpen(false)}
           >
             <Paper className={style.shareModal}>
-              <Typography>You can add some text before sharing</Typography>
+              <Typography style={{ fontWeight: "bold", fontSize: 17 }}>
+                You can add some text before sharing
+              </Typography>
               <TextField
                 label="Write some text"
                 multiline
