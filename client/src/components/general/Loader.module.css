@@ -1,0 +1,23 @@
+.spinnerExamples {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+.spinner {
+  box-sizing: border-box;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border-top: 4px solid rgb(0, 0, 0);
+  border-left: 4px solid rgb(0, 0, 0);
+  border-right: 4px solid rgba(255, 253, 253, 0);
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
