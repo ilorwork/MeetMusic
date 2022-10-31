@@ -35,7 +35,7 @@ const SharedPost = ({ postId }) => {
 
   return (
     <div style={{ padding: 14 }}>
-      <Card sx={{ mt: 2, border: 2 }}>
+      <Card sx={{ mt: 2, border: 1 }}>
         <CardHeader
           avatar={
             <button
@@ -47,7 +47,7 @@ const SharedPost = ({ postId }) => {
           }
           title={`${post?.creator?.firstName} ${post?.creator?.lastName}`}
           subheader={new Date(post?.timeOfCreation).toLocaleString()}
-          action={<div className={style.threePoints}></div>}
+          action={<div className={style.sharedSign}>shared</div>}
         ></CardHeader>
 
         <CardContent>
