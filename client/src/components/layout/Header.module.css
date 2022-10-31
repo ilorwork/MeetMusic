@@ -55,3 +55,24 @@
 .accountIcon:hover {
   cursor: pointer;
 }
+
+.burgerMenu {
+  cursor: pointer;
+}
+
+.boxContainer {
+  border: solid rgb(19 137 137) 2px;
+  text-align: center;
+}
+
+.boxInfo {
+  cursor: pointer;
+  border-bottom: solid gray 1px;
+  width: 200px;
+}
+
+@media (max-width: 768px) {
+  .wrapperIcons {
+    justify-content: end;
+  }
+}

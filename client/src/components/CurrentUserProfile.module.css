@@ -1,15 +1,21 @@
 .profilePageContainer {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.wrapsLeftSide {
+  width: 65%;
 }
 
 .profileInfoCard {
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 70%;
   height: 270px;
-  padding: 1rem;
+  padding: 10rem;
   margin: 1rem;
+  border: none;
 }
 
 .profileInfoContent {
@@ -17,13 +23,17 @@
   flex-direction: column;
   justify-content: space-evenly;
   height: inherit;
-  width: 28rem;
-  padding: 0rem 4rem;
 }
 
 .profileHeader {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.userImg {
+  width: 250px !important;
+  height: 250px !important;
 }
 
 .editProfileBtn {
@@ -32,10 +42,11 @@
 
 .personalInfoContainer {
   display: flex;
-  flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-between;
-  height: 4rem;
+  align-items: center;
+  height: 5rem;
+  width: 25rem;
 }
 
 .socialInfoContainer {
@@ -46,7 +57,7 @@
 .typographyRow {
   display: flex;
   justify-content: space-evenly;
-  width: 7rem;
+  width: 50%;
 }
 
 .homePage {
@@ -64,7 +75,7 @@
 .peopleYouMayKnow {
   width: 25rem;
   overflow: auto;
-  height: 58vh;
+  height: 39vh;
 }
 
 .peopleYouMayKnow::-webkit-scrollbar {
@@ -75,10 +86,14 @@
   background: #92a5de;
 }
 
+.wrapsRightSide {
+  display: block;
+  width: 30%;
+}
+
 .containerPostComponents {
-  width: 35rem;
   overflow: auto;
-  height: 58vh;
+  height: 88vh;
 }
 
 .containerPostComponents::-webkit-scrollbar {
@@ -94,7 +109,7 @@
 .peopleYouFollow {
   width: 25rem;
   overflow: auto;
-  height: 58vh;
+  height: 39vh;
 }
 
 .peopleYouFollow::-webkit-scrollbar {
@@ -105,9 +120,72 @@
   background: #92a5de;
 }
 
-@media (max-width: 800px) {
-  .homePage {
+@media (max-width: 1080px) {
+  .wrapsLeftSide {
+    width: 55%;
+  }
+
+  .wrapsRightSide {
+    width: 40%;
+  }
+
+  .userImg {
+    width: 150px !important;
+    height: 150px !important;
+  }
+
+  .titleOfPeopleYouMayKnow {
+    font-size: 18px;
+    color: black;
+    text-shadow: none;
+  }
+
+  .titleOfPeopleYouFollow {
+    font-size: 18px;
+    color: black;
+    text-shadow: none;
+  }
+
+  .peopleYouMayKnow {
+    height: 38vh;
+  }
+
+  .peopleYouFollow {
+    height: 38vh;
+  }
+
+  .personalInfoContainer {
+    display: none;
+  }
+
+  .socialInfoContainer {
+    width: 200px;
+  }
+
+  .userInfo {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profilePageContainer {
+    display: block;
+    text-align: center;
+  }
+
+  .wrapsLeftSide {
+    width: 100%;
+  }
+
+  .wrapsRightSide {
+    display: flex;
     justify-content: center;
+    width: 100%;
+  }
+
+  .containerPostComponents {
+    width: 80%;
+    height: 58vh;
   }
 
   .peopleYouMayKnow {
@@ -116,5 +194,15 @@
 
   .peopleYouFollow {
     display: none;
+  }
+
+  .profileInfoCard {
+    height: 250px;
+    padding: 0;
+  }
+
+  .profileInfoContent {
+    width: 300px;
+    justify-content: space-between;
   }
 }

@@ -57,10 +57,11 @@ const Followers = ({ follower, getUserInfo }) => {
         />
       </button>
       <span className={style.personName}>
-        {follower.firstName} {follower.lastName}
+        <div>{follower.firstName}</div>
+        <div>{follower.lastName}</div>
       </span>
       {isCurrentUserFollow && !isCurrentUser && (
-        <Button
+        <Button className={style.followButton}
           style={{ background: "rgb(19 137 137)", fontSize: 10 }}
           variant="contained"
           onClick={handleUnfollowUser}
@@ -69,7 +70,7 @@ const Followers = ({ follower, getUserInfo }) => {
         </Button>
       )}
       {!isCurrentUserFollow && !isCurrentUser && (
-        <Button
+        <Button className={style.followButton}
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}

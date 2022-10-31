@@ -11,9 +11,9 @@
 }
 
 .peopleYouMayKnow {
-  width: 25rem;
+  width: 25%;
   overflow: auto;
-  height: 91vh;
+  height: 89vh;
 }
 
 .peopleYouMayKnow::-webkit-scrollbar {
@@ -25,9 +25,9 @@
 }
 
 .containerPostComponents {
-  width: 35rem;
+  width: 45%;
   overflow: auto;
-  height: 91vh;
+  height: 89vh;
 }
 
 .containerPostComponents::-webkit-scrollbar {
@@ -41,9 +41,9 @@
 }
 
 .peopleYouFollow {
-  width: 25rem;
+  width: 25%;
   overflow: auto;
-  height: 91vh;
+  height: 89vh;
 }
 
 .peopleYouFollow::-webkit-scrollbar {
@@ -54,15 +54,28 @@
   background: #92a5de;
 }
 
-@media screen and (max-width: 1000px) {
-  .homePage {
-    display: none;
+@media (max-width: 1080px) {
+  .titleOfPeopleYouMayKnow {
+    font-size: 18px;
+    color: black;
+    text-shadow: none;
+  }
+
+  .titleOfPeopleYouFollow {
+    font-size: 18px;
+    color: black;
+    text-shadow: none;
   }
 }
 
-@media screen and (max-width: 800px) {
+@media (max-width: 768px) {
+  .homePage {
+    justify-content: center;
+  }
+
   .containerPostComponents {
     justify-content: center;
+    width: 80%;
   }
 
   .peopleYouMayKnow {
