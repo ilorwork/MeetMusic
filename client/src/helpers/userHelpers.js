@@ -118,40 +118,6 @@ const getPeopleYouMayKnowHelper = async () => {
   }
 };
 
-const getCurrentUserFollowing = async () => {
-  const token = localStorage.getItem("token");
-
-  try {
-    const res = await axios.get(`${base_url}/users/current-user/following`, {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-    });
-
-    return res.data;
-  } catch (e) {
-    throw e;
-  }
-};
-
-const getCurrentUserFollowers = async () => {
-  const token = localStorage.getItem("token");
-
-  try {
-    const res = await axios.get(`${base_url}/users/current-user/followers`, {
-      withCredentials: true,
-      headers: {
-        authorization: token,
-      },
-    });
-
-    return res.data;
-  } catch (e) {
-    throw e;
-  }
-};
-
 const followUser = async (userId, currentUserInfo) => {
   const token = localStorage.getItem("token");
   try {
@@ -214,42 +180,6 @@ const notifyUser = async (userId, notificationContent) => {
   }
 };
 
-const getUserInfo = async (userId) => {
-  try {
-    const res = await axios.post(`${base_url}/users/user`, {
-      _id: userId,
-    });
-
-    return res.data;
-  } catch (e) {
-    throw e;
-  }
-};
-
-const getUserFollowing = async (userId) => {
-  try {
-    const res = await axios.post(`${base_url}/users/user/following`, {
-      _id: userId,
-    });
-
-    return res.data;
-  } catch (e) {
-    throw e;
-  }
-};
-
-const getUserFollowers = async (userId) => {
-  try {
-    const res = await axios.post(`${base_url}/users/user/followers`, {
-      _id: userId,
-    });
-
-    return res.data;
-  } catch (e) {
-    throw e;
-  }
-};
-
 const getAllUsers = async () => {
   try {
     const res = await axios.get(`${base_url}/users/`);
@@ -267,13 +197,8 @@ export {
   getUserInfoById,
   editUser,
   getPeopleYouMayKnowHelper,
-  getCurrentUserFollowing,
-  getCurrentUserFollowers,
   followUser,
   unfollowUser,
   notifyUser,
-  getUserInfo,
-  getUserFollowing,
-  getUserFollowers,
   getAllUsers,
 };

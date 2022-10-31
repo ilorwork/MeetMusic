@@ -1,6 +1,5 @@
 const LikeModel = require("../models/likeModel");
 const PostModel = require("../models/postModel");
-const UserModel = require("../models/userModel");
 
 const addLike = async (req, res) => {
   try {
