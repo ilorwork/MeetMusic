@@ -214,7 +214,9 @@ const PostComponent = ({
   };
 
   const handleSharePost = async () => {
-    const sharedPost = { postText: sharedPostText, originPost: post._id };
+    setIsSharePostOpen(false);
+    const originPost = post.originPost ? post.originPost : post._id;
+    const sharedPost = { postText: sharedPostText, originPost: originPost };
 
     try {
       await createPost(sharedPost);
@@ -388,44 +390,46 @@ const PostComponent = ({
                 </audio>
               </div>
             )}
-            <div>
-              {postImages.length <= 8 && (
-                <IconButton
-                  sx={{ fontSize: 16 }}
-                  color="primary"
-                  aria-label="upload picture"
-                  component="label"
-                >
-                  <input
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    onChange={handleImageSelection}
-                  />
-                  <AddPhotoAlternateIcon />
-                  Upload Image
-                </IconButton>
-              )}
+            {!post.originPost && (
+              <div>
+                {postImages.length <= 8 && (
+                  <IconButton
+                    sx={{ fontSize: 16 }}
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                  >
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleImageSelection}
+                    />
+                    <AddPhotoAlternateIcon />
+                    Upload Image
+                  </IconButton>
+                )}
 
-              {!postAudio && (
-                <IconButton
-                  sx={{ fontSize: 16 }}
-                  title="Upload Audio"
-                  color="primary"
-                  aria-label="upload audio"
-                  component="label"
-                >
-                  <input
-                    hidden
-                    accept="audio/*"
-                    type="file"
-                    onChange={handleAudioSelection}
-                  />
-                  <AudioFileIcon />
-                  Upload Audio
-                </IconButton>
-              )}
-            </div>
+                {!postAudio && (
+                  <IconButton
+                    sx={{ fontSize: 16 }}
+                    title="Upload Audio"
+                    color="primary"
+                    aria-label="upload audio"
+                    component="label"
+                  >
+                    <input
+                      hidden
+                      accept="audio/*"
+                      type="file"
+                      onChange={handleAudioSelection}
+                    />
+                    <AudioFileIcon />
+                    Upload Audio
+                  </IconButton>
+                )}
+              </div>
+            )}
             <Button
               variant="contained"
               sx={{ background: "rgb(19 137 137)", width: 400, mt: 5 }}
