@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
@@ -6,7 +6,6 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import PublicIcon from "@mui/icons-material/Public";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
-import EventIcon from "@mui/icons-material/Event";
 import style from "./CurrentUserProfile.module.css";
 import PostComponent from "./PostComponent";
 import Followers from "./Followers";
@@ -22,6 +21,7 @@ import {
   unfollowUser,
 } from "../helpers/userHelpers";
 import { Button } from "@mui/material";
+import LoaderContext from "./context/LoaderContext";
 
 const UserProfile = () => {
   const [currentUser, setCurrentUser] = useState("");
@@ -31,8 +31,10 @@ const UserProfile = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
+  const { setLoading } = useContext(LoaderContext);
 
   useEffect(() => {
+    setLoading(true);
     getCurrentUser();
   }, []);
 
@@ -61,6 +63,7 @@ const UserProfile = () => {
   const getUserPosts = async () => {
     const posts = await getPostsByUserId(id);
     setUserPosts(posts);
+    setLoading(false);
   };
 
   const calculateAge = () =>
