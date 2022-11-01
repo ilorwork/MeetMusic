@@ -37,7 +37,6 @@ const CurrentUserProfile = () => {
   const [user, setUser] = useState("");
   const [userPosts, setUserPosts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [isTheFatherUserProfile, setIsTheFatherUserProfile] = useState(false);
 
   const navigate = useNavigate();
 
@@ -100,7 +99,8 @@ const CurrentUserProfile = () => {
             <label htmlFor="icon-button-file">
               <Tooltip title="Click to replace">
                 <IconButton component="span">
-                  <Avatar className={style.userImg}
+                  <Avatar
+                    className={style.userImg}
                     alt="user profile pic"
                     src={user.profilePic}
                   />
@@ -165,13 +165,21 @@ const CurrentUserProfile = () => {
             <div className={style.peopleYouMayKnow}>
               <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
               {user.followers?.map((follower) => (
-                <Followers key={uuid()} follower={follower} getUserInfo={getInfo} />
+                <Followers
+                  key={uuid()}
+                  follower={follower}
+                  getUserInfo={getInfo}
+                />
               ))}
             </div>
             <div className={style.peopleYouFollow}>
               <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
               {user.following?.map((followed) => (
-                <Following key={uuid()} followed={followed} getUserInfo={getInfo} />
+                <Following
+                  key={uuid()}
+                  followed={followed}
+                  getUserInfo={getInfo}
+                />
               ))}
             </div>
           </div>
@@ -179,7 +187,7 @@ const CurrentUserProfile = () => {
         <div className={style.wrapsRightSide}>
           <div className={style.containerPostComponents}>
             {userPosts.map((post) => (
-              <PostComponent key={uuid()} post={post} getPosts={getUserPosts} isTheFatherUserProfile={isTheFatherUserProfile} />
+              <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
             ))}
           </div>
         </div>

@@ -15,7 +15,6 @@ const Home = () => {
   const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
-  const [isTheFatherUserProfile, setIsTheFatherUserProfile] = useState(false);
 
   useEffect(() => {
     getUserInfo();
@@ -65,7 +64,6 @@ const Home = () => {
             getPosts={getPosts}
             getPeopleYouMayKnow={getPeopleYouMayKnow}
             getUserInfo={getUserInfo}
-            isTheFatherUserProfile={isTheFatherUserProfile}
             key={uuid()}
           />
         ))}

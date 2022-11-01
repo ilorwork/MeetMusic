@@ -1,6 +1,4 @@
-import React, {
-  useEffect, useState
-} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
@@ -17,14 +15,18 @@ import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import { v4 as uuid } from "uuid";
 import { getPostsByUserId } from "../helpers/postHelpers";
-import { followUser, getCurrentUserInfo, getUserInfoById, unfollowUser } from "../helpers/userHelpers";
+import {
+  followUser,
+  getCurrentUserInfo,
+  getUserInfoById,
+  unfollowUser,
+} from "../helpers/userHelpers";
 import { Button } from "@mui/material";
 
 const UserProfile = () => {
   const [currentUser, setCurrentUser] = useState("");
   const [user, setUser] = useState("");
   const [userPosts, setUserPosts] = useState([]);
-  const [isTheFatherUserProfile, setIsTheFatherUserProfile] = useState(true);
 
   const { id } = useParams();
 
@@ -32,7 +34,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     getCurrentUser();
-  }, [])
+  }, []);
 
   useEffect(() => {
     getUserInfo();
@@ -92,7 +94,8 @@ const UserProfile = () => {
       <div className={style.profilePageContainer}>
         <div className={style.wrapsLeftSide}>
           <Card className={style.profileInfoCard}>
-            <Avatar className={style.userImg}
+            <Avatar
+              className={style.userImg}
               alt="user profile pic"
               src={user.profilePic}
             />
@@ -104,7 +107,12 @@ const UserProfile = () => {
                 </h1>
                 {currentUser.following?.includes(id) && (
                   <Button
-                    style={{ background: "rgb(19 137 137)", fontSize: 10, width: 100, height: 50 }}
+                    style={{
+                      background: "rgb(19 137 137)",
+                      fontSize: 10,
+                      width: 100,
+                      height: 50,
+                    }}
                     variant="contained"
                     onClick={handleUnfollowUser}
                   >
@@ -113,7 +121,12 @@ const UserProfile = () => {
                 )}
                 {!currentUser.following?.includes(id) && (
                   <Button
-                    style={{ background: "rgb(209, 46, 100)", fontSize: 10, width: 100, height: 50 }}
+                    style={{
+                      background: "rgb(209, 46, 100)",
+                      fontSize: 10,
+                      width: 100,
+                      height: 50,
+                    }}
                     variant="contained"
                     onClick={handleFollowUser}
                   >
@@ -181,7 +194,11 @@ const UserProfile = () => {
         <div className={style.wrapsRightSide}>
           <div className={style.containerPostComponents}>
             {userPosts.map((post) => (
-              <PostComponent post={post} isTheFatherUserProfile={isTheFatherUserProfile} key={uuid()} />
+              <PostComponent
+                post={post}
+                isUserProfilePage={true}
+                key={uuid()}
+              />
             ))}
           </div>
         </div>
