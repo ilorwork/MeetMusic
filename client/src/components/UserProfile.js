@@ -73,12 +73,15 @@ const UserProfile = () => {
     ).toFixed(1);
 
   const handleFollowUser = async () => {
+    setLoading(true);
     try {
       await followUser(user._id, currentUser);
       getCurrentUser();
       getUserInfo();
     } catch (e) {
       throw new Error("follow user failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -43,6 +43,7 @@ import {
   unlikePost,
 } from "../helpers/postHelpers";
 import SharedPost from "./SharedPost";
+import LoaderContext from "./context/LoaderContext";
 
 const modalStyle = {
   position: "absolute",
@@ -80,6 +81,7 @@ const PostComponent = ({
   const [isSharePostOpen, setIsSharePostOpen] = useState(false);
 
   const { currentUserInfo } = useContext(UserContext);
+  const { setLoading } = useContext(LoaderContext);
 
   useEffect(() => {
     getCommentsOfPost();
@@ -88,13 +90,16 @@ const PostComponent = ({
   }, []);
 
   const handleFollowUser = async () => {
+    setLoading(true);
     try {
       await followUser(post.creator._id, currentUserInfo);
       getPeopleYouMayKnow();
-      getUserInfo();
+      await getUserInfo();
       getPosts();
     } catch (e) {
       throw new Error("follow user failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -145,6 +150,7 @@ const PostComponent = ({
   const navigate = useNavigate();
 
   const handleDeletePost = async () => {
+    setLoading(true);
     setIsDeleteModalOpen(false);
     try {
       await deletePost(post._id);
@@ -155,6 +161,8 @@ const PostComponent = ({
       if (e.response.status === 401) {
         navigate("/login");
       } else throw e;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -215,6 +223,7 @@ const PostComponent = ({
   };
 
   const handleSharePost = async () => {
+    setLoading(true);
     setIsSharePostOpen(false);
     const originPost = post.originPost ? post.originPost : post._id;
     const sharedPost = { postText: sharedPostText, originPost: originPost };
@@ -224,6 +233,8 @@ const PostComponent = ({
 
       setSharedPostText("");
       getPosts();
+
+      setLoading(false);
 
       let creator;
       if (post.originPost) {
@@ -243,6 +254,8 @@ const PostComponent = ({
       if (e.response.status === 401) {
         navigate("/login");
       } else throw e;
+    } finally {
+      setLoading(false);
     }
   };
 

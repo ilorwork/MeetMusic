@@ -4,17 +4,20 @@ import style from "./PeopleSideList.module.css";
 import { followUser, unfollowUser } from "../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
 import UserContext from "./layout/UserContext";
+import LoaderContext from "./context/LoaderContext";
 
 const Following = ({
   followed,
   getUserInfo,
-  getPeopleYouMayKnow = () => { },
-  getPosts = () => { }
+  getPeopleYouMayKnow = () => {},
+  getPosts = () => {},
 }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(true);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const { currentUserInfo } = useContext(UserContext);
+  const { setLoading } = useContext(LoaderContext);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,23 +30,29 @@ const Following = ({
   }, []);
 
   const handleFollowUser = async () => {
+    setLoading(true);
     try {
       await followUser(followed._id, currentUserInfo);
       getPeopleYouMayKnow();
-      getUserInfo();
+      await getUserInfo();
     } catch (e) {
       throw new Error("follow user failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleUnfollowUser = async () => {
+    setLoading(true);
     try {
       await unfollowUser(followed._id);
       getPeopleYouMayKnow();
-      getUserInfo();
+      await getUserInfo();
       getPosts();
     } catch (e) {
       throw new Error("unfollow user failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,7 +76,8 @@ const Following = ({
         <div>{followed.lastName}</div>
       </span>
       {isCurrentUserFollow && !isCurrentUser && (
-        <Button className={style.followButton}
+        <Button
+          className={style.followButton}
           style={{ background: "rgb(19 137 137)", fontSize: 10 }}
           variant="contained"
           onClick={handleUnfollowUser}
@@ -76,7 +86,8 @@ const Following = ({
         </Button>
       )}
       {!isCurrentUserFollow && !isCurrentUser && (
-        <Button className={style.followButton}
+        <Button
+          className={style.followButton}
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}
