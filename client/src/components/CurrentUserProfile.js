@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
@@ -6,7 +6,6 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import PublicIcon from "@mui/icons-material/Public";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
-import EventIcon from "@mui/icons-material/Event";
 import style from "./CurrentUserProfile.module.css";
 import PostComponent from "./PostComponent";
 import PersonIcon from "@mui/icons-material/Person";
@@ -19,6 +18,7 @@ import Followers from "./Followers";
 import Following from "./Following";
 import EditUser from "./EditUser";
 import { getCurrentUserPosts } from "../helpers/postHelpers";
+import LoaderContext from "./context/LoaderContext";
 
 const modalStyle = {
   position: "absolute",
@@ -39,8 +39,10 @@ const CurrentUserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
+  const { setLoading } = useContext(LoaderContext);
 
   useEffect(() => {
+    setLoading(true);
     getInfo();
     getUserPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,6 +62,7 @@ const CurrentUserProfile = () => {
   const getUserPosts = async () => {
     const userPosts = await getCurrentUserPosts();
     setUserPosts(userPosts);
+    setLoading(false);
   };
 
   const calculateAge = () =>

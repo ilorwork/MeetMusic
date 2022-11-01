@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import style from "./Home.module.css";
 import Following from "./Following";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
@@ -10,13 +10,17 @@ import {
   getPeopleYouMayKnowHelper,
 } from "../helpers/userHelpers";
 import { getHomePosts } from "../helpers/postHelpers";
+import LoaderContext from "./context/LoaderContext";
 
 const Home = () => {
   const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
 
+  const { setLoading } = useContext(LoaderContext);
+
   useEffect(() => {
+    setLoading(true);
     getUserInfo();
     getPosts();
     getPeopleYouMayKnow();
@@ -33,6 +37,8 @@ const Home = () => {
       setPosts(posts);
     } catch (e) {
       console.error("get posts is failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 

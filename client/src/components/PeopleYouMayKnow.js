@@ -4,9 +4,17 @@ import style from "./PeopleSideList.module.css";
 import { useNavigate } from "react-router-dom";
 import { followUser } from "../helpers/userHelpers";
 import UserContext from "./layout/UserContext";
+import LoaderContext from "./context/LoaderContext";
 
-const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo, getPosts }) => {
+const PeopleYouMayKnow = ({
+  user,
+  getPeopleYouMayKnow,
+  getUserInfo,
+  getPosts,
+}) => {
   const { currentUserInfo } = useContext(UserContext);
+  const { setLoading } = useContext(LoaderContext);
+
   const navigate = useNavigate();
 
   const navToUserPage = () => {
@@ -14,13 +22,16 @@ const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo, getPosts }) 
   };
 
   const handleFollowUser = async () => {
+    setLoading(true);
     try {
       await followUser(user._id, currentUserInfo);
       getPeopleYouMayKnow();
-      getUserInfo();
+      await getUserInfo();
       getPosts();
     } catch (e) {
       throw new Error("follow user failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,7 +51,8 @@ const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo, getPosts }) 
           <div>{user.firstName}</div>
           <div>{user.lastName}</div>
         </span>
-        <Button className={style.followButton}
+        <Button
+          className={style.followButton}
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}
