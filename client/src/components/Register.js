@@ -23,6 +23,7 @@ const Register = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [reEnteredPassword, setReEnteredPassword] = useState("");
   const [gender, setGender] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
@@ -84,10 +85,16 @@ const Register = () => {
       !lastName ||
       !email ||
       !password ||
+      !reEnteredPassword ||
       !gender ||
       !birthDate
     ) {
       setError("One or more mendatory fields are empty");
+      return;
+    }
+
+    if (password !== reEnteredPassword) {
+      setError("Passwords aren't equal");
       return;
     }
 
@@ -114,7 +121,9 @@ const Register = () => {
       else if (e.response.data.includes("Invalid email"))
         setError("Invalid email address");
       else if (e.response.data.includes("strong"))
-        setError("Password isn't strong enough");
+        setError(
+          "Password must be at least 8 characters, and contain at least one uppercase and one lowercase letter"
+        );
       else setError("An error has accured");
     }
   };
@@ -124,7 +133,7 @@ const Register = () => {
       <Paper
         className={style.userInfoFormPaper}
         elevation={3}
-        sx={{ width: 400, height: 570 }}
+        sx={{ width: 400, height: 630 }}
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
@@ -147,11 +156,17 @@ const Register = () => {
           onChange={(e) => onFieldChange(e, setEmail)}
         />
         <TextField
-          // error={error ? true : false}
           label="Password"
           value={password}
           type="password"
           onChange={(e) => onFieldChange(e, setPassword)}
+        />
+        <TextField
+          // error={error ? true : false}
+          label="Re-enter Your Password"
+          value={reEnteredPassword}
+          type="password"
+          onChange={(e) => onFieldChange(e, setReEnteredPassword)}
         />
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>

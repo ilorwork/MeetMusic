@@ -35,10 +35,17 @@ const setRecentConnection = (newUser) => {
   if (localStorage.getItem("recentConnections")) {
     recentConnections = JSON.parse(localStorage.getItem("recentConnections"));
 
-    const alreadyExist = recentConnections.find(
+    const userIndex = recentConnections.findIndex(
       (user) => user.email === newUser.email
     );
-    if (alreadyExist) return;
+    if (userIndex !== -1) {
+      recentConnections[userIndex] = newUser;
+      localStorage.setItem(
+        "recentConnections",
+        JSON.stringify(recentConnections)
+      );
+      return;
+    }
 
     if (recentConnections.length === 3) recentConnections.pop();
   }

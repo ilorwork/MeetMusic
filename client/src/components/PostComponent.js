@@ -37,6 +37,7 @@ import {
   createPost,
   deletePost,
   editPost,
+  getPostById,
   getPostComments,
   likePost,
   unlikePost,
@@ -193,8 +194,7 @@ const PostComponent = ({
   };
 
   const handleEditPost = async () => {
-    if (!postText && !postImages.length && !postAudio) return;
-    if (!postText.trim().length) return;
+    if (!postText.trim().length && !postImages.length && !postAudio) return;
     if (
       postText === post.postText &&
       postImages === post.postImages &&
@@ -224,6 +224,21 @@ const PostComponent = ({
 
       setSharedPostText("");
       getPosts();
+
+      let creator;
+      if (post.originPost) {
+        const originPostObj = await getPostById(post.originPost);
+        creator = originPostObj.creator._id;
+      } else {
+        creator = post.creator._id;
+      }
+
+      if (creator === currentUserInfo._id) return;
+
+      notifyUser(
+        creator,
+        `${currentUserInfo.firstName} ${currentUserInfo.lastName} shared your post`
+      );
     } catch (e) {
       if (e.response.status === 401) {
         navigate("/login");
