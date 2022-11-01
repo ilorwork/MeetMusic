@@ -1,11 +1,14 @@
+import { Modal } from "@mui/material";
 import React from "react";
 import style from "./Loader.module.css";
 
-const Loader = () => {
+const Loader = ({ loading = false }) => {
   return (
-    <main className={style.spinnerExamples}>
-      <span className={style.spinner} />
-    </main>
+    <Modal open={loading}>
+      <main className={style.spinnerExamples}>
+        <span className={style.spinner} />
+      </main>
+    </Modal>
   );
 };
 
