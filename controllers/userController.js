@@ -7,6 +7,10 @@ const {
 const { cloudinary } = require("../utils/cloudinary");
 const validator = require("validator");
 
+function capitalizeFirstChar(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 const getAllUsers = async (req, res) => {
   try {
     const allUsers = await UserModel.find({});
@@ -31,6 +35,9 @@ const createUser = async (req, res) => {
     if (!isStrong) return res.status(500).json(`Password isn't strong enough`);
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
+
+    req.body.firstName = capitalizeFirstChar(req.body.firstName.toLowerCase());
+    req.body.lastName = capitalizeFirstChar(req.body.lastName.toLowerCase());
 
     const newUser = await UserModel.create(req.body);
     await newUser.save();
