@@ -4,13 +4,19 @@
   cursor: pointer;
 }
 
-.threePoints {
+.threePoints,
+.sharedSign {
   height: 50px;
   width: 79px;
   text-align: end;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.sharedSign {
+  font-weight: bold;
+  color: #92a5de;
 }
 
 .footerIndecators {

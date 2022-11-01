@@ -17,6 +17,4 @@ router.delete("/", verifyUser, postController.deletePost);
 router.patch("/add-like", verifyUser, postController.addLike);
 router.patch("/remove-like", verifyUser, postController.removeLike);
 
-// todo: comment and shared post
-
 module.exports = router;
