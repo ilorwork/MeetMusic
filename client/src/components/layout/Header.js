@@ -24,13 +24,18 @@ import {
   getAllNotifications,
   readNotification,
 } from "../../helpers/notificationHelpers";
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Header = () => {
+  const [anchorBurger, setAnchorBurger] = useState(null);
+  const [isNoticesOpen, setIsNoticesOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorNotice, setAnchorNotice] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [autoVal, setAutoVal] = useState("");
+  const [windowWidth, setWindowWidth] = useState("");
 
   const navigate = useNavigate();
   const { currentUserInfo } = useContext(UserContext);
@@ -40,7 +45,15 @@ const Header = () => {
   useEffect(() => {
     getAllUsersInfo();
     getUserNotifications();
+    getWindowWidth();
+
+    window.addEventListener('resize', getWindowWidth);
   }, []);
+
+  const getWindowWidth = () => {
+    const { innerWidth } = window;
+    setWindowWidth(innerWidth);
+  }
 
   const getAllUsersInfo = async () => {
     const data = await getAllUsers();
@@ -130,77 +143,139 @@ const Header = () => {
           )}
         />
         <div className={style.wrapperIcons}>
-          <Box>
-            <Tooltip
-              title={
-                unreadCount
-                  ? `${unreadCount} Unread Notifications`
-                  : `Notifications`
-              }
-            >
-              <Badge badgeContent={unreadCount} color="secondary">
-                <NotificationsIcon
-                  onClick={(e) => setAnchorNotice(e.currentTarget)}
-                  className={style.notificationsIcon}
-                  sx={{ fontSize: 48 }}
-                />
-              </Badge>
-            </Tooltip>
-            <Menu
-              anchorEl={anchorNotice}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorNotice)}
-              onClose={() => setAnchorNotice(null)}
-            >
-              {notifications.map((notification) => (
-                <MenuItem
-                  key={uuid()}
-                  style={{
-                    background: notification.isBeingRead ? "white" : "#f7dadd",
-                  }}
-                  onClick={() => handleReadingNotification(notification._id)}
+          {windowWidth > 768 &&
+            <>
+              <Box>
+                <Tooltip
+                  title={
+                    unreadCount
+                      ? `${unreadCount} Unread Notifications`
+                      : `Notifications`
+                  }
                 >
-                  <Typography>{notification.content}</Typography>
+                  <Badge badgeContent={unreadCount} color="secondary">
+                    <NotificationsIcon
+                      onClick={(e) => setAnchorNotice(e.currentTarget)}
+                      className={style.notificationsIcon}
+                      sx={{ fontSize: 48 }}
+                    />
+                  </Badge>
+                </Tooltip>
+                <Menu
+                  anchorEl={anchorNotice}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorNotice)}
+                  onClose={() => setAnchorNotice(null)}
+                >
+                  {notifications.map((notification) => (
+                    <MenuItem
+                      key={uuid()}
+                      style={{
+                        background: notification.isBeingRead ? "white" : "#f7dadd",
+                      }}
+                      onClick={() => handleReadingNotification(notification._id)}
+                    >
+                      <Typography>{notification.content}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+              <Box>
+                <Tooltip title="Settings">
+                  <AccountCircleIcon
+                    onClick={(e) => setAnchorElUser(e.currentTarget)}
+                    className={style.accountIcon}
+                    sx={{ fontSize: 48 }}
+                  ></AccountCircleIcon>
+                </Tooltip>
+                <Menu
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={() => setAnchorElUser(null)}
+                >
+                  <MenuItem onClick={handleProfileClicked}>
+                    <Typography>Profile</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography>Log out</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            </>}
+          {
+            windowWidth <= 768 &&
+            <Box>
+              <Tooltip title="Menu">
+                <MenuIcon className={style.burgerMenu} sx={{ fontSize: 48 }}
+                  onClick={(e) => setAnchorBurger(e.currentTarget)} />
+              </Tooltip>
+
+              <Menu
+                anchorEl={anchorBurger}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorBurger)}
+                onClose={() => {
+                  setAnchorBurger(null);
+                  setIsNoticesOpen(false);
+                  setIsSettingsOpen(false);
+                }}
+              >
+                <MenuItem sx={{ width: 200, display: "flex", justifyContent: "center" }} onClick={() => setIsNoticesOpen(!isNoticesOpen)}>
+                  <Typography>Notifications</Typography>
                 </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Box>
-            <Tooltip title="Settings">
-              <AccountCircleIcon
-                onClick={(e) => setAnchorElUser(e.currentTarget)}
-                className={style.accountIcon}
-                sx={{ fontSize: 48 }}
-              ></AccountCircleIcon>
-            </Tooltip>
-            <Menu
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={() => setAnchorElUser(null)}
-            >
-              <MenuItem onClick={handleProfileClicked}>
-                <Typography>Profile</Typography>
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <Typography>Log out</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
+                {isNoticesOpen && <Box className={style.boxContainer}>
+                  {notifications.map((notification) => (
+                    <Box className={style.boxInfo}
+                      key={uuid()}
+                      style={{
+                        background: notification.isBeingRead ? "white" : "#f7dadd",
+                      }}
+                      onClick={() => handleReadingNotification(notification._id)}
+                    >
+                      <Typography>{notification.content}</Typography>
+                    </Box>
+                  ))}
+                </Box>}
+
+                <MenuItem sx={{ width: 200, display: "flex", justifyContent: "center" }} onClick={() => { setIsSettingsOpen(!isSettingsOpen) }}>
+                  <Typography>Settings</Typography>
+                </MenuItem>
+
+                {isSettingsOpen &&
+                  <Box className={style.boxContainer}>
+                    <Box className={style.boxInfo} onClick={handleProfileClicked}>
+                      <Typography>Profile</Typography>
+                    </Box>
+                    <Box className={style.boxInfo} onClick={handleLogout}>
+                      <Typography>Log out</Typography>
+                    </Box>
+                  </Box>}
+
+              </Menu>
+            </Box>
+          }
         </div>
       </Toolbar>
     </AppBar>

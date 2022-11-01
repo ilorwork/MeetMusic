@@ -60,6 +60,7 @@ const PostComponent = ({
   getPosts,
   getPeopleYouMayKnow,
   getUserInfo,
+  isUserProfilePage = false,
 }) => {
   const [anchorPostSettings, setAnchorPostSettings] = useState(null);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
@@ -256,7 +257,8 @@ const PostComponent = ({
                 )}
 
                 {!post.creator.followers.includes(currentUserInfo._id) &&
-                  post.creator._id !== currentUserInfo._id && (
+                  post.creator._id !== currentUserInfo._id &&
+                  !isUserProfilePage && (
                     <Button
                       style={{
                         background: "rgb(209, 46, 100)",

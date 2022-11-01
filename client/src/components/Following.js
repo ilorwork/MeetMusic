@@ -63,10 +63,11 @@ const Following = ({
         />
       </button>
       <span className={style.personName}>
-        {followed.firstName} {followed.lastName}
+        <div>{followed.firstName}</div>
+        <div>{followed.lastName}</div>
       </span>
       {isCurrentUserFollow && !isCurrentUser && (
-        <Button
+        <Button className={style.followButton}
           style={{ background: "rgb(19 137 137)", fontSize: 10 }}
           variant="contained"
           onClick={handleUnfollowUser}
@@ -75,7 +76,7 @@ const Following = ({
         </Button>
       )}
       {!isCurrentUserFollow && !isCurrentUser && (
-        <Button
+        <Button className={style.followButton}
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}

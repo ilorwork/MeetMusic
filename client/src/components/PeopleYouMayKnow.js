@@ -37,9 +37,10 @@ const PeopleYouMayKnow = ({ user, getPeopleYouMayKnow, getUserInfo, getPosts }) 
           />
         </button>
         <span className={style.personName}>
-          {user.firstName} {user.lastName}
+          <div>{user.firstName}</div>
+          <div>{user.lastName}</div>
         </span>
-        <Button
+        <Button className={style.followButton}
           style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
           variant="contained"
           onClick={handleFollowUser}
