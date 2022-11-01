@@ -86,12 +86,15 @@ const UserProfile = () => {
   };
 
   const handleUnfollowUser = async () => {
+    setLoading(true);
     try {
       await unfollowUser(user._id);
       getCurrentUser();
       getUserInfo();
     } catch (e) {
       throw new Error("unfollow user failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 
