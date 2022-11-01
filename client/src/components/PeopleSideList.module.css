@@ -12,7 +12,7 @@
 }
 
 .personName {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
 }
 
@@ -20,4 +20,26 @@
   border: none;
   background-color: #fff;
   cursor: pointer;
+}
+
+@media (max-width: 1080px) {
+  .personCard {
+    height: 60px;
+  }
+
+  .personPic {
+    width: 40px;
+    height: 40px;
+  }
+
+  .personName {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .followButton {
+    font-size: 12px;
+    max-width: 20px;
+    padding: 0;
+  }
 }

@@ -87,101 +87,109 @@ const CurrentUserProfile = () => {
   return (
     <>
       <div className={style.profilePageContainer}>
-        <Card className={style.profileInfoCard}>
-          <input
-            hidden
-            accept="image/*"
-            id="icon-button-file"
-            type="file"
-            onChange={handlePicChange}
-          />
-          <label htmlFor="icon-button-file">
-            <Tooltip title="Click to replace">
-              <IconButton component="span">
-                <Avatar
-                  alt="user profile pic"
-                  sx={{ width: 250, height: 250 }}
-                  src={user.profilePic}
-                />
-              </IconButton>
-            </Tooltip>
-          </label>
-          <CardContent className={style.profileInfoContent}>
-            <div className={style.profileHeader}>
-              <h1>
-                {user.firstName} {user.lastName}
-              </h1>
-              <Tooltip title="Edit Info">
-                <Button
-                  className={style.editProfileBtn}
-                  size="small"
-                  onClick={handleEditProfile}
-                >
-                  <EditIcon />
-                </Button>
+        <div className={style.wrapsLeftSide}>
+          <Card className={style.profileInfoCard}>
+            <input
+              hidden
+              accept="image/*"
+              id="icon-button-file"
+              type="file"
+              onChange={handlePicChange}
+            />
+            <label htmlFor="icon-button-file">
+              <Tooltip title="Click to replace">
+                <IconButton component="span">
+                  <Avatar
+                    className={style.userImg}
+                    alt="user profile pic"
+                    src={user.profilePic}
+                  />
+                </IconButton>
               </Tooltip>
-            </div>
+            </label>
+            <CardContent className={style.profileInfoContent}>
+              <div className={style.profileHeader}>
+                <h1>
+                  {user.firstName} {user.lastName}
+                </h1>
+                <Tooltip title="Edit Info">
+                  <Button
+                    className={style.editProfileBtn}
+                    size="small"
+                    onClick={handleEditProfile}
+                  >
+                    <EditIcon />
+                  </Button>
+                </Tooltip>
+              </div>
 
-            <div className={style.personalInfoContainer}>
-              <Typography className={style.typographyRow}>
-                <PublicIcon />
-                {user.country}
-              </Typography>
-              <Typography className={style.typographyRow}>
-                <LocationCityIcon />
-                {user.city}
-              </Typography>
-              <Typography className={style.typographyRow}>
-                <EventIcon />
-                {new Date(user.birthDate).toLocaleDateString()}
-              </Typography>
-              <Typography className={style.typographyRow}>
-                <PersonIcon />
-                {calculateAge()}
-              </Typography>
-              <Typography className={style.typographyRow}>
-                <WcIcon />
-                {user.gender}
-              </Typography>
-            </div>
-            <div className={style.socialInfoContainer}>
-              <Typography color="text.secondary">
-                {user.followers?.length} followers
-              </Typography>
-              <Typography color="text.secondary">
-                {userPosts?.length} posts
-              </Typography>
-              <Typography color="text.secondary">
-                {user.following?.length} following
-              </Typography>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+              <div className={style.personalInfoContainer}>
+                <Typography className={style.typographyRow}>
+                  <WcIcon />
+                  {user.gender}
+                </Typography>
+                <Typography className={style.typographyRow}>
+                  <PersonIcon />
+                  {calculateAge()}
+                </Typography>
+                <Typography className={style.typographyRow}>
+                  <PublicIcon />
+                  {user.country}
+                </Typography>
+                <Typography className={style.typographyRow}>
+                  <LocationCityIcon />
+                  {user.city}
+                </Typography>
+              </div>
+              <div className={style.socialInfoContainer}>
+                <Typography className={style.userInfo} color="text.secondary">
+                  {user.followers?.length} followers
+                </Typography>
+                <Typography className={style.userInfo} color="text.secondary">
+                  {userPosts?.length} posts
+                </Typography>
+                <Typography className={style.userInfo} color="text.secondary">
+                  {user.following?.length} following
+                </Typography>
+              </div>
+            </CardContent>
+          </Card>
 
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-        <Box sx={modalStyle}>
-          <EditUser user={user} setUser={setUser} setIsOpen={setIsOpen} />
-        </Box>
-      </Modal>
+          <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+            <Box sx={modalStyle}>
+              <EditUser user={user} setUser={setUser} setIsOpen={setIsOpen} />
+            </Box>
+          </Modal>
 
-      <div className={style.homePage}>
-        <div className={style.peopleYouMayKnow}>
-          <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
-          {user.followers?.map((follower) => (
-            <Followers key={uuid()} follower={follower} getUserInfo={getInfo} />
-          ))}
+          <div className={style.homePage}>
+            <div className={style.peopleYouMayKnow}>
+              <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
+              {user.followers?.map((follower) => (
+                <Followers
+                  key={uuid()}
+                  follower={follower}
+                  getUserInfo={getInfo}
+                />
+              ))}
+            </div>
+            <div className={style.peopleYouFollow}>
+              <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
+              {user.following?.map((followed) => (
+                <Following
+                  key={uuid()}
+                  followed={followed}
+                  getUserInfo={getInfo}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-        <div className={style.containerPostComponents}>
-          {userPosts.map((post) => (
-            <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
-          ))}
-        </div>
-        <div className={style.peopleYouFollow}>
-          <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
-          {user.following?.map((followed) => (
-            <Following key={uuid()} followed={followed} getUserInfo={getInfo} />
-          ))}
+        <div className={style.wrapsRightSide}>
+          <div className={style.containerPostComponents}>
+            {userPosts.map((post) => (
+              <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
+            ))}
+          </div>
         </div>
       </div>
     </>

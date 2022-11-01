@@ -116,11 +116,13 @@ const CreateNewPost = ({ getPosts }) => {
           className={style.profileBtn}
           onClick={() => navigate(`/user-profile/${userInfo._id}`)}
         >
-          <Avatar
-            alt="user profileic"
-            sx={{ width: 50, height: 50 }}
-            src={userInfo.profilePic}
-          />
+          <Tooltip title={`${userInfo.firstName} ${userInfo.lastName}`}>
+            <Avatar
+              alt="user profileic"
+              sx={{ width: 50, height: 50 }}
+              src={userInfo.profilePic}
+            />
+          </Tooltip>
         </button>
         <Button
           className={style.createNewPostBtn}
