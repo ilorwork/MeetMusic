@@ -43,6 +43,8 @@ const getPostById = async (req, res) => {
     const post = await PostModel.findOne({ _id: req.query.postId }).populate(
       "creator"
     );
+    if (!post)
+      return res.status(404).json(`Post ${req.query.postId} not exist`);
     return res.status(200).json(post);
   } catch (e) {
     return res.status(500).json(`Get post by id failed ${e}`);

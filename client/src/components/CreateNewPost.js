@@ -67,8 +67,7 @@ const CreateNewPost = ({ getPosts }) => {
   };
 
   const handleCreatePost = async () => {
-    if (!postText && !postImages.length && !postAudio) return;
-    if (!postText.trim().length) return;
+    if (!postText.trim().length && !postImages.length && !postAudio) return;
 
     const newPost = { postText, postImages, postAudio };
 
