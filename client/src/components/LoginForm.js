@@ -5,8 +5,8 @@ import { login } from "../helpers/userHelpers";
 import style from "./LoginForm.module.css";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("shilat@gmail.com");
-  const [password, setPassword] = useState("shilat23");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
