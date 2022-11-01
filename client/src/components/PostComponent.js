@@ -462,7 +462,8 @@ const PostComponent = ({
             )}
             <Button
               variant="contained"
-              sx={{ background: "rgb(19 137 137)", width: 400, mt: 5 }}
+              sx={{ width: 200, mt: 5 }}
+              style={{ background: "rgb(19 137 137)" }}
               onClick={handleEditPost}
             >
               Edit post

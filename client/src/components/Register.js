@@ -133,7 +133,7 @@ const Register = () => {
       <Paper
         className={style.userInfoFormPaper}
         elevation={3}
-        sx={{ width: 400, height: 630 }}
+        sx={{ height: 630 }}
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
@@ -171,7 +171,7 @@ const Register = () => {
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
             <FormLabel>Gender</FormLabel>
-            <RadioGroup
+            <RadioGroup className={style.gender}
               row
               onChange={(e) => onFieldChange(e, setGender)}
               value={gender}
@@ -235,11 +235,10 @@ const Register = () => {
         >
           Create a new account
         </Button>
-        <div className={style.loginBtn}>
-          <Button
+        <div className={style.loginDiv}>
+          <Button className={style.loginBtn}
             variant="contained"
             style={{ background: "rgb(19 137 137)" }}
-            sx={{ width: 300 }}
             onClick={() => navigate("/login")}
           >
             Login

@@ -19,3 +19,9 @@
   flex-direction: column;
   align-items: center;
 }
+
+@media (max-width: 450px) {
+  .createNewPostModal {
+    width: 300px !important;
+  }
+}

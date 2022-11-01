@@ -206,3 +206,27 @@
     justify-content: space-between;
   }
 }
+
+@media (max-width: 450px) {
+  .userImg {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .profileHeader {
+    font-size: 12px;
+  }
+
+  .socialInfoContainer {
+    display: none;
+  }
+
+  .profileInfoCard {
+    height: 100px;
+  }
+
+  .profileInfoContent {
+    justify-content: center;
+  }
+
+}

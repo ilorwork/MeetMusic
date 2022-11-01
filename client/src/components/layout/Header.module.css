@@ -75,4 +75,14 @@
   .wrapperIcons {
     justify-content: end;
   }
+
+  .searchField {
+    width: 200px !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .searchField {
+    width: 150px !important;
+  }
 }
