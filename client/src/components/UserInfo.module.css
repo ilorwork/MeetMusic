@@ -23,13 +23,33 @@
   justify-content: space-evenly;
   text-align: center;
   padding: 4px 8px;
+  width: 400px;
 }
 
 .error {
   color: red;
 }
 
-.loginBtn {
+.loginDiv {
   border-top: 2px dotted green;
   padding: 24px;
+}
+
+.loginBtn {
+  width: 300px;
+}
+
+@media (max-width: 600px) {
+  .userInfoFormPaper {
+    max-width: 280px;
+  }
+
+  .gender {
+    display: flex;
+    justify-content: center;
+  }
+
+  .loginBtn {
+    width: 200px;
+  }
 }
