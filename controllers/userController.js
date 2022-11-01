@@ -87,11 +87,12 @@ const editUser = async (req, res) => {
     if (updates.includes("profilePic")) {
       if (user.profilePic.includes("cloudinary")) {
         const imgPublicId = user.profilePic.split("/").pop().split(".")[0];
-        await cloudinary.uploader.destroy(imgPublicId);
+        await cloudinary.uploader.destroy(`profilePics/${imgPublicId}`);
       }
 
       const uploadedImgRes = await cloudinary.uploader.upload(
-        req.body.profilePic
+        req.body.profilePic,
+        { folder: "profilePics" }
       );
       req.body.profilePic = `https://res.cloudinary.com/dhbgvkcez/image/upload/v${uploadedImgRes.version}/${uploadedImgRes.public_id}.${uploadedImgRes.format}`;
     }
