@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -19,6 +19,7 @@ import AudioFileIcon from "@mui/icons-material/AudioFile";
 import { v4 as uuid } from "uuid";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { createPost } from "../helpers/postHelpers";
+import LoaderContext from "./context/LoaderContext";
 
 const modalStyle = {
   position: "absolute",
@@ -41,6 +42,7 @@ const CreateNewPost = ({ getPosts }) => {
   const [postAudio, setPostAudio] = useState("");
 
   const navigate = useNavigate();
+  const { setLoading } = useContext(LoaderContext);
 
   useEffect(() => {
     getUserInfo();
@@ -70,6 +72,7 @@ const CreateNewPost = ({ getPosts }) => {
     if (!postText.trim().length && !postImages.length && !postAudio) return;
 
     const newPost = { postText, postImages, postAudio };
+    setLoading(true);
 
     try {
       await createPost(newPost);
