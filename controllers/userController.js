@@ -21,7 +21,13 @@ const createUser = async (req, res) => {
     const isEmail = validator.isEmail(req.body.email);
     if (!isEmail) return res.status(500).json(`Invalid email`);
 
-    const isStrong = validator.isStrongPassword(req.body.password);
+    const isStrong = validator.isStrongPassword(req.body.password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 0,
+      minSymbols: 0,
+    });
     if (!isStrong) return res.status(500).json(`Password isn't strong enough`);
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
