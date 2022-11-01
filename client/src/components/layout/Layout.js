@@ -3,9 +3,12 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import { getCurrentUserInfo } from "../../helpers/userHelpers";
 import UserContext from "./UserContext";
+import LoaderContext from "../context/LoaderContext";
+import Loader from "../general/Loader";
 
 const Layout = () => {
   const [currentUserInfo, setIsCurrentUserInfo] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getCurrentUser();
@@ -18,8 +21,11 @@ const Layout = () => {
 
   return (
     <UserContext.Provider value={{ currentUserInfo }}>
-      <Header />
-      <Outlet />
+      <LoaderContext.Provider value={{ setLoading }}>
+        <Loader loading={loading} />
+        <Header />
+        <Outlet />
+      </LoaderContext.Provider>
     </UserContext.Provider>
   );
 };
