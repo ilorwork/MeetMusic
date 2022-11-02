@@ -62,12 +62,21 @@ const getPosts = async (req, res) => {
     );
     filteredPostsWithCreator.reverse();
 
-    const unfolowedRelatadPeoplePosts = allPostsWithCreator.filter(
+    let unfolowedRelatadPeoplePosts = allPostsWithCreator.filter(
       (post) =>
         !currentUser.following.includes(post.creator._id) &&
         currentUser.country === post.creator.country &&
         req.user._id != post.creator._id
     );
+
+    if (unfolowedRelatadPeoplePosts.length < 5) {
+      unfolowedRelatadPeoplePosts = allPostsWithCreator.filter(
+        (post) =>
+          !currentUser.following.includes(post.creator._id) &&
+          req.user._id != post.creator._id
+      );
+    }
+
     const idsOfRelatedPeople = unfolowedRelatadPeoplePosts.map(
       (post) => post.creator._id
     );
