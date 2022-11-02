@@ -142,10 +142,15 @@ const getPeopleUserMayKnow = async (req, res) => {
     const idsToExclude = usersToExclude.map((userId) => {
       return { _id: { $ne: userId } };
     });
-    const peopleUserMayKnow = await UserModel.find({
+
+    let peopleUserMayKnow = await UserModel.find({
       $and: idsToExclude,
       country: currentUser.country,
     });
+
+    if (peopleUserMayKnow.length < 5) {
+      peopleUserMayKnow = await UserModel.find({ $and: idsToExclude });
+    }
 
     return res.status(200).json(peopleUserMayKnow);
   } catch (e) {

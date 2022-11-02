@@ -135,14 +135,18 @@ const CurrentUserProfile = () => {
                   <PersonIcon />
                   {calculateAge()}
                 </Typography>
-                <Typography className={style.typographyRow}>
-                  <PublicIcon />
-                  {user.country}
-                </Typography>
-                <Typography className={style.typographyRow}>
-                  <LocationCityIcon />
-                  {user.city}
-                </Typography>
+                {user.country && (
+                  <Typography className={style.typographyRow}>
+                    <PublicIcon />
+                    {user.country}
+                  </Typography>
+                )}
+                {user.city && (
+                  <Typography className={style.typographyRow}>
+                    <LocationCityIcon />
+                    {user.city}
+                  </Typography>
+                )}
               </div>
               <div className={style.socialInfoContainer}>
                 <Typography className={style.userInfo} color="text.secondary">
