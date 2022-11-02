@@ -86,12 +86,15 @@ const UserProfile = () => {
   };
 
   const handleUnfollowUser = async () => {
+    setLoading(true);
     try {
       await unfollowUser(user._id);
       getCurrentUser();
       getUserInfo();
     } catch (e) {
       throw new Error("unfollow user failed " + e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,12 +116,8 @@ const UserProfile = () => {
                 </h1>
                 {currentUser.following?.includes(id) && (
                   <Button
-                    style={{
-                      background: "rgb(19 137 137)",
-                      fontSize: 10,
-                      width: 100,
-                      height: 50,
-                    }}
+                    className={style.followBtns}
+                    style={{ background: "rgb(19 137 137)" }}
                     variant="contained"
                     onClick={handleUnfollowUser}
                   >
@@ -127,12 +126,8 @@ const UserProfile = () => {
                 )}
                 {!currentUser.following?.includes(id) && (
                   <Button
-                    style={{
-                      background: "rgb(209, 46, 100)",
-                      fontSize: 10,
-                      width: 100,
-                      height: 50,
-                    }}
+                    className={style.followBtns}
+                    style={{ background: "rgb(209, 46, 100)" }}
                     variant="contained"
                     onClick={handleFollowUser}
                   >
