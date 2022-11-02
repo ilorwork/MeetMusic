@@ -44,11 +44,6 @@
     max-width: 280px;
   }
 
-  .gender {
-    display: flex;
-    justify-content: center;
-  }
-
   .loginBtn {
     width: 200px;
   }
