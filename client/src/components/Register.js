@@ -171,7 +171,7 @@ const Register = () => {
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
             <FormLabel>Gender</FormLabel>
-            <RadioGroup className={style.gender}
+            <RadioGroup
               row
               onChange={(e) => onFieldChange(e, setGender)}
               value={gender}
