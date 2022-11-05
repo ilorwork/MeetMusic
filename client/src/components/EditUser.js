@@ -115,6 +115,7 @@ const EditUser = ({ user, setUser, setIsOpen }) => {
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
+            required
             label="First name"
             autoFocus
             sx={{ marginRight: 3 }}
@@ -122,6 +123,7 @@ const EditUser = ({ user, setUser, setIsOpen }) => {
             onChange={(e) => onFieldChange(e, setFirstName)}
           />
           <TextField
+            required
             label="Last name"
             value={lastName}
             onChange={(e) => onFieldChange(e, setLastName)}
@@ -130,8 +132,9 @@ const EditUser = ({ user, setUser, setIsOpen }) => {
 
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
-            <FormLabel>Gender</FormLabel>
+            <FormLabel required>Gender</FormLabel>
             <RadioGroup
+              required
               row
               onChange={(e) => onFieldChange(e, setGender)}
               value={gender}
@@ -145,8 +148,9 @@ const EditUser = ({ user, setUser, setIsOpen }) => {
             </RadioGroup>
           </FormControl>
           <FormControl>
-            <FormLabel>Birth Date</FormLabel>
+            <FormLabel required>Birth Date</FormLabel>
             <TextField
+              required
               type="date"
               value={birthDate}
               onChange={(e) => onFieldChange(e, setBirthDate)}
