@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import style from "./Home.module.css";
 import Following from "./Following";
 import PeopleYouMayKnow from "./PeopleYouMayKnow";
@@ -16,6 +16,9 @@ const Home = () => {
   const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
   const [peopleUserMayKnow, setPeopleUserMayKnow] = useState([]);
+  const [page, setPage] = useState(1);
+  const [inView, setInView] = useState(false);
+  const loadingRef = useRef({});
 
   const { setLoading } = useContext(LoaderContext);
 
@@ -26,6 +29,12 @@ const Home = () => {
     getPeopleYouMayKnow();
   }, []);
 
+  useEffect(() => {
+    if (page === 1) return;
+    setLoading(true);
+    getPosts();
+  }, [page]);
+
   const getUserInfo = async () => {
     const info = await getCurrentUserInfo(true);
     setUser(info);
@@ -33,8 +42,9 @@ const Home = () => {
 
   const getPosts = async () => {
     try {
-      const posts = await getHomePosts();
-      setPosts(posts);
+      const postsArr = await getHomePosts(page);
+      setPosts([...posts, ...postsArr]);
+      setInView(false);
     } catch (e) {
       console.error("get posts is failed " + e);
     } finally {
@@ -45,6 +55,25 @@ const Home = () => {
   const getPeopleYouMayKnow = async () => {
     const people = await getPeopleYouMayKnowHelper();
     setPeopleUserMayKnow(people);
+  };
+
+  const isScrolledIntoView = (el) => {
+    if (inView) return;
+    const emptyObj = {};
+    if (el === emptyObj) return;
+    var rect = el.getBoundingClientRect();
+    var elemTop = rect.top;
+    var elemBottom = rect.bottom;
+    // Only completely visible elements return true:
+    var isVisible = elemTop >= 0 && elemBottom <= window.innerHeight;
+    // Partially visible elements return true:
+    //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+    console.log(isVisible);
+
+    if (isVisible) {
+      setInView(true);
+      setPage((prev) => prev + 1);
+    }
   };
 
   return (
@@ -61,7 +90,10 @@ const Home = () => {
           />
         ))}
       </div>
-      <div className={style.containerPostComponents}>
+      <div
+        onScroll={() => isScrolledIntoView(loadingRef.current)}
+        className={style.containerPostComponents}
+      >
         <CreateNewPost getPosts={getPosts} />
 
         {posts.map((post) => (
@@ -73,6 +105,7 @@ const Home = () => {
             key={uuid()}
           />
         ))}
+        <div ref={loadingRef} className={style.trigger}></div>
       </div>
       <div className={style.peopleYouFollow}>
         <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
