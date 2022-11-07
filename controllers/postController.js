@@ -52,47 +52,63 @@ const getPostById = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
+  const page = req.query.page;
+  let limit = 4;
+
   try {
-    const allPostsWithCreator = await PostModel.find({}).populate("creator");
-    const currentUser = await UserModel.findOne({ _id: req.user._id });
-    const filteredPostsWithCreator = allPostsWithCreator.filter(
-      (post) =>
-        currentUser.following.includes(post.creator._id) ||
-        req.user._id == post.creator._id
-    );
-    filteredPostsWithCreator.reverse();
+    const currentUser = await UserModel.findOne({ email: req.user.email });
 
-    let unfolowedRelatadPeoplePosts = allPostsWithCreator.filter(
-      (post) =>
-        !currentUser.following.includes(post.creator._id) &&
-        currentUser.country === post.creator.country &&
-        req.user._id != post.creator._id
-    );
+    const usersToInclude = currentUser.following;
+    usersToInclude.push(currentUser._id);
 
-    if (unfolowedRelatadPeoplePosts.length < 5) {
-      unfolowedRelatadPeoplePosts = allPostsWithCreator.filter(
-        (post) =>
-          !currentUser.following.includes(post.creator._id) &&
-          req.user._id != post.creator._id
-      );
-    }
-
-    const idsOfRelatedPeople = unfolowedRelatadPeoplePosts.map(
-      (post) => post.creator._id
-    );
-    const uniqIds = [...new Set(idsOfRelatedPeople)];
-
-    const postsArraysByUsers = uniqIds.map((uniqId) => {
-      return unfolowedRelatadPeoplePosts.filter(
-        (post) => post.creator._id == uniqId
-      );
+    const postsCount = await PostModel.count({
+      creator: {
+        $in: usersToInclude,
+      },
     });
 
-    const singlePostOfEachUser = postsArraysByUsers.map((postsArr) => {
-      return postsArr[Math.floor(Math.random() * postsArr.length)];
+    // const pagesToSkip = page - 1;
+    // const skip =
+    //   pagesToSkip !== 0 ? postsCount - pagesToSkip * limit : postsCount - limit;
+
+    const skip = postsCount - page * limit;
+    if (skip < 0) skip = 0;
+
+    const cUserAndHisFollowingPosts = await PostModel.find({
+      creator: {
+        $in: usersToInclude,
+      },
+    })
+      .skip(skip)
+      .limit(limit)
+      .populate("creator");
+
+    if (cUserAndHisFollowingPosts.length === limit) limit = 1;
+
+    cUserAndHisFollowingPosts.reverse();
+
+    const creatorsToExclude = usersToInclude.map((userId) => {
+      return { creator: { $ne: userId } };
     });
 
-    const allPosts = filteredPostsWithCreator.concat(singlePostOfEachUser);
+    const count = await PostModel.count({
+      $and: creatorsToExclude,
+    });
+
+    let rendomIndex = Math.floor(Math.random() * count);
+    if (rendomIndex + limit > count && rendomIndex - limit >= 0)
+      rendomIndex -= limit;
+
+    const randomPeopleUMKPosts = await PostModel.find({
+      $and: creatorsToExclude,
+    })
+      .skip(rendomIndex)
+      .limit(limit)
+      .populate("creator");
+
+    randomPeopleUMKPosts.reverse();
+
+    const allPosts = cUserAndHisFollowingPosts.concat(randomPeopleUMKPosts);
     return res.status(200).json(allPosts);
   } catch (e) {
     res.status(500).json(`Failed to get posts ${e}`);

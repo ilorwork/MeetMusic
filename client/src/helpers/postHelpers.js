@@ -79,7 +79,7 @@ const getCurrentUserPosts = async () => {
   }
 };
 
-const getHomePosts = async () => {
+const getHomePosts = async (page) => {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${base_url}/posts/`, {
@@ -87,6 +87,7 @@ const getHomePosts = async () => {
       headers: {
         authorization: token,
       },
+      params: { page },
     });
     return res.data;
   } catch (e) {
