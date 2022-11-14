@@ -17,7 +17,7 @@ NodeJS, Express, Mongoose(MongoDB), Cloudinary
 #### Seed the DB (Mongoose)
 - Create [MondoDB account](https://account.mongodb.com/account/login) and create a DB. <br/>
 
-- **Create `.env` file in the root-dir with the following fields** (can be found in the 'connect' section in Mongo Atlas) <br/>
+- Create `.env` file in the root-dir with the following fields (can be found in the 'connect' section in Mongo Atlas) <br/>
   - `DB_USER = "<Your DB user name>"` <br/>
   - `DB_PASS = "<Your DB password>"` <br/>
   - `DB_HOST = "<Your DB host>"` <br/>
