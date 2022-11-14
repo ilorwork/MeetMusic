@@ -14,7 +14,7 @@ NodeJS, Express, Mongoose(MongoDB), Cloudinary
 - Clone this repo
 - Run `npm i` on the root-dir and `client` dirs - To install all the dependencies
 
-#### To seed the DB (Mongoose)
+#### Seed the DB (Mongoose)
 - Create [MondoDB account](https://account.mongodb.com/account/login) and create a DB. <br/>
 
 - **Create `.env` file in the root-dir with the following fields** (can be found in the 'connect' section in Mongo Atlas) <br/>
@@ -34,7 +34,7 @@ NodeJS, Express, Mongoose(MongoDB), Cloudinary
   - `CLOUDINARY_API_KEY = "<Your cloudinary API Key>"` <br />
   - `CLOUDINARY_API_SECRET = "<Your cloudinary API Secret>"` <br />
 
-#### To run the app
+#### Run the app
 - Change `base_url` variables on `client\src\config\config.json` to looks like this: <br />
 `"_base_url": "https://meetmusic.onrender.com",` <br />
   `"base_url": "http://localhost:7000"` <br />
