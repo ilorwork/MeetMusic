@@ -35,7 +35,7 @@ NodeJS, Express, Mongoose(MongoDB), Cloudinary
   - `CLOUDINARY_API_SECRET = "<Your cloudinary API Secret>"` <br />
 
 #### Run the app
-- Change `base_url` variables on `client\src\config\config.json` to looks like this: <br />
+- Change `base_url` variables on `client\src\config\config.json` to look like this: <br />
 `"_base_url": "https://meetmusic.onrender.com",` <br />
   `"base_url": "http://localhost:7000"` <br />
 - Run `npm run dev` on the root-dir <br />
