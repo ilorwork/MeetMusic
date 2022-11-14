@@ -1,7 +1,9 @@
 # 🎵 MeetMusic 🎵
 
 An online social network for musicians to connect with each other, share content, <br />
-connecting with people with similar interests, and more.
+connecting with people with similar interests, and more. <br />
+
+[meetmusic.onrender.com](meetmusic.onrender.com)
 
 ## 🛠 Main technologies
 ### Front-End
