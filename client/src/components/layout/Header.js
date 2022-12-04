@@ -24,7 +24,7 @@ import {
   getAllNotifications,
   readNotification,
 } from "../../helpers/notificationHelpers";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 
 const Header = () => {
   const [anchorBurger, setAnchorBurger] = useState(null);
@@ -47,13 +47,13 @@ const Header = () => {
     getUserNotifications();
     getWindowWidth();
 
-    window.addEventListener('resize', getWindowWidth);
+    window.addEventListener("resize", getWindowWidth);
   }, []);
 
   const getWindowWidth = () => {
     const { innerWidth } = window;
     setWindowWidth(innerWidth);
-  }
+  };
 
   const getAllUsersInfo = async () => {
     const data = await getAllUsers();
@@ -143,7 +143,7 @@ const Header = () => {
           )}
         />
         <div className={style.wrapperIcons}>
-          {windowWidth > 768 &&
+          {windowWidth > 768 && (
             <>
               <Box>
                 <Tooltip
@@ -177,10 +177,17 @@ const Header = () => {
                   {notifications.map((notification) => (
                     <MenuItem
                       key={uuid()}
+                      sx={{ boxShadow: 1 }}
                       style={{
-                        background: notification.isBeingRead ? "white" : "#f7dadd",
+                        background: notification.isBeingRead
+                          ? "white"
+                          : "#f7dadd",
+                        margin: 4,
+                        borderRadius: 4,
                       }}
-                      onClick={() => handleReadingNotification(notification._id)}
+                      onClick={() =>
+                        handleReadingNotification(notification._id)
+                      }
                     >
                       <Typography>{notification.content}</Typography>
                     </MenuItem>
@@ -216,13 +223,16 @@ const Header = () => {
                   </MenuItem>
                 </Menu>
               </Box>
-            </>}
-          {
-            windowWidth <= 768 &&
+            </>
+          )}
+          {windowWidth <= 768 && (
             <Box>
               <Tooltip title="Menu">
-                <MenuIcon className={style.burgerMenu} sx={{ fontSize: 48 }}
-                  onClick={(e) => setAnchorBurger(e.currentTarget)} />
+                <MenuIcon
+                  className={style.burgerMenu}
+                  sx={{ fontSize: 48 }}
+                  onClick={(e) => setAnchorBurger(e.currentTarget)}
+                />
               </Tooltip>
 
               <Menu
@@ -242,40 +252,58 @@ const Header = () => {
                   setIsSettingsOpen(false);
                 }}
               >
-                <MenuItem sx={{ width: 200, display: "flex", justifyContent: "center" }} onClick={() => setIsNoticesOpen(!isNoticesOpen)}>
+                <MenuItem
+                  sx={{ width: 200, display: "flex", justifyContent: "center" }}
+                  onClick={() => setIsNoticesOpen(!isNoticesOpen)}
+                >
                   <Typography>Notifications</Typography>
                 </MenuItem>
-                {isNoticesOpen && <Box className={style.boxContainer}>
-                  {notifications.map((notification) => (
-                    <Box className={style.boxInfo}
-                      key={uuid()}
-                      style={{
-                        background: notification.isBeingRead ? "white" : "#f7dadd",
-                      }}
-                      onClick={() => handleReadingNotification(notification._id)}
-                    >
-                      <Typography>{notification.content}</Typography>
-                    </Box>
-                  ))}
-                </Box>}
+                {isNoticesOpen && (
+                  <Box className={style.boxContainer}>
+                    {notifications.map((notification) => (
+                      <Box
+                        className={style.boxInfo}
+                        key={uuid()}
+                        style={{
+                          background: notification.isBeingRead
+                            ? "white"
+                            : "#f7dadd",
+                        }}
+                        onClick={() =>
+                          handleReadingNotification(notification._id)
+                        }
+                      >
+                        <Typography>{notification.content}</Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
 
-                <MenuItem sx={{ width: 200, display: "flex", justifyContent: "center" }} onClick={() => { setIsSettingsOpen(!isSettingsOpen) }}>
+                <MenuItem
+                  sx={{ width: 200, display: "flex", justifyContent: "center" }}
+                  onClick={() => {
+                    setIsSettingsOpen(!isSettingsOpen);
+                  }}
+                >
                   <Typography>Settings</Typography>
                 </MenuItem>
 
-                {isSettingsOpen &&
+                {isSettingsOpen && (
                   <Box className={style.boxContainer}>
-                    <Box className={style.boxInfo} onClick={handleProfileClicked}>
+                    <Box
+                      className={style.boxInfo}
+                      onClick={handleProfileClicked}
+                    >
                       <Typography>Profile</Typography>
                     </Box>
                     <Box className={style.boxInfo} onClick={handleLogout}>
                       <Typography>Log out</Typography>
                     </Box>
-                  </Box>}
-
+                  </Box>
+                )}
               </Menu>
             </Box>
-          }
+          )}
         </div>
       </Toolbar>
     </AppBar>
