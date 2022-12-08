@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 
-// seperate token gen and cookie creation to seperated funcs
 const generateAccessTokenHeader = (req, res, user) => {
   const accessToken = jwt.sign(
     { email: user.email, _id: user._id },
