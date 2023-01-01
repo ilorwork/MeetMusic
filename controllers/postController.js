@@ -30,8 +30,9 @@ const createPost = async (req, res) => {
 
       req.body.postAudio = uploadedAudioRes.secure_url;
     }
+
     const newPost = await PostModel.create(req.body);
-    await newPost.save();
+
     return res.status(201).json(newPost);
   } catch (e) {
     res.status(500).json("post creation failed " + e);
