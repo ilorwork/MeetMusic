@@ -4,8 +4,6 @@ const createNotification = async (req, res) => {
   try {
     const newNotification = await NotificationModel.create(req.body);
 
-    await newNotification.save();
-
     return res.status(201).json(newNotification);
   } catch (e) {
     return res.status(500).json(`Notification creation failed ${e}`);

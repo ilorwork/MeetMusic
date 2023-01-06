@@ -40,7 +40,6 @@ const createUser = async (req, res) => {
     req.body.lastName = capitalizeFirstChar(req.body.lastName.toLowerCase());
 
     const newUser = await UserModel.create(req.body);
-    await newUser.save();
 
     newUser.password = "Unable to send sensitive data";
     return res.status(201).json(newUser);

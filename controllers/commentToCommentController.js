@@ -7,7 +7,6 @@ const createCommentToComment = async (req, res) => {
     req.body.creator = req.user._id;
 
     const newCommentToComment = await CommentToCommentModel.create(req.body);
-    await newCommentToComment.save();
 
     const commentCommented =
       (await CommentModel.findOne({ _id: req.body.commentId })) ||

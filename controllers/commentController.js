@@ -7,7 +7,6 @@ const createComment = async (req, res) => {
     req.body.creator = req.user._id;
 
     const newComment = await CommentModel.create(req.body);
-    await newComment.save();
 
     const postCommented = await PostModel.findOne({ _id: req.body.postId });
     postCommented.commentsCount++;

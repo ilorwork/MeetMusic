@@ -6,7 +6,6 @@ const addLike = async (req, res) => {
     req.body.creator = req.user._id;
 
     const newLike = await LikeModel.create(req.body);
-    await newLike.save();
 
     const likedPost = await PostModel.findOne({ _id: req.body.postId });
     likedPost.likesCount += 1;
