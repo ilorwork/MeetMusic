@@ -26,7 +26,7 @@ const SharedPost = ({ postId }) => {
   }, []);
 
   useEffect(() => {
-    if (JSON.stringify(post) === "{}") return;
+    if (Object.keys(post).length === 0) return;
     setPostImages(post.postImages);
   }, [post]);
 
