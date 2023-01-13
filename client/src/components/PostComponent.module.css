@@ -70,3 +70,11 @@
 .shareModal button {
   width: 70%;
 }
+
+/* This hides the action menu,
+but it better hide it instead of going out of bound. */
+@media (max-width: 420px) {
+  audio {
+    max-width: 190px;
+  }
+}
