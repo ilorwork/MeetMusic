@@ -137,6 +137,7 @@ const Register = () => {
       >
         <div className={style.flexRowCenterGroup}>
           <TextField
+            required
             label="First name"
             autoFocus
             sx={{ marginRight: 3 }}
@@ -144,24 +145,28 @@ const Register = () => {
             onChange={(e) => onFieldChange(e, setFirstName)}
           />
           <TextField
+            required
             label="Last name"
             value={lastName}
             onChange={(e) => onFieldChange(e, setLastName)}
           />
         </div>
         <TextField
+          required
           label="Email"
           value={email}
           type="email"
           onChange={(e) => onFieldChange(e, setEmail)}
         />
         <TextField
+          required
           label="Password"
           value={password}
           type="password"
           onChange={(e) => onFieldChange(e, setPassword)}
         />
         <TextField
+          required
           // error={error ? true : false}
           label="Re-enter Your Password"
           value={reEnteredPassword}
@@ -170,8 +175,9 @@ const Register = () => {
         />
         <div className={style.flexRowCenterGroup}>
           <FormControl sx={{ marginRight: 2 }}>
-            <FormLabel>Gender</FormLabel>
+            <FormLabel required>Gender</FormLabel>
             <RadioGroup
+              required
               row
               onChange={(e) => onFieldChange(e, setGender)}
               value={gender}
@@ -185,8 +191,9 @@ const Register = () => {
             </RadioGroup>
           </FormControl>
           <FormControl>
-            <FormLabel>Birth Date</FormLabel>
+            <FormLabel required>Birth Date</FormLabel>
             <TextField
+              required
               type="date"
               value={birthDate}
               onChange={(e) => onFieldChange(e, setBirthDate)}
@@ -236,7 +243,8 @@ const Register = () => {
           Create a new account
         </Button>
         <div className={style.loginDiv}>
-          <Button className={style.loginBtn}
+          <Button
+            className={style.loginBtn}
             variant="contained"
             style={{ background: "rgb(19 137 137)" }}
             onClick={() => navigate("/login")}
