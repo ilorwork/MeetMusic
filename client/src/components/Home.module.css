@@ -10,6 +10,12 @@
     3px 3px 0 #6f82bb, 4px 4px 0 #677ab3, 5px 5px 0 #5e71aa;
 }
 
+.pumk {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .peopleYouMayKnow {
   width: 25%;
   overflow: auto;

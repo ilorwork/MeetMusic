@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { followUser } from "../helpers/userHelpers";
 import UserContext from "./layout/UserContext";
 import LoaderContext from "./context/LoaderContext";
+import RecentConnectionCard from "./RecentConnectionCard";
 
 const PeopleYouMayKnow = ({
   user,
@@ -37,29 +38,7 @@ const PeopleYouMayKnow = ({
 
   return (
     <>
-      <div className={style.personCard}>
-        <button className={style.userProfileBtn} onClick={navToUserPage}>
-          <img
-            className={style.personPic}
-            width={70}
-            height={70}
-            src={user.profilePic}
-            alt="user profile pic"
-          />
-        </button>
-        <span className={style.personName}>
-          <div>{user.firstName}</div>
-          <div>{user.lastName}</div>
-        </span>
-        <Button
-          className={style.followButton}
-          style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
-          variant="contained"
-          onClick={handleFollowUser}
-        >
-          Follow
-        </Button>
-      </div>
+      <RecentConnectionCard user={user} setRecentUsers={() => {}} />
     </>
   );
 };

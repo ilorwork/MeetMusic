@@ -5,6 +5,7 @@ import { followUser, unfollowUser } from "../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
 import UserContext from "./layout/UserContext";
 import LoaderContext from "./context/LoaderContext";
+import UserCard from "./UserCard";
 
 const Following = ({
   followed,
@@ -60,53 +61,7 @@ const Following = ({
     navigate(`/user-profile/${followed._id}`);
   };
 
-  return (
-    <div className={style.personCard}>
-      <button className={style.userProfileBtn} onClick={navToUserPage}>
-        <img
-          className={style.personPic}
-          width={70}
-          height={70}
-          src={followed.profilePic}
-          alt="user profile pic"
-        />
-      </button>
-      <span className={style.personName}>
-        <div>{followed.firstName}</div>
-        <div>{followed.lastName}</div>
-      </span>
-      {isCurrentUserFollow && !isCurrentUser && (
-        <Button
-          className={style.followButton}
-          style={{ background: "rgb(19 137 137)", fontSize: 10 }}
-          variant="contained"
-          onClick={handleUnfollowUser}
-        >
-          UnFollow
-        </Button>
-      )}
-      {!isCurrentUserFollow && !isCurrentUser && (
-        <Button
-          className={style.followButton}
-          style={{ background: "rgb(209, 46, 100)", fontSize: 10 }}
-          variant="contained"
-          onClick={handleFollowUser}
-        >
-          Follow
-        </Button>
-      )}
-      {isCurrentUser && (
-        <Button
-          style={{ background: "disable", color: "black", fontSize: 10 }}
-          variant="contained"
-          onClick={handleFollowUser}
-          disabled
-        >
-          yourself
-        </Button>
-      )}
-    </div>
-  );
+  return <UserCard user={followed} setRecentUsers={() => {}} />;
 };
 
 export default Following;
