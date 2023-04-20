@@ -170,7 +170,7 @@ const CurrentUserProfile = () => {
 
           <div className={style.homePage}>
             <div className={style.peopleYouMayKnow}>
-              <h1 className={style.titleOfPeopleYouMayKnow}>Followers</h1>
+              <h1 className={style.sectionTitle}>Followers</h1>
               {user.followers?.map((follower) => (
                 <Followers
                   key={uuid()}
@@ -180,7 +180,7 @@ const CurrentUserProfile = () => {
               ))}
             </div>
             <div className={style.peopleYouFollow}>
-              <h1 className={style.titleOfPeopleYouFollow}>Following</h1>
+              <h1 className={style.sectionTitle}>Following</h1>
               {user.following?.map((followed) => (
                 <Following
                   key={uuid()}
@@ -193,6 +193,7 @@ const CurrentUserProfile = () => {
         </div>
         <div className={style.wrapsRightSide}>
           <div className={style.containerPostComponents}>
+            <h1 className={style.sectionTitle}>Your Posts</h1>
             {userPosts.map((post) => (
               <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
             ))}
