@@ -8,6 +8,7 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [checkingInfo, setCheckingInfo] = useState(false);
 
   const navigate = useNavigate();
 
@@ -17,6 +18,8 @@ const LoginForm = () => {
       return;
     }
 
+    setCheckingInfo(true);
+
     try {
       await login(email, password);
       navigate("/");
@@ -24,6 +27,8 @@ const LoginForm = () => {
       if (e.response.status === 401) setError("Wrong email or password");
       else if (e.response.status === 404) setError("User not found");
       else setError("An error has accured");
+    } finally {
+      setCheckingInfo(false);
     }
   };
 
@@ -68,6 +73,7 @@ const LoginForm = () => {
           variant="contained"
           style={{ background: "rgb(209, 46, 100)" }}
           onClick={handleSumbitLogin}
+          disabled={checkingInfo}
         >
           Log In
         </Button>

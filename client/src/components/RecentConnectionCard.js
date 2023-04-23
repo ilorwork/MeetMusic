@@ -19,6 +19,7 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [checkingInfo, setCheckingInfo] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,12 +29,16 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
       return;
     }
 
+    setCheckingInfo(true);
+
     try {
       await login(user.email, password);
       navigate("/");
     } catch (e) {
       if (e.response.status === 401) setError("Wrong password");
       else setError("An error has accured");
+    } finally {
+      setCheckingInfo(false);
     }
   };
 
@@ -140,6 +145,7 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
             variant="contained"
             style={{ background: "rgb(209, 46, 100)" }}
             onClick={handleSumbitLogin}
+            disabled={checkingInfo}
           >
             Log In
           </Button>
