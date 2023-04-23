@@ -44,12 +44,24 @@ const LoginForm = () => {
           value={email}
           type="email"
           onChange={(e) => onFieldChange(e, setEmail)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSumbitLogin();
+            }
+          }}
         />
         <TextField
           label="Password"
           value={password}
           type="password"
           onChange={(e) => onFieldChange(e, setPassword)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSumbitLogin();
+            }
+          }}
         />
         {error && <div className={style.error}>{error}</div>}
         <Button
@@ -60,7 +72,8 @@ const LoginForm = () => {
           Log In
         </Button>
         <div className={style.createAccountBtnWrapper}>
-          <Button className={style.createAccountBtn}
+          <Button
+            className={style.createAccountBtn}
             variant="contained"
             style={{ background: "rgb(19 137 137)" }}
             onClick={() => navigate("/register")}

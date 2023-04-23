@@ -127,7 +127,14 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
             value={password}
             type="password"
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSumbitLogin();
+              }
+            }}
           />
+
           {error && <div className={style.error}>{error}</div>}
           <Button
             variant="contained"
