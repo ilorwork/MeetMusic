@@ -1,4 +1,4 @@
-import { Box, Button, Card, Modal, Typography } from "@mui/material";
+import { Box, Button, Card, Divider, Modal, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import style from "./AboutUs.module.css";
@@ -8,7 +8,6 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 450,
   bgcolor: "background.paper",
   border: "1px solid #000",
   borderRadius: 2,
@@ -30,13 +29,19 @@ const AboutUs = () => {
         <div>
           <Typography variant="h6">WHAT'S THE PURPOSE OF MEET MUSIC</Typography>
           <Typography>
-            MeetMusic is a social network for creating connections and
-            collaborations between artists,
+            MeetMusic is an open source social network for creating connections
+            and collaborations between artists,
           </Typography>
           <Typography>
             singers and musicians, and for sharing music between people.
           </Typography>
+          <Typography>
+            <a href="https://github.com/ilorwork/MeetMusic" target="_blank">
+              MeetMusic's GitHub repository
+            </a>
+          </Typography>
         </div>
+
         <div>
           <Typography variant="h6">WHO WE ARE</Typography>
           <Typography>
@@ -44,11 +49,12 @@ const AboutUs = () => {
           </Typography>
           <Typography>
             Both of us have graduated from a FullStack development program at{" "}
-            <a href="https://gocode.co.il" target="_blank">
+            <a href="https://www.facebook.com/gocodeweb" target="_blank">
               GoCode
             </a>
           </Typography>
         </div>
+        <Divider />
         <div className={style.btnsWrapper}>
           <Button
             variant="contained"
@@ -66,14 +72,34 @@ const AboutUs = () => {
           </Button>
           <Modal open={isOpen} onClose={() => setIsOpen(false)}>
             <Box sx={modalStyle} className={style.contactUsModal}>
-              <Typography>
-                <b>Ilor Shurer- </b>
-                ilorwork64@gmail.com
-              </Typography>
-              <Typography>
-                <b>Amitay Gabay- </b>
-                amitaygabay1@gmail.com
-              </Typography>
+              <div>
+                <Typography>
+                  <b>Ilor Shurer</b>
+                </Typography>
+                <Typography>
+                  ilorwork64@gmail.com {" - "}
+                  <a
+                    href="https://www.linkedin.com/in/ilor-shurer-513128203/"
+                    target="_blank"
+                  >
+                    Linkedin
+                  </a>
+                </Typography>
+              </div>
+              <div>
+                <Typography>
+                  <b>Amitay Gabay</b>
+                </Typography>
+                <Typography>
+                  amitaygabay1@gmail.com {" - "}
+                  <a
+                    href="https://www.linkedin.com/in/amitay-gabay-14749722a/"
+                    target="_blank"
+                  >
+                    Linkedin
+                  </a>
+                </Typography>
+              </div>
             </Box>
           </Modal>
         </div>

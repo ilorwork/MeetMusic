@@ -46,6 +46,16 @@
   justify-content: space-evenly;
   align-items: center;
   height: 200px;
+  width: 450px;
+}
+
+.contactUsModal > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  text-align: center;
 }
 
 @media (max-width: 600px) {
@@ -63,9 +73,11 @@
     height: 450px;
     padding: 0.5rem 1rem;
   }
+}
 
+@media (max-width: 540px) {
   .contactUsModal {
-    width: 90%;
+    width: 80%;
   }
 }
 
@@ -85,5 +97,19 @@
 
   .btnsWrapper > button {
     margin: 0 0.5rem;
+  }
+
+  .contactUsModal {
+    width: 90%;
+  }
+}
+
+@media (max-width: 370px) {
+  .aboutUsCard {
+    width: 95%;
+  }
+
+  .contactUsModal {
+    height: 250px;
   }
 }
