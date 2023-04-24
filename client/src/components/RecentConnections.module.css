@@ -22,3 +22,15 @@
 .p {
   margin: 0 0 8px 0;
 }
+
+.logoCard {
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.logoCard span:hover {
+  color: rgb(19, 137, 137);
+  box-shadow: 5px 5px 0px 0px rgb(118, 197, 188),
+    10px 10px 0px 0px rgb(155, 221, 197), 15px 15px 0px 0px rgb(185, 227, 224),
+    5px 5px 15px 5px rgba(0, 0, 0, 0);
+}
