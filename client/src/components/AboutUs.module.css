@@ -1,0 +1,115 @@
+.aboutUsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aboutUsTop {
+  background-color: rgb(209, 46, 100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  width: 100%;
+}
+
+.aboutUsHeader {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 50px;
+  color: rgba(191, 216, 244, 0.864);
+}
+
+.aboutUsCard {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  width: 70%;
+  min-height: 400px;
+  position: relative;
+  top: -80px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+  padding: 1rem 2rem;
+}
+
+.btnsWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.btnsWrapper > button {
+  margin: 0 1rem;
+}
+
+.contactUsModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 200px;
+  width: 450px;
+}
+
+.contactUsModal > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .aboutUsTop {
+    height: 200px;
+  }
+
+  .aboutUsHeader {
+    font-size: 35px;
+  }
+
+  .aboutUsCard {
+    width: 85%;
+    top: -60px;
+    height: 450px;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .contactUsModal {
+    width: 80%;
+  }
+}
+
+@media (max-width: 420px) {
+  .aboutUsTop {
+    height: 150px;
+  }
+
+  .aboutUsHeader {
+    font-size: 25px;
+  }
+
+  .aboutUsCard {
+    width: 90%;
+    top: -40px;
+  }
+
+  .btnsWrapper > button {
+    margin: 0 0.5rem;
+  }
+
+  .contactUsModal {
+    width: 90%;
+  }
+}
+
+@media (max-width: 370px) {
+  .aboutUsCard {
+    width: 95%;
+  }
+
+  .contactUsModal {
+    height: 250px;
+  }
+}
