@@ -6,7 +6,7 @@
   margin: 0 8px;
 }
 
-.modalCard {
+.loginModalCard {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -32,7 +32,7 @@
 }
 
 @media (max-width: 450px) {
-  .modalCard {
+  .loginModalCard {
     width: 250px;
     height: 300px;
   }
