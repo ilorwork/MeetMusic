@@ -44,19 +44,7 @@ import {
 } from "../helpers/postHelpers";
 import SharedPost from "./SharedPost";
 import LoaderContext from "./context/LoaderContext";
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 300,
-  border: "2px solid #000",
-  borderRadius: 2,
-  boxShadow: 24,
-  px: 2,
-  py: 4
-};
+import DeleteModal from "./general/DeleteModal";
 
 const PostComponent = ({
   post,
@@ -343,32 +331,12 @@ const PostComponent = ({
             </>
           }
         ></CardHeader>
-        <Modal
-          open={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen(false)}
-        >
-          <Box sx={modalStyle} className={style.deletePostModal}>
-            <Typography variant="h6" component="h2">
-              Are You Sure?
-            </Typography>
-            <div className={style.modalBtns}>
-              <Button
-                variant="contained"
-                style={{ background: "rgb(209, 46, 100)" }}
-                onClick={handleDeletePost}
-              >
-                Yes
-              </Button>
-              <Button
-                variant="contained"
-                style={{ background: "rgb(19, 137, 137)" }}
-                onClick={() => setIsDeleteModalOpen(false)}
-              >
-                No
-              </Button>
-            </div>
-          </Box>
-        </Modal>
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          setIsOpen={setIsDeleteModalOpen}
+          handleDelete={handleDeletePost}
+        />
+
         {isInEditingMode && (
           <Box>
             <Textarea
