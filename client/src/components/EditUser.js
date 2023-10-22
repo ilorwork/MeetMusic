@@ -54,7 +54,7 @@ const EditUser = ({ user, setUser, setIsOpen }) => {
     PaperProps: {
       style: {
         maxHeight: 225,
-        width: 166,
+        maxWidth: 166,
       },
     },
   };
@@ -111,7 +111,7 @@ const EditUser = ({ user, setUser, setIsOpen }) => {
       <Paper
         className={style.userInfoFormPaper}
         elevation={3}
-        sx={{ width: 400, height: 480 }}
+        sx={{ maxWidth: 400, height: 480 }}
       >
         <div className={style.flexRowCenterGroup}>
           <TextField

@@ -25,12 +25,12 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 450,
+  maxWidth: 450,
   bgcolor: "background.paper",
   border: "2px solid #000",
   borderRadius: 2,
   boxShadow: 24,
-  p: 4,
+  p: 3,
 };
 
 const CurrentUserProfile = () => {
