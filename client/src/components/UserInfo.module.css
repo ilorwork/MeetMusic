@@ -1,4 +1,5 @@
 .registerFormContainer {
+  flex: 1;
   height: 700px;
   display: flex;
   justify-content: center;
@@ -23,7 +24,7 @@
   justify-content: space-evenly;
   text-align: center;
   padding: 4px 8px;
-  width: 400px;
+  max-width: 400px;
 }
 
 .error {
@@ -39,12 +40,31 @@
   width: 300px;
 }
 
-@media (max-width: 600px) {
-  .userInfoFormPaper {
-    max-width: 280px;
+@media (max-width: 450px) {
+  .registerFormContainer {
+    display: block;
+  }
+
+  .editFormContainer {
+    width: 320px;
+    display: block;
   }
 
   .loginBtn {
     width: 200px;
+  }
+}
+
+@media (max-width: 400px) {
+  .editFormContainer {
+    width: 280px;
+    display: block;
+  }
+}
+
+@media (max-width: 350px) {
+  .editFormContainer {
+    width: 250px;
+    display: block;
   }
 }
