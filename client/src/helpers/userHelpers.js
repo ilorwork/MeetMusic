@@ -1,7 +1,6 @@
 import axios from "axios";
-import config from "../config/config.json";
 
-const base_url = config.base_url;
+const base_url = process.env.REACT_APP_BASE_URL;
 
 const register = async (newUser) => {
   try {
