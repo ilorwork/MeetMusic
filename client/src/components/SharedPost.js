@@ -12,7 +12,7 @@ import {
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { getPostById } from "../helpers/postHelpers";
+import { getPostById, linkifyLinksWithinText } from "../helpers/postHelpers";
 
 const SharedPost = ({ postId }) => {
   const [post, setPost] = useState({});
@@ -69,7 +69,15 @@ const SharedPost = ({ postId }) => {
             ></CardHeader>
 
             <CardContent>
-              {post?.postText && <Box>{post?.postText}</Box>}
+              {post?.postText && (
+                <Box>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: linkifyLinksWithinText(post.postText),
+                    }}
+                  />
+                </Box>
+              )}
               {postImages.length !== 0 && (
                 <ImageList
                   cols={getImagesCols()}
