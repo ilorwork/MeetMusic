@@ -44,7 +44,7 @@ NodeJS, Express, Mongoose(MongoDB), Cloudinary
 
 #### Run the app
 
-- Create another `.env` file in the React proj-root-dir with the following field: <br/>
+- Create another `.env` file in the React proj-root-dir (MeetMusic/client/) with the following field: <br/>
 
   - `REACT_APP_BASE_URL = "<Your Base Url Path>"` <br/>
 

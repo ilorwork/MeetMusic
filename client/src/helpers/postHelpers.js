@@ -334,6 +334,18 @@ const textValidation = (e, text) => {
   return !!text.trim().length;
 };
 
+const linkifyLinksWithinText = (text) => {
+  // Regular expression to find URLs within the text
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  // Replace URLs with clickable links
+  const textWithLinks = text.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank">${url}</a>`;
+  });
+
+  return textWithLinks;
+};
+
 export {
   createPost,
   editPost,
@@ -355,4 +367,5 @@ export {
   likePost,
   unlikePost,
   textValidation,
+  linkifyLinksWithinText,
 };

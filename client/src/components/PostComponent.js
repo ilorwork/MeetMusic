@@ -40,6 +40,7 @@ import {
   getPostById,
   getPostComments,
   likePost,
+  linkifyLinksWithinText,
   unlikePost,
 } from "../helpers/postHelpers";
 import SharedPost from "./SharedPost";
@@ -442,7 +443,15 @@ const PostComponent = ({
 
         {!isInEditingMode && (
           <CardContent>
-            {postText && <Box>{postText}</Box>}
+            {postText && (
+              <Box>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: linkifyLinksWithinText(postText),
+                  }}
+                />
+              </Box>
+            )}
             {postImages.length !== 0 && (
               <ImageList
                 cols={getImagesCols()}
