@@ -17,6 +17,8 @@ import axios from "axios";
 import style from "./UserInfo.module.css";
 import { v4 as uuid } from "uuid";
 import { login, notifyUser, register } from "../helpers/userHelpers";
+import RecentConnections from "./RecentConnections";
+import loginStyle from "./Login.module.css";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -129,130 +131,137 @@ const Register = () => {
   };
 
   return (
-    <div className={style.registerFormContainer}>
-      <Paper
-        className={style.userInfoFormPaper}
-        elevation={3}
-        sx={{ height: 630 }}
-      >
-        <div className={style.flexRowCenterGroup}>
-          <TextField
-            required
-            label="First name"
-            autoFocus
-            sx={{ marginRight: 3 }}
-            value={firstName}
-            onChange={(e) => onFieldChange(e, setFirstName)}
-          />
-          <TextField
-            required
-            label="Last name"
-            value={lastName}
-            onChange={(e) => onFieldChange(e, setLastName)}
-          />
-        </div>
-        <TextField
-          required
-          label="Email"
-          value={email}
-          type="email"
-          onChange={(e) => onFieldChange(e, setEmail)}
-        />
-        <TextField
-          required
-          label="Password"
-          value={password}
-          type="password"
-          onChange={(e) => onFieldChange(e, setPassword)}
-        />
-        <TextField
-          required
-          // error={error ? true : false}
-          label="Re-enter Your Password"
-          value={reEnteredPassword}
-          type="password"
-          onChange={(e) => onFieldChange(e, setReEnteredPassword)}
-        />
-        <div className={style.flexRowCenterGroup}>
-          <FormControl sx={{ marginRight: 2 }}>
-            <FormLabel required>Gender</FormLabel>
-            <RadioGroup
-              required
-              row
-              onChange={(e) => onFieldChange(e, setGender)}
-              value={gender}
-            >
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel
-                value="female"
-                control={<Radio />}
-                label="Female"
-              />
-            </RadioGroup>
-          </FormControl>
-          <FormControl>
-            <FormLabel required>Birth Date</FormLabel>
+    <div className={loginStyle.container}>
+      <RecentConnections />
+      <div className={style.registerFormContainer}>
+        <Paper
+          className={style.userInfoFormPaper}
+          elevation={3}
+          sx={{ height: 630 }}
+        >
+          <div className={style.flexRowCenterGroup}>
             <TextField
               required
-              type="date"
-              value={birthDate}
-              onChange={(e) => onFieldChange(e, setBirthDate)}
+              label="First name"
+              autoFocus
+              sx={{ marginRight: 3 }}
+              value={firstName}
+              onChange={(e) => onFieldChange(e, setFirstName)}
             />
-          </FormControl>
-        </div>
-        <div className={style.flexRowCenterGroup}>
-          <FormControl sx={{ m: 1, width: 200, marginRight: 2 }}>
-            <InputLabel>Country</InputLabel>
-            <Select
-              value={country}
-              onChange={handleCountryChange}
-              label="Country"
-              MenuProps={MenuProps}
-            >
-              {countriesAndCities.map((c) => (
-                <MenuItem key={uuid()} value={c.name}>
-                  {c.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <TextField
+              required
+              label="Last name"
+              value={lastName}
+              onChange={(e) => onFieldChange(e, setLastName)}
+            />
+          </div>
+          <TextField
+            required
+            label="Email"
+            value={email}
+            type="email"
+            onChange={(e) => onFieldChange(e, setEmail)}
+          />
+          <TextField
+            required
+            label="Password"
+            value={password}
+            type="password"
+            onChange={(e) => onFieldChange(e, setPassword)}
+          />
+          <TextField
+            required
+            // error={error ? true : false}
+            label="Re-enter Your Password"
+            value={reEnteredPassword}
+            type="password"
+            onChange={(e) => onFieldChange(e, setReEnteredPassword)}
+          />
+          <div className={style.flexRowCenterGroup}>
+            <FormControl sx={{ marginRight: 2 }}>
+              <FormLabel required>Gender</FormLabel>
+              <RadioGroup
+                required
+                row
+                onChange={(e) => onFieldChange(e, setGender)}
+                value={gender}
+              >
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Male"
+                />
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label="Female"
+                />
+              </RadioGroup>
+            </FormControl>
+            <FormControl>
+              <FormLabel required>Birth Date</FormLabel>
+              <TextField
+                required
+                type="date"
+                value={birthDate}
+                onChange={(e) => onFieldChange(e, setBirthDate)}
+              />
+            </FormControl>
+          </div>
+          <div className={style.flexRowCenterGroup}>
+            <FormControl sx={{ m: 1, width: 200, marginRight: 2 }}>
+              <InputLabel>Country</InputLabel>
+              <Select
+                value={country}
+                onChange={handleCountryChange}
+                label="Country"
+                MenuProps={MenuProps}
+              >
+                {countriesAndCities.map((c) => (
+                  <MenuItem key={uuid()} value={c.name}>
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-          <FormControl sx={{ m: 1, width: 200 }}>
-            <InputLabel>City</InputLabel>
-            <Select
-              value={city}
-              onChange={(e) => onFieldChange(e, setCity)}
-              label="City"
-              MenuProps={MenuProps}
-            >
-              {citiesOfSelectedCountry.map((c) => (
-                <MenuItem key={uuid()} value={c}>
-                  {c}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-        {error && <div className={style.error}>{error}</div>}
-        <Button
-          variant="contained"
-          style={{ background: "rgb(209, 46, 100)" }}
-          sx={{ my: 3 }}
-          onClick={hanbleSubmitForm}
-        >
-          Create a new account
-        </Button>
-        <div className={style.loginDiv}>
+            <FormControl sx={{ m: 1, width: 200 }}>
+              <InputLabel>City</InputLabel>
+              <Select
+                value={city}
+                onChange={(e) => onFieldChange(e, setCity)}
+                label="City"
+                MenuProps={MenuProps}
+              >
+                {citiesOfSelectedCountry.map((c) => (
+                  <MenuItem key={uuid()} value={c}>
+                    {c}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          {error && <div className={style.error}>{error}</div>}
           <Button
-            className={style.loginBtn}
             variant="contained"
-            style={{ background: "rgb(19 137 137)" }}
-            onClick={() => navigate("/login")}
+            style={{ background: "rgb(209, 46, 100)" }}
+            sx={{ my: 3 }}
+            onClick={hanbleSubmitForm}
           >
-            Login
+            Create a new account
           </Button>
-        </div>
-      </Paper>
+          <div className={style.loginDiv}>
+            <Button
+              className={style.loginBtn}
+              variant="contained"
+              style={{ background: "rgb(19 137 137)" }}
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </Button>
+          </div>
+        </Paper>
+      </div>
     </div>
   );
 };

@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
     default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
   },
   role: { type: String, enum: ["user", "admin"], default: "user" },
+  creationDate: { type: Date, default: Date.now() },
   following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
 });

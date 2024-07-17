@@ -6,17 +6,22 @@ connecting with people with similar interests, and more. <br />
 [meetmusic.onrender.com](http://meetmusic.onrender.com/)
 
 ## 🛠 Main technologies
+
 ### Front-End
+
 ReactJS, Material-UI
 
 ### Back-End
+
 NodeJS, Express, Mongoose(MongoDB), Cloudinary
 
 ## ⚙️ Local execution
+
 - Clone this repo
 - Run `npm i` on the root-dir and `client` dirs - To install all the dependencies
 
 #### Seed the DB (Mongoose)
+
 - Create [MondoDB account](https://account.mongodb.com/account/login) and create a DB. <br/>
 
 - Create `.env` file in the root-dir with the following fields (can be found in the 'connect' section in Mongo Atlas) <br/>
@@ -26,6 +31,7 @@ NodeJS, Express, Mongoose(MongoDB), Cloudinary
   - `DB_NAME = "<Your DB name>"` <br/>
 
 #### More .env fields
+
 - Port:
   - `PORT=7000` <br />
 - User auth:
@@ -37,8 +43,10 @@ NodeJS, Express, Mongoose(MongoDB), Cloudinary
   - `CLOUDINARY_API_SECRET = "<Your cloudinary API Secret>"` <br />
 
 #### Run the app
-- Change `base_url` variables on `client\src\config\config.json` to look like this: <br />
-`"_base_url": "https://meetmusic.onrender.com",` <br />
-  `"base_url": "http://localhost:7000"` <br />
+
+- Create another `.env` file in the React proj-root-dir (MeetMusic/client/) with the following field: <br/>
+
+  - `REACT_APP_BASE_URL = "<Your Base Url Path>"` <br/>
+
 - Run `npm run dev` on the root-dir <br />
 - The app will run at http://localhost:3000

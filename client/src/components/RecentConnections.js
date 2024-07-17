@@ -4,9 +4,12 @@ import RecentConnectionCard from "./RecentConnectionCard";
 import style from "./RecentConnections.module.css";
 import cardStyle from "./RecentConnectionCard.module.css";
 import { v4 as uuid } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 const RecentConnections = () => {
   const [recentUsers, setRecentUsers] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!localStorage.getItem("recentConnections")) return;
@@ -19,9 +22,11 @@ const RecentConnections = () => {
 
   return (
     <div className={style.wrapper}>
-      <h1>
-        <span className={style.h1}>MeetMusic</span>
-      </h1>
+      <Card className={style.logoCard} onClick={() => navigate("/about")}>
+        <h1>
+          <span className={style.h1}>MeetMusic</span>
+        </h1>
+      </Card>
       <h2 className={style.h2}>Recent Connections</h2>
       {recentUsers.length > 0 && (
         <p className={style.p}>Click your photo to sign in</p>

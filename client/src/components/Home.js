@@ -50,7 +50,7 @@ const Home = () => {
   return (
     <div className={style.homePage}>
       <div className={style.peopleYouMayKnow}>
-        <h1 className={style.titleOfPeopleYouMayKnow}>People you may know</h1>
+        <h1 className={style.sectionTitle}>People you may know</h1>
         <div className={style.pumk}>
           {peopleUserMayKnow.map((user) => (
             <PeopleYouMayKnow
@@ -77,7 +77,7 @@ const Home = () => {
         ))}
       </div>
       <div className={style.peopleYouFollow}>
-        <h1 className={style.titleOfPeopleYouFollow}>People you follow</h1>
+        <h1 className={style.sectionTitle}>People you follow</h1>
         <div className={style.pumk}>
           {user.following?.map((followed) => (
             <Following

@@ -1,0 +1,28 @@
+.deleteModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2),
+    0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+  padding: 32px 16px;
+}
+
+.deleteModalBtns {
+  display: flex;
+  justify-content: space-between;
+  width: 67%;
+  padding-top: 20px;
+}
+
+.deleteModalBtns button {
+  width: 4.4rem;
+}

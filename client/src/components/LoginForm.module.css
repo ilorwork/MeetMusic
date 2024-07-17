@@ -30,10 +30,6 @@
 }
 
 @media (max-width: 450px) {
-  .formPaper {
-    max-width: 280px;
-  }
-
   .createAccountBtn {
     width: 200px;
   }

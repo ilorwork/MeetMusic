@@ -14,11 +14,14 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import style from "./RecentConnectionCard.module.css";
 import { login } from "../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "./general/DeleteModal";
 
 const RecentConnectionCard = ({ user, setRecentUsers }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [checkingInfo, setCheckingInfo] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,12 +31,16 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
       return;
     }
 
+    setCheckingInfo(true);
+
     try {
       await login(user.email, password);
       navigate("/");
     } catch (e) {
       if (e.response.status === 401) setError("Wrong password");
       else setError("An error has accured");
+    } finally {
+      setCheckingInfo(false);
     }
   };
 
@@ -54,6 +61,7 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
     );
 
     setRecentUsers(recentConnections);
+    setIsRemoveModalOpen(false);
   };
 
   const closeLoginModal = () => {
@@ -66,9 +74,7 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
       <div className={style.containsCard}>
         <Tooltip title="Remove connection">
           <IconButton
-            onClick={() => {
-              handleRemoveConnection();
-            }}
+            onClick={() => setIsRemoveModalOpen(true)}
             style={{
               marginBottom: -40,
               marginLeft: -120,
@@ -86,6 +92,11 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
             />
           </IconButton>
         </Tooltip>
+        <DeleteModal
+          isOpen={isRemoveModalOpen}
+          setIsOpen={setIsRemoveModalOpen}
+          handleDelete={handleRemoveConnection}
+        />
         <Card className={style.card} sx={{ width: 150 }}>
           <CardMedia
             component="img"
@@ -110,7 +121,7 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
         </Card>
       </div>
       <Modal open={isOpen} onClose={closeLoginModal}>
-        <Card className={style.modalCard}>
+        <Card className={style.loginModalCard}>
           <CardMedia
             component={"div"}
             className={style.cardImg}
@@ -127,12 +138,20 @@ const RecentConnectionCard = ({ user, setRecentUsers }) => {
             value={password}
             type="password"
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSumbitLogin();
+              }
+            }}
           />
+
           {error && <div className={style.error}>{error}</div>}
           <Button
             variant="contained"
             style={{ background: "rgb(209, 46, 100)" }}
             onClick={handleSumbitLogin}
+            disabled={checkingInfo}
           >
             Log In
           </Button>
