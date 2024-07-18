@@ -170,30 +170,34 @@ const CurrentUserProfile = () => {
 
           <div className={style.homePage}>
             <div className={style.peopleYouMayKnow}>
-              <h1 className={style.sectionTitle}>Followers</h1>
-              {user.followers?.map((follower) => (
-                <Followers
-                  key={uuid()}
-                  follower={follower}
-                  getUserInfo={getInfo}
-                />
-              ))}
+              <h2 className={style.sectionTitle}>Followers</h2>
+              <div className={style.usersListWrapper}>
+                {user.followers?.map((follower) => (
+                  <Followers
+                    key={uuid()}
+                    follower={follower}
+                    getUserInfo={getInfo}
+                  />
+                ))}
+              </div>
             </div>
             <div className={style.peopleYouFollow}>
-              <h1 className={style.sectionTitle}>Following</h1>
-              {user.following?.map((followed) => (
-                <Following
-                  key={uuid()}
-                  followed={followed}
-                  getUserInfo={getInfo}
-                />
-              ))}
+              <h2 className={style.sectionTitle}>Following</h2>
+              <div className={style.usersListWrapper}>
+                {user.following?.map((followed) => (
+                  <Following
+                    key={uuid()}
+                    followed={followed}
+                    getUserInfo={getInfo}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
         <div className={style.wrapsRightSide}>
           <div className={style.containerPostComponents}>
-            <h1 className={style.sectionTitle}>Your Posts</h1>
+            <h2 className={style.sectionTitle}>Your Posts</h2>
             {userPosts.map((post) => (
               <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
             ))}

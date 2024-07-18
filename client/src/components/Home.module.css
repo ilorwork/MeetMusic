@@ -5,9 +5,14 @@
 }
 
 .sectionTitle {
-  color: #92a5de;
-  text-shadow: 0px 0px 0 #899cd5, 1px 1px 0 #8194cd, 2px 2px 0 #788bc4,
-    3px 3px 0 #6f82bb, 4px 4px 0 #677ab3, 5px 5px 0 #5e71aa;
+  color: #000000;
+  margin-bottom: 0.7rem;
+}
+
+.usersListWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .peopleYouMayKnow {
@@ -52,7 +57,6 @@
   .sectionTitle {
     font-size: 18px;
     color: black;
-    text-shadow: none;
   }
 }
 
