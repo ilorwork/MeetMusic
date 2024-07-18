@@ -1,6 +1,4 @@
-import { Button } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import style from "./PeopleSideList.module.css";
 import { followUser, unfollowUser } from "../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
 import UserContext from "./layout/UserContext";
@@ -14,7 +12,6 @@ const Following = ({
   getPosts = () => {},
 }) => {
   const [isCurrentUserFollow, setIsCurrentUserFollow] = useState(true);
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const { currentUserInfo } = useContext(UserContext);
   const { setLoading } = useContext(LoaderContext);
@@ -22,10 +19,6 @@ const Following = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (followed._id === currentUserInfo._id) {
-      setIsCurrentUser(true);
-      return;
-    }
     setIsCurrentUserFollow(followed.followers.includes(currentUserInfo._id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -57,11 +50,14 @@ const Following = ({
     }
   };
 
-  const navToUserPage = () => {
-    navigate(`/user-profile/${followed._id}`);
-  };
-
-  return <UserCard user={followed} setRecentUsers={() => {}} />;
+  return (
+    <UserCard
+      user={followed}
+      handleFollowUser={handleFollowUser}
+      handleUnfollowUser={handleUnfollowUser}
+      isFollowed={isCurrentUserFollow}
+    />
+  );
 };
 
 export default Following;

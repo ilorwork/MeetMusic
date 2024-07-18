@@ -39,6 +39,7 @@ const UserProfile = () => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     getUserInfo();
     getUserPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,31 +175,35 @@ const UserProfile = () => {
 
           <div className={style.homePage}>
             <div className={style.peopleYouMayKnow}>
-              <h1 className={style.sectionTitle}>Followers</h1>
-              {user.followers?.map((follower) => (
-                <Followers
-                  key={uuid()}
-                  follower={follower}
-                  getUserInfo={getUserInfo}
-                />
-              ))}
+              <h2 className={style.sectionTitle}>Followers</h2>
+              <div className={style.usersListWrapper}>
+                {user.followers?.map((follower) => (
+                  <Followers
+                    key={uuid()}
+                    follower={follower}
+                    getUserInfo={getUserInfo}
+                  />
+                ))}
+              </div>
             </div>
             <div className={style.peopleYouFollow}>
-              <h1 className={style.sectionTitle}>Following</h1>
-              {user.following?.map((followed) => (
-                <Following
-                  followed={followed}
-                  getUserInfo={getUserInfo}
-                  key={uuid()}
-                />
-              ))}
+              <h2 className={style.sectionTitle}>Following</h2>
+              <div className={style.usersListWrapper}>
+                {user.following?.map((followed) => (
+                  <Following
+                    followed={followed}
+                    getUserInfo={getUserInfo}
+                    key={uuid()}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         <div className={style.wrapsRightSide}>
           <div className={style.containerPostComponents}>
-            <h1 className={style.sectionTitle}>{user.firstName}'s Posts</h1>
+            <h2 className={style.sectionTitle}>{user.firstName}'s Posts</h2>
             {userPosts.map((post) => (
               <PostComponent
                 post={post}

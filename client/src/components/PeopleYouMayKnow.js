@@ -1,11 +1,8 @@
 import React, { useContext } from "react";
-import { Button } from "@mui/material";
-import style from "./PeopleSideList.module.css";
-import { useNavigate } from "react-router-dom";
 import { followUser } from "../helpers/userHelpers";
 import UserContext from "./layout/UserContext";
 import LoaderContext from "./context/LoaderContext";
-import RecentConnectionCard from "./RecentConnectionCard";
+import UserCard from "./UserCard";
 
 const PeopleYouMayKnow = ({
   user,
@@ -15,12 +12,6 @@ const PeopleYouMayKnow = ({
 }) => {
   const { currentUserInfo } = useContext(UserContext);
   const { setLoading } = useContext(LoaderContext);
-
-  const navigate = useNavigate();
-
-  const navToUserPage = () => {
-    navigate(`user-profile/${user._id}`);
-  };
 
   const handleFollowUser = async () => {
     setLoading(true);
@@ -38,7 +29,13 @@ const PeopleYouMayKnow = ({
 
   return (
     <>
-      <RecentConnectionCard user={user} setRecentUsers={() => {}} />
+      <UserCard
+        user={user}
+        handleFollowUser={handleFollowUser}
+        handleUnfollowUser={() => {}}
+        isFollowed={false}
+        setRecentUsers={() => {}}
+      />
     </>
   );
 };

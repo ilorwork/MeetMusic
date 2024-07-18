@@ -7,7 +7,7 @@ const UserSearchCard = (props) => {
   const navigate = useNavigate();
 
   const navToUserPage = (e) => {
-    navigate(`user-profile/${user._id}`);
+    navigate(`/user-profile/${user._id}`);
     props.onClick(e);
     props.setAutoVal("");
   };

@@ -50,8 +50,8 @@ const Home = () => {
   return (
     <div className={style.homePage}>
       <div className={style.peopleYouMayKnow}>
-        <h1 className={style.sectionTitle}>People you may know</h1>
-        <div className={style.pumk}>
+        <h2 className={style.sectionTitle}>People you may know</h2>
+        <div className={style.usersListWrapper}>
           {peopleUserMayKnow.map((user) => (
             <PeopleYouMayKnow
               user={user}
@@ -77,8 +77,8 @@ const Home = () => {
         ))}
       </div>
       <div className={style.peopleYouFollow}>
-        <h1 className={style.sectionTitle}>People you follow</h1>
-        <div className={style.pumk}>
+        <h2 className={style.sectionTitle}>People you follow</h2>
+        <div className={style.usersListWrapper}>
           {user.following?.map((followed) => (
             <Following
               key={uuid()}

@@ -7,8 +7,8 @@
 
 .spinner {
   box-sizing: border-box;
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   border-top: 4px solid rgb(0, 0, 0);
   border-left: 4px solid rgb(0, 0, 0);
