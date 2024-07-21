@@ -1,13 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import style from "./UserSearchCard.module.css";
 
 const UserSearchCard = (props) => {
   const { user } = props;
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navToUserPage = (e) => {
-    navigate(`/user-profile/${user._id}`);
+    const profileEndPoint = `/user-profile/${user._id}`;
+    if (location.pathname !== profileEndPoint) navigate(profileEndPoint);
     props.onClick(e);
     props.setAutoVal("");
   };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -38,6 +38,7 @@ const Header = () => {
   const [windowWidth, setWindowWidth] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { currentUserInfo } = useContext(UserContext);
 
   const unreadCount = notifications.filter((n) => !n.isBeingRead).length;
@@ -67,7 +68,8 @@ const Header = () => {
 
   const handleProfileClicked = () => {
     setAnchorElUser(null);
-    navigate(`/user-profile/${currentUserInfo._id}`);
+    const profileEndPoint = `/user-profile/${currentUserInfo._id}`;
+    if (location.pathname !== profileEndPoint) navigate(profileEndPoint);
   };
 
   const handleLogout = async () => {
@@ -104,7 +106,12 @@ const Header = () => {
   return (
     <AppBar position="sticky" className={style.appBar}>
       <Toolbar className={style.toolBar}>
-        <div className={style.wrapperMusicIcon} onClick={() => navigate("/")}>
+        <div
+          className={style.wrapperMusicIcon}
+          onClick={() => {
+            if (location.pathname !== "/") navigate("/");
+          }}
+        >
           <Tooltip title="Home">
             <LibraryMusicIcon
               className={style.musicIcon}

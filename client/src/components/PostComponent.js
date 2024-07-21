@@ -22,7 +22,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CommentComponent from "./CommentComponent";
 import { v4 as uuid } from "uuid";
 import CreateNewComment from "./CreateNewComment";
@@ -138,6 +138,7 @@ const PostComponent = ({
   };
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDeletePost = async () => {
     setLoading(true);
@@ -249,6 +250,11 @@ const PostComponent = ({
     }
   };
 
+  const handleUserProfileClick = async () => {
+    const profileEndPoint = `/user-profile/${post.creator._id}`;
+    if (location.pathname !== profileEndPoint) navigate(profileEndPoint);
+  };
+
   return (
     <div style={{ padding: 2 }}>
       <Card sx={{ mt: 2 }}>
@@ -256,7 +262,7 @@ const PostComponent = ({
           avatar={
             <button
               className={style.profileBtn}
-              onClick={() => navigate(`/user-profile/${post.creator._id}`)}
+              onClick={handleUserProfileClick}
             >
               <Avatar src={post.creator.profilePic} />
             </button>
