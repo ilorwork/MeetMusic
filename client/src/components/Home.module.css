@@ -30,7 +30,7 @@
 }
 
 .containerPostComponents {
-  width: 35%;
+  width: 40%;
   overflow: auto;
   height: 89vh;
 }
@@ -67,7 +67,7 @@
 
   .containerPostComponents {
     justify-content: center;
-    width: 80%;
+    width: 93%;
   }
 
   .peopleYouMayKnow {

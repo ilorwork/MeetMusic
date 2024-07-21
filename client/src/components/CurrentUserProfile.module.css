@@ -93,7 +93,7 @@
 
 .wrapsRightSide {
   display: block;
-  width: 40%;
+  width: 44%;
 }
 
 .containerPostComponents {
@@ -131,7 +131,7 @@
   }
 
   .wrapsRightSide {
-    width: 40%;
+    width: 44%;
   }
 
   .userImg {
@@ -182,7 +182,7 @@
   }
 
   .containerPostComponents {
-    width: 80%;
+    width: 93%;
     height: 58vh;
   }
 
