@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -7,51 +7,53 @@ import Typography from "@mui/material/Typography";
 import PublicIcon from "@mui/icons-material/Public";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import style from "./CurrentUserProfile.module.css";
-import PostComponent from "./PostComponent";
+import PostComponent from "../posts/PostComponent";
+import Followers from "./usersLists/Followers";
+import Following from "./usersLists/Following";
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
-import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, IconButton, Modal, Tooltip } from "@mui/material";
-import { editUser, getCurrentUserInfo } from "../helpers/userHelpers";
 import { v4 as uuid } from "uuid";
-import Followers from "./Followers";
-import Following from "./Following";
-import EditUser from "./EditUser";
-import { getCurrentUserPosts } from "../helpers/postHelpers";
-import LoaderContext from "./context/LoaderContext";
+import { getPostsByUserId } from "../../helpers/postHelpers";
+import {
+  followUser,
+  getCurrentUserInfo,
+  getUserInfoById,
+  unfollowUser,
+} from "../../helpers/userHelpers";
+import { Button } from "@mui/material";
+import LoaderContext from "../context/LoaderContext";
 
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: 450,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  borderRadius: 2,
-  boxShadow: 24,
-  p: 3,
-};
-
-const CurrentUserProfile = () => {
+const UserProfile = () => {
+  const [currentUser, setCurrentUser] = useState("");
   const [user, setUser] = useState("");
   const [userPosts, setUserPosts] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+
+  const { id } = useParams();
 
   const navigate = useNavigate();
   const { setLoading } = useContext(LoaderContext);
 
   useEffect(() => {
     setLoading(true);
-    getInfo();
-    getUserPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getCurrentUser();
   }, []);
 
-  const getInfo = async () => {
+  useEffect(() => {
+    setLoading(true);
+    getUserInfo();
+    getUserPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const getCurrentUser = async () => {
+    const info = await getCurrentUserInfo();
+    setCurrentUser(info);
+  };
+
+  const getUserInfo = async () => {
     try {
-      const currentUserInfo = await getCurrentUserInfo(true);
-      setUser(currentUserInfo);
+      const userInfo = await getUserInfoById(id);
+      setUser(userInfo);
     } catch (e) {
       if (e.response.status === 401) {
         navigate("/login");
@@ -60,8 +62,8 @@ const CurrentUserProfile = () => {
   };
 
   const getUserPosts = async () => {
-    const userPosts = await getCurrentUserPosts();
-    setUserPosts(userPosts);
+    const posts = await getPostsByUserId(id);
+    setUserPosts(posts);
     setLoading(false);
   };
 
@@ -71,20 +73,30 @@ const CurrentUserProfile = () => {
       (365.25 * 24 * 60 * 60 * 1000)
     ).toFixed(1);
 
-  const handleEditProfile = () => {
-    setIsOpen(true);
+  const handleFollowUser = async () => {
+    setLoading(true);
+    try {
+      await followUser(user._id, currentUser);
+      getCurrentUser();
+      getUserInfo();
+    } catch (e) {
+      throw new Error("follow user failed " + e);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePicChange = (e) => {
-    const reader = new FileReader();
-    reader.onload = async () => {
-      if (reader.readyState === 2) {
-        const updatedUser = await editUser({ profilePic: reader.result });
-        setUser(updatedUser);
-      }
-    };
-
-    reader.readAsDataURL(e.target.files[0]);
+  const handleUnfollowUser = async () => {
+    setLoading(true);
+    try {
+      await unfollowUser(user._id);
+      getCurrentUser();
+      getUserInfo();
+    } catch (e) {
+      throw new Error("unfollow user failed " + e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,38 +104,37 @@ const CurrentUserProfile = () => {
       <div className={style.profilePageContainer}>
         <div className={style.wrapsLeftSide}>
           <Card className={style.profileInfoCard}>
-            <input
-              hidden
-              accept="image/*"
-              id="icon-button-file"
-              type="file"
-              onChange={handlePicChange}
+            <Avatar
+              className={style.userImg}
+              alt="user profile pic"
+              src={user.profilePic}
             />
-            <label htmlFor="icon-button-file">
-              <Tooltip title="Click to replace">
-                <IconButton component="span">
-                  <Avatar
-                    className={style.userImg}
-                    alt="user profile pic"
-                    src={user.profilePic}
-                  />
-                </IconButton>
-              </Tooltip>
-            </label>
+
             <CardContent className={style.profileInfoContent}>
               <div className={style.profileHeader}>
                 <h1>
                   {user.firstName} {user.lastName}
                 </h1>
-                <Tooltip title="Edit Info">
+                {currentUser.following?.includes(id) && (
                   <Button
-                    className={style.editProfileBtn}
-                    size="small"
-                    onClick={handleEditProfile}
+                    className={style.followBtns}
+                    style={{ background: "rgb(19 137 137)" }}
+                    variant="contained"
+                    onClick={handleUnfollowUser}
                   >
-                    <EditIcon />
+                    UnFollow
                   </Button>
-                </Tooltip>
+                )}
+                {!currentUser.following?.includes(id) && (
+                  <Button
+                    className={style.followBtns}
+                    style={{ background: "rgb(209, 46, 100)" }}
+                    variant="contained"
+                    onClick={handleFollowUser}
+                  >
+                    Follow
+                  </Button>
+                )}
               </div>
 
               <div className={style.personalInfoContainer}>
@@ -162,12 +173,6 @@ const CurrentUserProfile = () => {
             </CardContent>
           </Card>
 
-          <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-            <Box sx={modalStyle}>
-              <EditUser user={user} setUser={setUser} setIsOpen={setIsOpen} />
-            </Box>
-          </Modal>
-
           <div className={style.homePage}>
             <div className={style.peopleYouMayKnow}>
               <h2 className={style.sectionTitle}>Followers</h2>
@@ -176,7 +181,7 @@ const CurrentUserProfile = () => {
                   <Followers
                     key={uuid()}
                     follower={follower}
-                    getUserInfo={getInfo}
+                    getUserInfo={getUserInfo}
                   />
                 ))}
               </div>
@@ -186,20 +191,25 @@ const CurrentUserProfile = () => {
               <div className={style.usersListWrapper}>
                 {user.following?.map((followed) => (
                   <Following
-                    key={uuid()}
                     followed={followed}
-                    getUserInfo={getInfo}
+                    getUserInfo={getUserInfo}
+                    key={uuid()}
                   />
                 ))}
               </div>
             </div>
           </div>
         </div>
+
         <div className={style.wrapsRightSide}>
           <div className={style.containerPostComponents}>
-            <h2 className={style.sectionTitle}>Your Posts</h2>
+            <h2 className={style.sectionTitle}>{user.firstName}'s Posts</h2>
             {userPosts.map((post) => (
-              <PostComponent key={uuid()} post={post} getPosts={getUserPosts} />
+              <PostComponent
+                post={post}
+                isUserProfilePage={true}
+                key={uuid()}
+              />
             ))}
           </div>
         </div>
@@ -208,4 +218,4 @@ const CurrentUserProfile = () => {
   );
 };
 
-export default CurrentUserProfile;
+export default UserProfile;

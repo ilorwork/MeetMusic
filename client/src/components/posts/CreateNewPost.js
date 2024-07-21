@@ -12,14 +12,14 @@ import {
   TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUserInfo } from "../helpers/userHelpers";
+import { getCurrentUserInfo } from "../../helpers/userHelpers";
 import style from "./CreateNewPost.module.css";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import { v4 as uuid } from "uuid";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { createPost } from "../helpers/postHelpers";
-import LoaderContext from "./context/LoaderContext";
+import { createPost } from "../../helpers/postHelpers";
+import LoaderContext from "../context/LoaderContext";
 
 const modalStyle = {
   position: "absolute",

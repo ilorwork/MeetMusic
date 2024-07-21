@@ -1,7 +1,7 @@
 import { Button, Paper, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../helpers/userHelpers";
+import { login } from "../../helpers/userHelpers";
 import style from "./LoginForm.module.css";
 
 const LoginForm = () => {

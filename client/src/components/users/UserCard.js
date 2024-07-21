@@ -7,12 +7,12 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import style from "./RecentConnectionCard.module.css";
+import style from "../auth/RecentConnectionCard.module.css";
 import { useNavigate } from "react-router-dom";
 import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import UserContext from "./layout/UserContext";
+import UserContext from "../context/UserContext";
 
 const UserCard = ({
   user,

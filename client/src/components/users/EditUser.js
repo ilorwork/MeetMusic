@@ -15,7 +15,7 @@ import Select from "@mui/material/Select";
 import axios from "axios";
 import style from "./UserInfo.module.css";
 import { v4 as uuid } from "uuid";
-import { editUser } from "../helpers/userHelpers";
+import { editUser } from "../../helpers/userHelpers";
 
 const EditUser = ({ user, setUser, setIsOpen }) => {
   const [firstName, setFirstName] = useState(user.firstName);

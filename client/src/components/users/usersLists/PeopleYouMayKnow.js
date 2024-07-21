@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { followUser } from "../helpers/userHelpers";
-import UserContext from "./layout/UserContext";
-import LoaderContext from "./context/LoaderContext";
-import UserCard from "./UserCard";
+import { followUser } from "../../../helpers/userHelpers";
+import UserContext from "../../context/UserContext";
+import LoaderContext from "../../context/LoaderContext";
+import UserCard from "../UserCard";
 
 const PeopleYouMayKnow = ({
   user,

@@ -17,9 +17,9 @@ import {
 import style from "./Header.module.css";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { getAllUsers, logout } from "../../helpers/userHelpers";
-import UserSearchCard from "../UserSearchCard";
+import UserSearchCard from "../search/UserSearchCard";
 import { v4 as uuid } from "uuid";
-import UserContext from "./UserContext";
+import UserContext from "../context/UserContext";
 import {
   getAllNotifications,
   readNotification,

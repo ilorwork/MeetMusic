@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import style from "./RecentConnectionCard.module.css";
-import { login } from "../helpers/userHelpers";
+import { login } from "../../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
-import DeleteModal from "./general/DeleteModal";
+import DeleteModal from "../common/DeleteModal";
 
 const RecentConnectionCard = ({ user, setRecentUsers }) => {
   const [isOpen, setIsOpen] = useState(false);
