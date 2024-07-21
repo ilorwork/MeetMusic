@@ -8,14 +8,14 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CreateCommentToComment from "./CreateCommentToComment";
 import CommentToCommentComponent from "./CommentToCommentComponent";
 import { v4 as uuid } from "uuid";
-import { getCurrentUserInfo } from "../helpers/userHelpers";
+import { getCurrentUserInfo } from "../../helpers/userHelpers";
 import Textarea from "@mui/joy/Textarea";
 import {
   deleteComment,
   editComment,
   getCommentReplies,
   textValidation,
-} from "../helpers/postHelpers";
+} from "../../helpers/postHelpers";
 
 const CommentComponent = ({
   comment,

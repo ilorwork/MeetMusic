@@ -12,7 +12,7 @@ import {
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { getPostById, linkifyLinksWithinText } from "../helpers/postHelpers";
+import { getPostById, linkifyLinksWithinText } from "../../helpers/postHelpers";
 
 const SharedPost = ({ postId }) => {
   const [post, setPost] = useState({});

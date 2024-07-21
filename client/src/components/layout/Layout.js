@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import { getCurrentUserInfo } from "../../helpers/userHelpers";
-import UserContext from "./UserContext";
+import UserContext from "../context/UserContext";
 import LoaderContext from "../context/LoaderContext";
-import Loader from "../general/Loader";
+import Loader from "../common/Loader";
 
 const Layout = () => {
   const [currentUserInfo, setIsCurrentUserInfo] = useState({});

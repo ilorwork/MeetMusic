@@ -14,9 +14,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import style from "./UserInfo.module.css";
+import style from "../users/UserInfo.module.css";
 import { v4 as uuid } from "uuid";
-import { login, notifyUser, register } from "../helpers/userHelpers";
+import { login, notifyUser, register } from "../../helpers/userHelpers";
 import RecentConnections from "./RecentConnections";
 import loginStyle from "./Login.module.css";
 

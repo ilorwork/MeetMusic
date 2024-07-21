@@ -7,14 +7,14 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CreateCommentToComment from "./CreateCommentToComment";
 import { v4 as uuid } from "uuid";
-import { getCurrentUserInfo } from "../helpers/userHelpers";
+import { getCurrentUserInfo } from "../../helpers/userHelpers";
 import Textarea from "@mui/joy/Textarea";
 import {
   deleteReply,
   editReply,
   getReplyReplies,
   textValidation,
-} from "../helpers/postHelpers";
+} from "../../helpers/postHelpers";
 
 const CommentToCommentComponent = ({
   commentToComment,

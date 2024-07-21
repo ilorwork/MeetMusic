@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { followUser, unfollowUser } from "../helpers/userHelpers";
+import { followUser, unfollowUser } from "../../../helpers/userHelpers";
 import { useNavigate } from "react-router-dom";
-import UserContext from "./layout/UserContext";
-import LoaderContext from "./context/LoaderContext";
-import UserCard from "./UserCard";
+import UserContext from "../../context/UserContext";
+import LoaderContext from "../../context/LoaderContext";
+import UserCard from "../UserCard";
 
 const Following = ({
   followed,

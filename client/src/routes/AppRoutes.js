@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AboutUs from "../components/AboutUs";
 import Home from "../components/Home";
 import Layout from "../components/layout/Layout";
-import LogIn from "../components/LogIn";
-import Register from "../components/Register";
+import LogIn from "../components/auth/LogIn";
+import Register from "../components/auth/Register";
 import UserProfileProvider from "./UserProfileProvider";
 
 const AppRoutes = () => {

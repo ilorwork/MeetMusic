@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
-import CurrentUserProfile from "../components/CurrentUserProfile";
-import UserContext from "../components/layout/UserContext";
-import UserProfile from "../components/UserProfile";
+import CurrentUserProfile from "../components/users/CurrentUserProfile";
+import UserContext from "../components/context/UserContext";
+import UserProfile from "../components/users/UserProfile";
 
 const UserProfileProvider = () => {
   const { currentUserInfo } = useContext(UserContext);

@@ -3,9 +3,9 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
-import UserContext from "./layout/UserContext";
-import { notifyUser } from "../helpers/userHelpers";
-import { createComment, textValidation } from "../helpers/postHelpers";
+import UserContext from "../context/UserContext";
+import { notifyUser } from "../../helpers/userHelpers";
+import { createComment, textValidation } from "../../helpers/postHelpers";
 
 const CreateNewComment = ({
   post,

@@ -23,11 +23,11 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useLocation, useNavigate } from "react-router-dom";
-import CommentComponent from "./CommentComponent";
+import CommentComponent from "../comments/CommentComponent";
 import { v4 as uuid } from "uuid";
-import CreateNewComment from "./CreateNewComment";
-import UserContext from "./layout/UserContext";
-import { followUser, notifyUser } from "../helpers/userHelpers";
+import CreateNewComment from "../comments/CreateNewComment";
+import UserContext from "../context/UserContext";
+import { followUser, notifyUser } from "../../helpers/userHelpers";
 import Textarea from "@mui/joy/Textarea";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
@@ -42,10 +42,10 @@ import {
   likePost,
   linkifyLinksWithinText,
   unlikePost,
-} from "../helpers/postHelpers";
+} from "../../helpers/postHelpers";
 import SharedPost from "./SharedPost";
-import LoaderContext from "./context/LoaderContext";
-import DeleteModal from "./general/DeleteModal";
+import LoaderContext from "../context/LoaderContext";
+import DeleteModal from "../common/DeleteModal";
 
 const PostComponent = ({
   post,

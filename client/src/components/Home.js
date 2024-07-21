@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import style from "./Home.module.css";
-import Following from "./Following";
-import PeopleYouMayKnow from "./PeopleYouMayKnow";
-import PostComponent from "./PostComponent";
+import Following from "./users/usersLists/Following";
+import PeopleYouMayKnow from "./users/usersLists/PeopleYouMayKnow";
+import PostComponent from "./posts/PostComponent";
 import { v4 as uuid } from "uuid";
-import CreateNewPost from "./CreateNewPost";
+import CreateNewPost from "./posts/CreateNewPost";
 import {
   getCurrentUserInfo,
   getPeopleYouMayKnowHelper,
